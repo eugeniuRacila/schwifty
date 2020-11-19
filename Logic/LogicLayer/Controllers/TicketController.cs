@@ -36,8 +36,10 @@ namespace LogicLayer.Controllers
         {
             // Need to see if it blocks the return (aka if it loops trough the entire array first)
             // Move to service
+
+            string serializedTicket = Newtonsoft.Json.JsonConvert.SerializeObject(ticket);
             
-            Package<Ticket> package = new Package<Ticket>("AddOrder", ticket);
+            Package package = new Package("OrdersService", "AddMessage", serializedTicket);
             string jsonPackage = JsonSerializer.Serialize(package);
 
             Console.WriteLine($"jsonPackage :: {jsonPackage}");

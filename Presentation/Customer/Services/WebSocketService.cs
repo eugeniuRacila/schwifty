@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
-using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Customer.Models;
-using Newtonsoft.Json.Linq;
+using Customer.Services.Order;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Customer.Services
 {
     public class WebSocketService : IWebSocketService
     {
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions();
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
         private readonly ClientWebSocket _webSocket = new ClientWebSocket();
-        private readonly OrdersService _ordersService;
+        private readonly AOrderService _orderService;
 
         private string _socketConnectionId;
 
-        public WebSocketService(OrdersService ordersService)
+        public WebSocketService(AOrderService orderService)
         {
-            _ordersService = ordersService;
+            _orderService = orderService;
         }
         
         public async Task InitializeWebSocketsAsync()
@@ -49,31 +51,31 @@ namespace Customer.Services
             while (!_disposalTokenSource.IsCancellationRequested)
             {
                 var received = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
-                var receivedAsText = Encoding.UTF8.GetString(buffer.Array ?? throw new NullReferenceException(), 0, received.Count);
+                var json = Encoding.UTF8.GetString(buffer.Array ?? throw new NullReferenceException(), 0, received.Count);
 
-                string[] type = receivedAsText.Split('"');
-                IList<string> package = type.ToList();
-
-                for (int i = 0; i < type.Length; i++)
-                    if (i == 3)
+                Console.WriteLine($"Received a message from server, via socket: {json}");
+                
+                try
+                {
+                    var deserializedPackage = JsonConvert.DeserializeObject<Package>(json);
+                    
+                    if (deserializedPackage.Service == "OrdersService")
                     {
-                        Type magicType = Type.GetType("PackageOrder");
-                        
-                        Console.WriteLine($"magicType :: {magicType}");
-
-                        
-                        ConstructorInfo magicConstructor = magicType.GetConstructor(new Type[] { typeof(OrdersService)});
-                        object magicClassObject = magicConstructor.Invoke(new object[]{ _ordersService });
-                        MethodInfo magicMethod = magicType.GetMethod("AddOrder");
-                        object magicValue = magicMethod.Invoke(magicClassObject, new object[]{receivedAsText});
-
-                        Console.WriteLine($"maginc value :: {magicValue}");
+                        var method = _orderService.GetType().GetMethod(deserializedPackage.Action);
+                        Console.WriteLine($"var method = {method}");
+                        Console.WriteLine($"argument = {deserializedPackage.Payload}");
+                        method?.Invoke(_orderService, new object[] { deserializedPackage.Payload });
                     }
-
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                
                 // Console.WriteLine($"type of package:: {type[3]}");
-                
-                
-                Console.WriteLine($"Received a message from server, via socket: {receivedAsText}");
+
+                Console.WriteLine($"After call");
                 // how to notify other pages when server send any information ???
             }
         }

@@ -32,7 +32,7 @@ namespace LogicLayer.Middlewares
                 string conn = _manager.AddSocket(webSocket);
 
                 //Send ConnID Back
-                await SendConnID(webSocket, conn);
+                // await SendConnID(webSocket, conn);
 
                 await Receive(webSocket, async (result, buffer) =>
                 {
