@@ -17,11 +17,11 @@ namespace Customer.Services
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions();
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
         private readonly ClientWebSocket _webSocket = new ClientWebSocket();
-        private readonly IOrderService _orderService;
+        private readonly AOrderService _orderService;
 
         private string _socketConnectionId;
 
-        public WebSocketService(IOrderService orderService)
+        public WebSocketService(AOrderService orderService)
         {
             _orderService = orderService;
         }

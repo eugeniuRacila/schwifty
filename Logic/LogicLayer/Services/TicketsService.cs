@@ -10,7 +10,7 @@ namespace LogicLayer.Services
         public async Task<Ticket> Create(Ticket ticket)
         {
             // Calling java to save the ticket into DB
-            return new Ticket {TextMessageTest = ticket.TextMessageTest};
+            return new Ticket {Text = ticket.Text};
         }
 
         public string GetOrders()

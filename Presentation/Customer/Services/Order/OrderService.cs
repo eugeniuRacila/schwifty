@@ -5,10 +5,9 @@ using Newtonsoft.Json;
 
 namespace Customer.Services.Order
 {
-    public class OrderService : IOrderService
+    public class OrderService : AOrderService
     {
         private IList<Message> _list;
-        public Action<IList<Message>> OrdersUpdate;
 
         public OrderService()
         {
@@ -16,14 +15,15 @@ namespace Customer.Services.Order
             _list.Add(new Message("Initial message"));
         }
 
-        public void AddMessage(string jsonPayload)
+        public override void AddMessage(string jsonPayload)
         {
+            Console.WriteLine("AddMessage was called");
             var message = JsonConvert.DeserializeObject<Message>(jsonPayload);
             _list.Add(message);
             OrdersUpdate?.Invoke(GetAllOrders());
         }
 
-        public IList<Message> GetAllOrders()
+        public override IList<Message> GetAllOrders()
         {
             return new List<Message>(_list);
         }

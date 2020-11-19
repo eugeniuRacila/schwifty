@@ -1,9 +1,8 @@
 ﻿@page "/counter"
-@using Customer.Services
 @using Customer.Models
 @using Customer.Services.Order
 
-@inject IOrderService OrderService;
+@inject AOrderService OrderService;
 
 <h1>Orders</h1>
 <ul>
@@ -26,7 +25,9 @@
     
     private async void OnNotify(IList<Message> messages)
     {
+        Console.WriteLine("OnNotify function was called");
         _orders = messages;
+        
         await InvokeAsync(StateHasChanged);
     }
 }

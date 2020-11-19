@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace LogicLayer.Models
 {
     public class Ticket
     {
-        [DataMember(Name = "textMessageTest")]
-        public string TextMessageTest { get; set; }
+        [JsonPropertyName("text")]
+        public string Text { get; set; }
     }
 }
