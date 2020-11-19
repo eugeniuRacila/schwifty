@@ -1,8 +1,9 @@
 ﻿@page "/counter"
 @using Customer.Services
 @using Customer.Models
+@using Customer.Services.Order
 
-@inject OrdersService OrdersService;
+@inject IOrderService OrderService;
 
 <h1>Orders</h1>
 <ul>
@@ -19,8 +20,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _orders = OrdersService.GetAllOrders();
-        OrdersService.OrdersUpdate += OnNotify;
+        _orders = OrderService.GetAllOrders();
+        OrderService.OrdersUpdate += OnNotify;
     }
     
     private async void OnNotify(IList<Message> messages)

@@ -1,20 +1,27 @@
-﻿using System;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace LogicLayer.Models
 {
-    public class Package<T>
+    public class Package
     {
-        // change to ENUMS
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
+        [JsonPropertyName("service")]
+        public string Service { get; set; } // change to ENUMS
+        
+        [JsonPropertyName("action")]
+        public string Action { get; set; } // change to ENUMS
+        
         [JsonPropertyName("payload")]
-        public T Payload { get; set; }
+        public string Payload { get; set; }
 
-        public Package(string type, T payload)
+        public Package()
         {
-            Type = type;
+            // ...
+        }
+
+        public Package(string service, string action, string payload)
+        {
+            Service = service;
+            Action = action;
             Payload = payload;
         }
     }

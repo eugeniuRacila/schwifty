@@ -1,23 +1,24 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Customer.Models;
+using Newtonsoft.Json;
 
-namespace Customer.Services
+namespace Customer.Services.Order
 {
-    public class OrdersService
+    public class OrderService : IOrderService
     {
         private IList<Message> _list;
         public Action<IList<Message>> OrdersUpdate;
 
-        public OrdersService()
+        public OrderService()
         {
             _list = new List<Message>();
             _list.Add(new Message("Initial message"));
         }
 
-        public void AddMessage(Message message)
+        public void AddMessage(string jsonPayload)
         {
+            var message = JsonConvert.DeserializeObject<Message>(jsonPayload);
             _list.Add(message);
             OrdersUpdate?.Invoke(GetAllOrders());
         }

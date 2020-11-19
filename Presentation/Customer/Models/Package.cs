@@ -1,15 +1,28 @@
-﻿namespace Customer.Models
-{
-    public class Package<T>
-    {
-        // change to ENUMS
-        private string _type;
-        private T _payload;
+﻿using System.Text.Json.Serialization;
 
-        public Package(string type, T payload)
+namespace Customer.Models
+{
+    public class Package
+    {
+        [JsonPropertyName("service")]
+        public string Service { get; set; } // change to ENUMS
+        
+        [JsonPropertyName("action")]
+        public string Action { get; set; } // change to ENUMS
+        
+        [JsonPropertyName("payload")]
+        public string Payload { get; set; }
+
+        public Package()
         {
-            _type = type;
-            _payload = payload;
+            // ...
+        }
+
+        public Package(string service, string action, string payload)
+        {
+            Service = service;
+            Action = action;
+            Payload = payload;
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using System;
 using Customer.Services;
+using Customer.Services.Order;
 
 namespace Customer.Models
 {
     public class PackageOrder
     {
-        private readonly OrdersService _ordersService;
+        private readonly OrderService _orderService;
 
-        public PackageOrder(OrdersService ordersService)
+        public PackageOrder(OrderService orderService)
         {
-            _ordersService = ordersService;
+            _orderService = orderService;
         }
 
         public static void AddOrder(string jsonPayload)
