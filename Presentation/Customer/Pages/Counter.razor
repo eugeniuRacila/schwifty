@@ -1,0 +1,31 @@
+﻿@page "/counter"
+@using Customer.Services
+@using Customer.Models
+
+@inject OrdersService OrdersService;
+
+<h1>Orders</h1>
+<ul>
+    @foreach (var message in _orders)
+    {
+        <li>@message.Text</li>
+    }
+</ul>
+
+
+@code {
+    private IList<Message> _orders = new List<Message>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _orders = OrdersService.GetAllOrders();
+        OrdersService.OrdersUpdate += OnNotify;
+    }
+    
+    private async void OnNotify(IList<Message> messages)
+    {
+        _orders = messages;
+        await InvokeAsync(StateHasChanged);
+    }
+}
