@@ -29,8 +29,11 @@ namespace LogicLayer.Models
 
         public class LocationPoint
         {
+            [JsonPropertyName("address")]
             public string Address { get; set; }
+            [JsonPropertyName("lat")]
             public double Lat { get; set; }
+            [JsonPropertyName("lng")]
             public double Lng { get; set; }
         }
 

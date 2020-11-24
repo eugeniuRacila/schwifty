@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using LogicLayer.Models;
 using LogicLayer.Services;
 using LogicLayer.Utils;
@@ -22,6 +23,8 @@ namespace LogicLayer.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder(Order orderToCreate)
         {
+            Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
+            
             await _orderService.CreateOrderAsync(orderToCreate);
 
             return orderToCreate;

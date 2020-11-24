@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Driver.Models
+namespace Customer.Models
 {
     public class Order
     {
