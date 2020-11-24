@@ -27,9 +27,19 @@ namespace LogicLayer.Middlewares
             if (context.WebSockets.IsWebSocketRequest)
             {
                 Console.WriteLine("Websocket upgrade request");
+                Console.WriteLine("websocket request " + context.Request.Path);
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
-                string conn = _manager.AddSocket(webSocket);
+                string conn;
+
+                if (context.Request.Path.ToString().ToLower() == "/driver")
+                {
+                    conn = _manager.AddDriverSocket(webSocket);
+                }
+                else
+                {
+                    conn = _manager.AddSocket(webSocket);
+                }
 
                 //Send ConnID Back
                 // await SendConnID(webSocket, conn);

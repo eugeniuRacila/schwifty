@@ -39,12 +39,14 @@ namespace LogicLayer.Controllers
 
             string serializedTicket = Newtonsoft.Json.JsonConvert.SerializeObject(ticket);
             
-            Package package = new Package("OrdersService", "AddMessage", serializedTicket);
+            Package package = new Package("OrderService", "AddMessage", serializedTicket);
             string jsonPackage = JsonSerializer.Serialize(package);
 
             Console.WriteLine($"jsonPackage :: {jsonPackage}");
+            Console.WriteLine("list customer length : " + _manager.GetAllSockets().Count);
+            Console.WriteLine("list driver length : " + _manager.GetDriverSockets().Count);
             
-            foreach (var sock in _manager.GetAllSockets())
+            foreach (var sock in _manager.GetDriverSockets())
             {
                 if (sock.Value.State == WebSocketState.Open)
                     await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);

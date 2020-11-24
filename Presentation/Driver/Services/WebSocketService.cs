@@ -25,7 +25,7 @@ namespace Driver.Services
         
         public async Task InitializeWebSocketsAsync()
         {
-            await _webSocket.ConnectAsync(new Uri("wss://localhost:5001/"), _disposalTokenSource.Token);
+            await _webSocket.ConnectAsync(new Uri("wss://localhost:5001/driver"), _disposalTokenSource.Token);
 
             if (_webSocket.State == WebSocketState.Open)
                 Console.WriteLine("Successfully connected to server (websocket)");

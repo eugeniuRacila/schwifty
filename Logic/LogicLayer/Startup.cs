@@ -31,6 +31,7 @@ namespace LogicLayer
         {
             services.AddControllers();
             services.AddWebSocketServerConnectionManager();
+            services.AddScoped<OrderService>();
             services.AddScoped<TicketsService>();
         }
 
