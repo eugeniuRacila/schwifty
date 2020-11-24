@@ -5,7 +5,7 @@ using Driver.Models;
 
 namespace Driver.Services
 {
-    public abstract class AOrderService
+    public abstract class AOrderService : IMutualService
     {
         public Action<IList<Message>> OrdersUpdate;
 

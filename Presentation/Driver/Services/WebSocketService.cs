@@ -14,13 +14,13 @@ namespace Driver.Services
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions();
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
         private readonly ClientWebSocket _webSocket = new ClientWebSocket();
-        private readonly AOrderService _orderService;
+        private readonly ServicesHub _servicesHub;
 
         private string _socketConnectionId;
 
-        public WebSocketService(AOrderService orderService)
+        public WebSocketService(ServicesHub servicesHub)
         {
-            _orderService = orderService;
+            _servicesHub = servicesHub;
         }
         
         public async Task InitializeWebSocketsAsync()
@@ -55,13 +55,29 @@ namespace Driver.Services
                 try
                 {
                     var deserializedPackage = JsonConvert.DeserializeObject<Package>(json);
+
+                    IMutualService foundService = _servicesHub.Services[deserializedPackage.Service];
                     
-                    if (deserializedPackage.Service == "OrdersService")
+                    if (foundService != null)
                     {
-                        var method = _orderService.GetType().GetMethod(deserializedPackage.Action);
-                        Console.WriteLine($"var method = {method}");
-                        Console.WriteLine($"argument = {deserializedPackage.Payload}");
-                        method?.Invoke(_orderService, new object[] { deserializedPackage.Payload });
+                        var method = foundService.GetType().GetMethod(deserializedPackage.Action);
+
+                        if (method != null)
+                        {
+                            Console.WriteLine($"Invoking the service: {deserializedPackage.Service} on the {deserializedPackage.Action}, with: {deserializedPackage.Payload} parameters.");
+                        
+                            method.Invoke(foundService, new object[] { deserializedPackage.Payload });
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[ERROR] Service {deserializedPackage.Service} doesn't have a method with the name of {deserializedPackage.Action}");
+                            throw new Exception();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[ERROR] Service {deserializedPackage.Service} was not found in the servies hub");
+                        throw new Exception();
                     }
                 }
                 catch (Exception e)

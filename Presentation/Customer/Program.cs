@@ -19,6 +19,7 @@ namespace Customer
             
             
             builder.Services.AddSingleton<AOrderService, OrderService>();
+            builder.Services.AddSingleton<ServicesHub>();
             
             // WebSockets injection
             builder.Services.AddSingleton<IWebSocketService, WebSocketService>();

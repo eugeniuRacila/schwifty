@@ -21,12 +21,12 @@ namespace Driver
             builder.Services.AddScoped(
                 sp => new HttpClient {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
             
-            
             builder.Services.AddSingleton<AOrderService, OrderService>();
+            builder.Services.AddSingleton<ServicesHub>();
             
             // WebSockets injection
             builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
-            
+
             await builder.Build().RunAsync();
         }
     }
