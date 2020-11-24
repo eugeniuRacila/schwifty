@@ -6,6 +6,9 @@ namespace LogicLayer.Models
 {
     public class Order
     {
+        [JsonPropertyName("orderId")]
+        public string orderId { get; set; } = Guid.NewGuid().ToString();
+        
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }
         

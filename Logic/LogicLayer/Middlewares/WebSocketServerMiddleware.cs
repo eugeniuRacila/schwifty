@@ -26,15 +26,16 @@ namespace LogicLayer.Middlewares
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
-                Console.WriteLine("Websocket upgrade request");
-                Console.WriteLine("websocket request " + context.Request.Path);
+                Console.WriteLine($"WebSocketServerMiddleware -> InvokeAsync, at path: '{context.Request.Path}'");
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
+                bool isDriver = false;
+                
                 string conn;
 
                 if (context.Request.Path.ToString().ToLower() == "/driver")
                 {
                     conn = _manager.AddDriverSocket(webSocket);
+                    isDriver = true;
                 }
                 else
                 {
@@ -55,12 +56,24 @@ namespace LogicLayer.Middlewares
                     } 
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        string id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
-                        Console.WriteLine($"Receive->Close on: {id}");
-
+                        string id;
                         WebSocket ws;
-                        _manager.GetAllSockets().TryRemove(id, out ws);
-                        Console.WriteLine($"Managed Connections: {_manager.GetAllSockets().Count}");
+                        
+                        if (isDriver)
+                        {
+                            id = _manager.GetDriverSockets().FirstOrDefault(s => s.Value == webSocket).Key;
+                            _manager.GetDriverSockets().TryRemove(id, out ws);
+                            Console.WriteLine($"Managed Connections: {_manager.GetDriverSockets().Count}");
+                        }
+                        else
+                        {
+                            id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
+                            _manager.GetAllSockets().TryRemove(id, out ws);
+                            Console.WriteLine($"Managed Connections: {_manager.GetAllSockets().Count}");
+                        }
+                        
+                        Console.WriteLine($"Receive -> Close on: {id}");
+                        
 
                         await ws.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
                     }

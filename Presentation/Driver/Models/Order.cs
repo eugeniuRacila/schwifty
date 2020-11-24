@@ -1,9 +1,13 @@
 ﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Driver.Models
 {
     public class Order
     {
+        [JsonPropertyName("orderId")]
+        public string orderId { get; set; }
+        
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }
 
@@ -21,15 +25,23 @@ namespace Driver.Models
 
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }
-        
+
         [JsonPropertyName("createdOn")]
         public long CreatedOn { get; set; }
-    }
 
-    public class LocationPoint
-    {
-        public string Address { get; set; }
-        public double Lat { get; set; }
-        public double Lng { get; set; }
+        public class LocationPoint
+        {
+            [JsonPropertyName("address")]
+            public string Address { get; set; }
+            [JsonPropertyName("lat")]
+            public double Lat { get; set; }
+            [JsonPropertyName("lng")]
+            public double Lng { get; set; }
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

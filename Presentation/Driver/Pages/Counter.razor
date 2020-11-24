@@ -1,21 +1,39 @@
 ﻿@page "/counter"
 
 @using Customer.Models
+@using Driver.Models
 @using Driver.Services
 
 @inject AOrderService OrderService;
 
 <h1>Orders</h1>
-<ul>
-    @foreach (var message in _orders)
+
+    @foreach (var order in _orders)
     {
-        <li>@message.Text</li>
+        <p>Order: @order.orderId</p>
+        <ul>
+            <li>CustomerId: @order.CustomerId</li>
+            <li>StartingPoint:</li>
+            <ul>
+                <li>Address: @order.StartingPoint.Address</li>
+                <li>Lat: @order.StartingPoint.Lat</li>
+                <li>Lng: @order.StartingPoint.Lng</li>
+            </ul>
+            <li>DestinationPoint:</li>
+            <ul>
+                <li>Address: @order.DestinationPoint.Address</li>
+                <li>Lat: @order.DestinationPoint.Lat</li>
+                <li>Lng: @order.DestinationPoint.Lng</li>
+            </ul>
+            <li>NeededSeats: @order.NeededSeats</li>
+            <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
+        </ul>
+        <hr/>
     }
-</ul>
 
 
 @code {
-    private IList<Message> _orders = new List<Message>();
+    private IList<Order> _orders = new List<Order>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -24,10 +42,10 @@
         OrderService.OrdersUpdate += OnNotify;
     }
     
-    private async void OnNotify(IList<Message> messages)
+    private async void OnNotify(IList<Order> orders)
     {
-        Console.WriteLine("OnNotify function was called");
-        _orders = messages;
+        Console.WriteLine("CounterPage -> OnNotify");
+        _orders = orders;
         
         await InvokeAsync(StateHasChanged);
     }

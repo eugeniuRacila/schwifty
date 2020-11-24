@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using Customer.Models;
+using Driver.Models;
 using Newtonsoft.Json;
 
 namespace Driver.Services
 {
     public class OrderService : AOrderService
     {
-        private IList<Message> _list;
+        private IList<Order> _list;
 
         public OrderService()
         {
-            _list = new List<Message>();
-            _list.Add(new Message("Initial message"));
+            _list = new List<Order>();
         }
 
-        public override void AddMessage(string jsonPayload)
+        public override void AddOrder(string jsonPayload)
         {
-            Console.WriteLine("AddMessage was called");
-            var message = JsonConvert.DeserializeObject<Message>(jsonPayload);
-            _list.Add(message);
+            Console.WriteLine($"OrderService -> AddOrder : {jsonPayload}");
+
+            var orderToCreate = JsonConvert.DeserializeObject<Order>(jsonPayload);
+            
+            // Call Data Layer and store the order into database
+            
+            _list.Add(orderToCreate);
+            
             OrdersUpdate?.Invoke(GetAllOrders());
         }
 
-        public override IList<Message> GetAllOrders()
+        public override IList<Order> GetAllOrders()
         {
-            return new List<Message>(_list);
+            return new List<Order>(_list);
         }
     }
 }
