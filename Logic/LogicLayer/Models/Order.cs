@@ -24,6 +24,9 @@ namespace LogicLayer.Models
         [JsonPropertyName("destinationPoint")]
         public LocationPoint DestinationPoint { get; set; }
         
+        [JsonPropertyName("typeOfCar")]
+        public string TypeOfCar { get; set; }
+        
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }
 
@@ -34,8 +37,10 @@ namespace LogicLayer.Models
         {
             [JsonPropertyName("address")]
             public string Address { get; set; }
+            
             [JsonPropertyName("lat")]
             public double Lat { get; set; }
+            
             [JsonPropertyName("lng")]
             public double Lng { get; set; }
         }

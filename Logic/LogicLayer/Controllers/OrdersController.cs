@@ -25,8 +25,21 @@ namespace LogicLayer.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(Order orderToCreate)
+        // public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
+        public async Task<ActionResult<Order>> CreateOrder([FromBody] string json)
         {
+            Console.WriteLine($"json :: {json}");
+            Order orderToCreate;
+            try
+            {
+                orderToCreate = JsonConvert.DeserializeObject<Order>(json);
+            
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("exception: \n" + e);
+                throw;
+            }
             Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
             
             await _orderService.CreateOrderAsync(orderToCreate);

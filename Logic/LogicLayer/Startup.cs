@@ -29,6 +29,14 @@ namespace LogicLayer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+            
             services.AddControllers();
             services.AddWebSocketServerConnectionManager();
             services.AddScoped<OrderService>();
@@ -49,12 +57,13 @@ namespace LogicLayer
 
             app.UseHttpsRedirection();
 
-             app.UseRouting();
+            app.UseRouting();
 
-             app.UseAuthorization();
+            app.UseAuthorization();
+
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
             
             // what is app.run and why it has to be called after all the previous methods
             app.Run(async context =>

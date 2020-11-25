@@ -8,29 +8,28 @@
 
 <h1>Orders</h1>
 
-    @foreach (var order in _orders)
-    {
-        <p>Order: @order.orderId</p>
+@foreach (var order in _orders)
+{
+    <p>Order: @order.orderId</p>
+    <ul>
+        <li>CustomerId: @order.CustomerId</li>
+        <li>StartingPoint:</li>
         <ul>
-            <li>CustomerId: @order.CustomerId</li>
-            <li>StartingPoint:</li>
-            <ul>
-                <li>Address: @order.StartingPoint.Address</li>
-                <li>Lat: @order.StartingPoint.Lat</li>
-                <li>Lng: @order.StartingPoint.Lng</li>
-            </ul>
-            <li>DestinationPoint:</li>
-            <ul>
-                <li>Address: @order.DestinationPoint.Address</li>
-                <li>Lat: @order.DestinationPoint.Lat</li>
-                <li>Lng: @order.DestinationPoint.Lng</li>
-            </ul>
-            <li>NeededSeats: @order.NeededSeats</li>
-            <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
+            <li>Address: @order.StartingPoint.Address</li>
+            <li>Lat: @order.StartingPoint.Lat</li>
+            <li>Lng: @order.StartingPoint.Lng</li>
         </ul>
-        <hr/>
-    }
-
+        <li>DestinationPoint:</li>
+        <ul>
+            <li>Address: @order.DestinationPoint.Address</li>
+            <li>Lat: @order.DestinationPoint.Lat</li>
+            <li>Lng: @order.DestinationPoint.Lng</li>
+        </ul>
+        <li>NeededSeats: @order.NeededSeats</li>
+        <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
+    </ul>
+    <hr/>
+}
 
 @code {
     private IList<Order> _orders = new List<Order>();

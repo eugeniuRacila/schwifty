@@ -1,33 +1,47 @@
-﻿@page "/counter"
+﻿@page "/create-order"
+
 @using Customer.Models
 @using Customer.Services.Order
+@using Newtonsoft.Json
 
+@inject HttpClient Http
 @inject AOrderService OrderService;
 
-<h1>Orders</h1>
-<ul>
-    @foreach (var message in _orders)
-    {
-        <li>@message.Text</li>
-    }
-</ul>
+<h1>Create order</h1>
+<EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>
+        Starting point:
+        <InputText id="startingPoint" @bind-Value="_order.StartingPoint.Address" />
+    </label>
+    <label>
+        Destination point:
+        <InputText id="destinationPoint" @bind-Value="_order.DestinationPoint.Address" />
+    </label>
+    <label>
+        Type of car:
+        <InputText id="typeOfCar" @bind-Value="_order.TypeOfCar" />
+    </label>
+    <label>
+        Needed seats:
+        <InputNumber id="amountOfSeats" @bind-Value="_order.NeededSeats" />
+    </label>
+
+    <button type="submit">Submit</button>
+</EditForm>
 
 
 @code {
-    private IList<Message> _orders = new List<Message>();
+    // Get user ID from the clientService
+    // First create the clientService
+    private Order _order = new Order();
 
-    protected override async Task OnInitializedAsync()
+    private async void HandleValidSubmit()
     {
-        await base.OnInitializedAsync();
-        _orders = OrderService.GetAllOrders();
-        OrderService.OrdersUpdate += OnNotify;
-    }
-    
-    private async void OnNotify(IList<Message> messages)
-    {
-        Console.WriteLine("OnNotify function was called");
-        _orders = messages;
-        
-        await InvokeAsync(StateHasChanged);
+        string serializedOrder = JsonConvert.SerializeObject(_order);
+        Console.WriteLine($"Serialized order: {serializedOrder}");
+        await Http.PostAsJsonAsync("api/orders", serializedOrder);
     }
 }
