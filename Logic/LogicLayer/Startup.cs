@@ -37,7 +37,7 @@ namespace LogicLayer
                 });
             });
             
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddWebSocketServerConnectionManager();
             services.AddScoped<OrderService>();
             services.AddScoped<TicketsService>();

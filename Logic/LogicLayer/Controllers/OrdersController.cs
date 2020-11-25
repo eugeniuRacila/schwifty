@@ -23,23 +23,28 @@ namespace LogicLayer.Controllers
             _manager = manager;
             _orderService = orderService;
         }
+        
+        public class MyModel
+        {
+            public string Key {get; set;}
+        }
 
         [HttpPost]
-        // public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
-        public async Task<ActionResult<Order>> CreateOrder([FromBody] string json)
+        public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
-            Console.WriteLine($"json :: {json}");
-            Order orderToCreate;
-            try
-            {
-                orderToCreate = JsonConvert.DeserializeObject<Order>(json);
             
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("exception: \n" + e);
-                throw;
-            }
+            // Console.WriteLine($"json :: {json}");
+            // Order orderToCreate;
+            // try
+            // {
+            //     orderToCreate = JsonConvert.DeserializeObject<Order>(json);
+            //
+            // }
+            // catch (Exception e)
+            // {
+            //     Console.WriteLine("exception: \n" + e);
+            //     throw;
+            // }
             Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
             
             await _orderService.CreateOrderAsync(orderToCreate);
@@ -54,7 +59,7 @@ namespace LogicLayer.Controllers
                 if (sock.Value.State == WebSocketState.Open)
                     await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
             }
-
+            
             return orderToCreate;
         }
     }

@@ -6,6 +6,7 @@ namespace LogicLayer.Models
 {
     public class Order
     {
+        
         [JsonPropertyName("orderId")]
         public string orderId { get; set; } = Guid.NewGuid().ToString();
         
@@ -43,6 +44,11 @@ namespace LogicLayer.Models
             
             [JsonPropertyName("lng")]
             public double Lng { get; set; }
+        }
+
+        public Order()
+        {
+            // ...
         }
 
         public override string ToString()
