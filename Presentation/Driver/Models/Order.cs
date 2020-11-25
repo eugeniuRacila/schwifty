@@ -5,9 +5,9 @@ namespace Driver.Models
 {
     public class Order
     {
-        [JsonProperty("orderId")]
-        [JsonPropertyName("orderId")]
-        public string orderId { get; set; }
+        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        public string OrderId { get; set; }
         
         [JsonProperty("customerId")]
         [JsonPropertyName("customerId")]
@@ -21,13 +21,9 @@ namespace Driver.Models
         [JsonPropertyName("carId")]
         public int CarId { get; set; }
 
-        [JsonProperty("startingPoint")]
-        [JsonPropertyName("startingPoint")]
-        public LocationPoint StartingPoint { get; set; }
-
-        [JsonProperty("destinationPoint")]
-        [JsonPropertyName("destinationPoint")]
-        public LocationPoint DestinationPoint { get; set; }
+        [JsonProperty("locationPoint")]
+        [JsonPropertyName("locationPoint")]
+        public LocationPoint LocationPoints { get; set; }
         
         [JsonProperty("typeOfCar")]
         [JsonPropertyName("typeOfCar")]
@@ -41,24 +37,36 @@ namespace Driver.Models
         [JsonPropertyName("createdOn")]
         public long CreatedOn { get; set; }
 
-        public class LocationPoint
-        {
-            [JsonProperty("address")]
-            [JsonPropertyName("address")]
-            public string Address { get; set; }
-            
-            [JsonProperty("lat")]
-            [JsonPropertyName("lat")]
-            public double Lat { get; set; }
-            
-            [JsonProperty("lng")]
-            [JsonPropertyName("lng")]
-            public double Lng { get; set; }
-        }
-
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
+        }
+        
+        public class LocationPoint
+        {
+            [JsonProperty("startingAddress")]
+            [JsonPropertyName("startingAddress")]
+            public string StartingAddress { get; set; }
+        
+            [JsonProperty("startingLat")]
+            [JsonPropertyName("startingLat")]
+            public double StartingLat { get; set; }
+        
+            [JsonProperty("startingLng")]
+            [JsonPropertyName("startingLng")]
+            public double StartingLng { get; set; }
+        
+            [JsonProperty("destinationAddress")]
+            [JsonPropertyName("destinationAddress")]
+            public string DestinationAddress { get; set; }
+        
+            [JsonProperty("destinationLat")]
+            [JsonPropertyName("destinationLat")]
+            public double DestinationLat { get; set; }
+        
+            [JsonProperty("destinationLng")]
+            [JsonPropertyName("destinationLng")]
+            public double DestinationLng { get; set; }
         }
     }
 }

@@ -10,7 +10,7 @@ public class LocationPoint {
     private double startingLat;
     private double startingLng;
     private String destinationAddress;
-    private double destinationLag;
+    private double destinationLat;
     private double destinationLng;
 
     public LocationPoint() {
@@ -48,12 +48,12 @@ public class LocationPoint {
         this.destinationAddress = destinationAddress;
     }
 
-    public double getDestinationLag() {
-        return destinationLag;
+    public double getDestinationLat() {
+        return destinationLat;
     }
 
-    public void setDestinationLag(double destinationLag) {
-        this.destinationLag = destinationLag;
+    public void setDestinationLat(double destinationLat) {
+        this.destinationLat = destinationLat;
     }
 
     public double getDestinationLng() {

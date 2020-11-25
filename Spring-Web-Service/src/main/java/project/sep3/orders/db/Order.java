@@ -20,8 +20,8 @@ public class Order {
     private int driverId;
     @Column(name="type_Of_Car")
     private String typeOfCar;
-    @Column(name = "amount_Of_Seats", nullable = false)
-    private int amountOfSeats;
+    @Column(name = "needed_Seats", nullable = false)
+    private int neededSeats;
 
 
     @Embedded
@@ -61,8 +61,8 @@ public class Order {
         this.typeOfCar = typeOfCar;
     }
 
-    public void setAmountOfSeats(int amountOfSeats) {
-        this.amountOfSeats = amountOfSeats;
+    public void setNeededSeats(int neededSeats) {
+        this.neededSeats = neededSeats;
     }
 
     public int getCustomerId() {
@@ -78,7 +78,7 @@ public class Order {
         return typeOfCar;
     }
 
-    public int getAmountOfSeats() {
-        return amountOfSeats;
+    public int getNeededSeats() {
+        return neededSeats;
     }
 }

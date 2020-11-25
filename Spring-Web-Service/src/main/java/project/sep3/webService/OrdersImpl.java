@@ -30,7 +30,7 @@ public class OrdersImpl {
     public Order create(@RequestBody Order order)  {
         try {
             System.out.println(order.getTypeOfCar());
-            return ordersDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getAmountOfSeats());
+            return ordersDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
         } catch(RuntimeException e) {
             if (e.getMessage().contains("duplicate key"))
                 throw new DuplicateKeyException(e);

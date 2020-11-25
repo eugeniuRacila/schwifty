@@ -14,12 +14,28 @@
     <ValidationSummary />
 
     <label>
-        Starting point:
-        <InputText id="startingPoint" @bind-Value="_order.StartingPoint.Address" />
+        Starting address:
+        <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" />
     </label>
     <label>
-        Destination point:
-        <InputText id="destinationPoint" @bind-Value="_order.DestinationPoint.Address" />
+        Starting lat:
+        <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" />
+    </label>
+    <label>
+        Starting lng:
+        <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" />
+    </label>
+    <label>
+        Destination address:
+        <InputText id="destinationPoint" @bind-Value="_order.LocationPoints.DestinationAddress" />
+    </label>
+    <label>
+        Destination lat:
+        <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" />
+    </label>
+    <label>
+        Destination lng:
+        <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" />
     </label>
     <label>
         Type of car:
@@ -37,15 +53,11 @@
 @code {
     // Get user ID from the clientService
     // First create the clientService
-    private Order _order = new Order();
+    private readonly Order _order = new Order();
 
     private async void HandleValidSubmit()
     {
-        string serializedOrder = JsonConvert.SerializeObject(_order);
-        StringContent content = new StringContent(
-            serializedOrder, Encoding.UTF8, "application/json");
-
-        Console.WriteLine($"Serialized order: {serializedOrder}");
-        await Http.PostAsJsonAsync("api/orders", content);
+        Console.WriteLine($"Serialized order: {_order}");
+        await Http.PostAsJsonAsync("api/orders", _order);
     }
 }

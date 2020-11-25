@@ -34,12 +34,12 @@ public class OrdersDAOImpl implements OrdersDAO {
 
 
     @Override
-    public Order create(int customerId, String typeOfCar, LocationPoint locationPoint, int amountOfSeats) {
+    public Order create(int customerId, String typeOfCar, LocationPoint locationPoint, int neededSeats) {
         Order order = new Order();
         order.setCustomerId(customerId);
         order.setLocationPoint(locationPoint);
         order.setTypeOfCar(typeOfCar);
-        order.setAmountOfSeats(amountOfSeats);
+        order.setNeededSeats(neededSeats);
         Session session = getNewSession();
         saveOrder(session, order);
         session.close();

@@ -1,50 +1,43 @@
 ﻿using System;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace LogicLayer.Models
 {
     public class Order
     {
+        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        public int OrderId { get; set; }
         
-        [JsonPropertyName("orderId")]
-        public string orderId { get; set; } = Guid.NewGuid().ToString();
-        
+        [JsonProperty("customerId")]
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }
         
+        [JsonProperty("driverId")]
         [JsonPropertyName("driverId")]
         public int DriverId { get; set; }
         
+        [JsonProperty("carId")]
         [JsonPropertyName("carId")]
         public int CarId { get; set; }
         
-        [JsonPropertyName("startingPoint")]
-        public LocationPoint StartingPoint { get; set; }
-        
-        [JsonPropertyName("destinationPoint")]
-        public LocationPoint DestinationPoint { get; set; }
-        
+        [JsonProperty("locationPoint")]
+        [JsonPropertyName("locationPoint")]
+        public LocationPoint LocationPoints { get; set; }
+
+        [JsonProperty("typeOfCar")]
         [JsonPropertyName("typeOfCar")]
         public string TypeOfCar { get; set; }
         
+        [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }
 
+        [JsonProperty("createdOn")]
         [JsonPropertyName("createdOn")]
         public long CreatedOn { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        public class LocationPoint
-        {
-            [JsonPropertyName("address")]
-            public string Address { get; set; }
-            
-            [JsonPropertyName("lat")]
-            public double Lat { get; set; }
-            
-            [JsonPropertyName("lng")]
-            public double Lng { get; set; }
-        }
 
         public Order()
         {
@@ -54,6 +47,33 @@ namespace LogicLayer.Models
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);
+        }
+        
+        public class LocationPoint
+        {
+            [JsonProperty("startingAddress")]
+            [JsonPropertyName("startingAddress")]
+            public string StartingAddress { get; set; }
+        
+            [JsonProperty("startingLat")]
+            [JsonPropertyName("startingLat")]
+            public double StartingLat { get; set; }
+        
+            [JsonProperty("startingLng")]
+            [JsonPropertyName("startingLng")]
+            public double StartingLng { get; set; }
+        
+            [JsonProperty("destinationAddress")]
+            [JsonPropertyName("destinationAddress")]
+            public string DestinationAddress { get; set; }
+        
+            [JsonProperty("destinationLat")]
+            [JsonPropertyName("destinationLat")]
+            public double DestinationLat { get; set; }
+        
+            [JsonProperty("destinationLng")]
+            [JsonPropertyName("destinationLng")]
+            public double DestinationLng { get; set; }
         }
     }
 }
