@@ -3,6 +3,7 @@
 @using Customer.Models
 @using Customer.Services.Order
 @using Newtonsoft.Json
+@using System.Text
 
 @inject HttpClient Http
 @inject AOrderService OrderService;
@@ -41,7 +42,10 @@
     private async void HandleValidSubmit()
     {
         string serializedOrder = JsonConvert.SerializeObject(_order);
+        StringContent content = new StringContent(
+            serializedOrder, Encoding.UTF8, "application/json");
+
         Console.WriteLine($"Serialized order: {serializedOrder}");
-        await Http.PostAsJsonAsync("api/orders", serializedOrder);
+        await Http.PostAsJsonAsync("api/orders", content);
     }
 }

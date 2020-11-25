@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace Customer.Models
@@ -8,7 +10,7 @@ namespace Customer.Models
         [JsonProperty("customerId")]
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }
-
+        
         [JsonProperty("startingPoint")]
         [JsonPropertyName("startingPoint")]
         public LocationPoint StartingPoint { get; set; } = new LocationPoint();
@@ -20,7 +22,7 @@ namespace Customer.Models
         [JsonProperty("typeOfCar")]
         [JsonPropertyName("typeOfCar")]
         public string TypeOfCar { get; set; }
-
+        
         [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }

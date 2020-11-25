@@ -14,17 +14,23 @@
     <ul>
         <li>CustomerId: @order.CustomerId</li>
         <li>StartingPoint:</li>
-        <ul>
-            <li>Address: @order.StartingPoint.Address</li>
-            <li>Lat: @order.StartingPoint.Lat</li>
-            <li>Lng: @order.StartingPoint.Lng</li>
-        </ul>
+        @if (order.StartingPoint != null)
+        {
+            <ul>
+                <li>Address: @order.StartingPoint.Address</li>
+                <li>Lat: @order.StartingPoint.Lat</li>
+                <li>Lng: @order.StartingPoint.Lng</li>
+            </ul>
+        }
         <li>DestinationPoint:</li>
-        <ul>
-            <li>Address: @order.DestinationPoint.Address</li>
-            <li>Lat: @order.DestinationPoint.Lat</li>
-            <li>Lng: @order.DestinationPoint.Lng</li>
-        </ul>
+        @if (order.DestinationPoint != null)
+        {
+            <ul>
+                <li>Address: @order.DestinationPoint.Address</li>
+                <li>Lat: @order.DestinationPoint.Lat</li>
+                <li>Lng: @order.DestinationPoint.Lng</li>
+            </ul>
+        }
         <li>NeededSeats: @order.NeededSeats</li>
         <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
     </ul>
