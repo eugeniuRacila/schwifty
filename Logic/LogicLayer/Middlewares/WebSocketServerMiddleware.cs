@@ -67,9 +67,9 @@ namespace LogicLayer.Middlewares
                         }
                         else
                         {
-                            id = _manager.GetAllSockets().FirstOrDefault(s => s.Value == webSocket).Key;
-                            _manager.GetAllSockets().TryRemove(id, out ws);
-                            Console.WriteLine($"Managed Connections: {_manager.GetAllSockets().Count}");
+                            id = _manager.GetCustomerSockets().FirstOrDefault(s => s.Value == webSocket).Key;
+                            _manager.GetCustomerSockets().TryRemove(id, out ws);
+                            Console.WriteLine($"Managed Connections: {_manager.GetCustomerSockets().Count}");
                         }
                         
                         Console.WriteLine($"Receive -> Close on: {id}");
@@ -96,7 +96,7 @@ namespace LogicLayer.Middlewares
             if (Guid.TryParse(routeOb.To.ToString(), out guidOutput))
             {
                 Console.WriteLine("Targeted");
-                var sock = _manager.GetAllSockets().FirstOrDefault(s => s.Key == routeOb.To.ToString());
+                var sock = _manager.GetCustomerSockets().FirstOrDefault(s => s.Key == routeOb.To.ToString());
                 if (sock.Value != null)
                 {
                     if (sock.Value.State == WebSocketState.Open)
@@ -110,7 +110,7 @@ namespace LogicLayer.Middlewares
             else
             {
                 Console.WriteLine("Broadcast");
-                foreach (var sock in _manager.GetAllSockets())
+                foreach (var sock in _manager.GetCustomerSockets())
                 {
                     if (sock.Value.State == WebSocketState.Open)
                         await sock.Value.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()), WebSocketMessageType.Text, true, CancellationToken.None);

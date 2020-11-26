@@ -6,13 +6,13 @@ namespace LogicLayer.Utils
 {
     public class WebSocketServerConnectionManager
     {
-        private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
+        private ConcurrentDictionary<string, WebSocket> _customrSockets = new ConcurrentDictionary<string, WebSocket>();
         private ConcurrentDictionary<string, WebSocket> _driverSockets = new ConcurrentDictionary<string, WebSocket>();
 
         public string AddSocket(WebSocket socket)
         {
             string connId = Guid.NewGuid().ToString();
-            _sockets.TryAdd(connId, socket);
+            _customrSockets.TryAdd(connId, socket);
             Console.WriteLine("WebSocketServerConnectionManager-> AddSocket: WebSocket added with ID: " + connId);
             
             return connId;
@@ -28,9 +28,9 @@ namespace LogicLayer.Utils
             return connId;
         }
 
-        public ConcurrentDictionary<string, WebSocket> GetAllSockets()
+        public ConcurrentDictionary<string, WebSocket> GetCustomerSockets()
         {
-            return _sockets;
+            return _customrSockets;
         }
 
         public ConcurrentDictionary<string, WebSocket> GetDriverSockets()
