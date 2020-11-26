@@ -18,7 +18,7 @@ namespace Customer
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5001") });
             
             
-            builder.Services.AddSingleton<AOrderService, OrderService>();
+            builder.Services.AddSingleton<AbstractOrderService, OrderService>();
             builder.Services.AddSingleton<ServicesHub>();
             
             // WebSockets injection

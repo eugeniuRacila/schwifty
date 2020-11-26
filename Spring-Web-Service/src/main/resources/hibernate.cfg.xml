@@ -7,7 +7,7 @@
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
         <property name="hibernate.connection.url">jdbc:sqlite:.Schwifty.db</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.dialect">project.sep3.SQLiteDialect</property>
+        <property name="hibernate.dialect">project.sep3.restService.config.SQLiteDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.cache.use_second_level_cache">true</property>

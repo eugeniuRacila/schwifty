@@ -1,0 +1,63 @@
+﻿@page "/create-order"
+
+@using Customer.Models
+@using Customer.Services.Order
+@using Newtonsoft.Json
+@using System.Text
+
+@inject HttpClient Http
+@inject AbstractOrderService OrderService;
+
+<h1>Create order</h1>
+<EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>
+        Starting address:
+        <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" />
+    </label>
+    <label>
+        Starting lat:
+        <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" />
+    </label>
+    <label>
+        Starting lng:
+        <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" />
+    </label>
+    <label>
+        Destination address:
+        <InputText id="destinationPoint" @bind-Value="_order.LocationPoints.DestinationAddress" />
+    </label>
+    <label>
+        Destination lat:
+        <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" />
+    </label>
+    <label>
+        Destination lng:
+        <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" />
+    </label>
+    <label>
+        Type of car:
+        <InputText id="typeOfCar" @bind-Value="_order.TypeOfCar" />
+    </label>
+    <label>
+        Needed seats:
+        <InputNumber id="amountOfSeats" @bind-Value="_order.NeededSeats" />
+    </label>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+
+@code {
+    // Get user ID from the clientService
+    // First create the clientService
+    private readonly Order _order = new Order();
+
+    private async void HandleValidSubmit()
+    {
+        Console.WriteLine($"Serialized order: {_order}");
+        await Http.PostAsJsonAsync("api/orders", _order);
+    }
+}

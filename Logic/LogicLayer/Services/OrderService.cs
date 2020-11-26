@@ -6,7 +6,7 @@ using RestSharp;
 
 namespace LogicLayer.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         public async Task<Order> CreateOrderAsync(Order orderToCreate)
         {

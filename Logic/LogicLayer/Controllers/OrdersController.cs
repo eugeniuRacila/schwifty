@@ -16,35 +16,18 @@ namespace LogicLayer.Controllers
     public class OrdersController : Controller
     {
         private readonly WebSocketServerConnectionManager _manager;
-        private readonly OrderService _orderService;
+        private readonly IOrderService _orderService;
 
-        public OrdersController(WebSocketServerConnectionManager manager, OrderService orderService)
+        public OrdersController(WebSocketServerConnectionManager manager, IOrderService orderService)
         {
             _manager = manager;
             _orderService = orderService;
         }
         
-        public class MyModel
-        {
-            public string Key {get; set;}
-        }
 
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
-            
-            // Console.WriteLine($"json :: {json}");
-            // Order orderToCreate;
-            // try
-            // {
-            //     orderToCreate = JsonConvert.DeserializeObject<Order>(json);
-            //
-            // }
-            // catch (Exception e)
-            // {
-            //     Console.WriteLine("exception: \n" + e);
-            //     throw;
-            // }
             Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
             
             var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
