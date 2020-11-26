@@ -4,7 +4,7 @@ using Customer.Models;
 
 namespace Customer.Services.Order
 {
-    public abstract class AOrderService
+    public abstract class AOrderService : IMutualService
     {
         public Action<IList<Message>> OrdersUpdate;
 
