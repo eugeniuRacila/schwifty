@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,21 +29,66 @@ namespace LogicLayer.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
+            
             Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
-            
-            var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
-
-            // Broadcast order to all drivers
-            Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
-            string jsonPackage = JsonConvert.SerializeObject(package);
-            
-            foreach (var sock in _manager.GetDriverSockets())
+            if (!isOrderValid(orderToCreate))
             {
-                if (sock.Value.State == WebSocketState.Open)
-                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+                Console.WriteLine("The data of order:" + orderToCreate.OrderId + " was corrupted. Empty order is returned" );
+                return new Order();
             }
+
+            var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
+                //Console.WriteLine("Here: " + createdOrder);
+                // Broadcast order to all drivers
+                Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
+                string jsonPackage = JsonConvert.SerializeObject(package);
             
-            return createdOrder;
+                foreach (var sock in _manager.GetDriverSockets())
+                {
+                    if (sock.Value.State == WebSocketState.Open)
+                        await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+
+                return createdOrder;
+        }
+
+        private bool isOrderValid(Order order)
+        {
+            if (IsNullOrEmpty(order.LocationPoints.StartingAddress))
+            {
+                return false;
+            }
+
+            if (IsNullOrEmpty(order.LocationPoints.DestinationAddress))
+            {
+                return false;
+            }
+
+            if (IsNullOrEmpty(order.TypeOfCar) || !IsCorrectType(order.TypeOfCar))
+            {
+                return false;
+            }
+
+            if (!IsCorrectAmountOfSeats(order.NeededSeats))
+            {
+                return false;
+            }
+            return true;
+        }
+        
+        private bool IsNullOrEmpty(string str)
+        {
+            return str == null || str.Equals("");
+        }
+        
+        private bool IsCorrectType(string type)
+        {
+            return type.Equals("standard") || type.Equals("comfort") || type.Equals("VIP");
+        }
+
+        private bool IsCorrectAmountOfSeats(int seats)
+        {
+            return seats == 2 || seats == 5 || seats == 8;
         }
     }
 }

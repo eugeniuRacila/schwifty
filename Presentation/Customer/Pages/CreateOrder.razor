@@ -2,51 +2,66 @@
 
 @using Customer.Models
 @using Customer.Services.Order
-@using Newtonsoft.Json
-@using System.Text
+@inject IJSRuntime JS
+
 
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
 
 <h1>Create order</h1>
 <EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
 
-    <label>
-        Starting address:
-        <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" />
-    </label>
-    <label>
-        Starting lat:
-        <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" />
-    </label>
-    <label>
-        Starting lng:
-        <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" />
-    </label>
-    <label>
-        Destination address:
-        <InputText id="destinationPoint" @bind-Value="_order.LocationPoints.DestinationAddress" />
-    </label>
-    <label>
-        Destination lat:
-        <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" />
-    </label>
-    <label>
-        Destination lng:
-        <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" />
-    </label>
-    <label>
-        Type of car:
-        <InputText id="typeOfCar" @bind-Value="_order.TypeOfCar" />
-    </label>
-    <label>
-        Needed seats:
-        <InputNumber id="amountOfSeats" @bind-Value="_order.NeededSeats" />
-    </label>
+    <div id="fields">
+        <div id="labels">
+            <label for="startingAddress">
+                Starting address:
+            </label>
+            <label for="startingLat">
+                Starting lat:
+            </label>
+            <label for="startingLng">
+                Starting lng:
+            </label>
+            <label for="destinationPoint">
+                Destination address:
+            </label>
+            <label for="destinationPoint">
+                Destination lat:
+            </label>
+            <label for="destinationLng">
+                Destination lng:
+            </label>
+            <label for="typeOfCar">
+                Type of car:
+            </label>
+            <label for="amountOfSeats">
+                Needed seats:
+            </label>
 
+        </div>
+        <div id="inputs">
+            <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress"/>
+            <InputNumber min="-90" max="90" id="startingLat" @bind-Value="_order.LocationPoints.StartingLat"/>
+            <InputNumber min="-180" max="180" id="startingLng" @bind-Value="_order.LocationPoints.StartingLng"/>
+            <InputText id="destinationPoint" @bind-Value="_order.LocationPoints.DestinationAddress"/>
+            <InputNumber min="0" max="90" id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat"/>
+            <InputNumber min="-180" max="180" id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng"/>
+            <select id="typeOfCar" @bind="_order.TypeOfCar">
+                <option value="standard">Standard</option>
+                <option value="comfort">Comfort</option>
+                <option value="VIP">VIP</option>
+            </select>
+            <select  id="amountOfSeats" @bind="_order.NeededSeats">
+                <option value="2">2</option>
+                <option value="6">5</option>
+                <option value="8">8</option>
+            </select>
+        </div>
+    </div>
     <button type="submit">Submit</button>
+    <p id="error-label">@_error</p>
 </EditForm>
 
 
@@ -54,10 +69,41 @@
     // Get user ID from the clientService
     // First create the clientService
     private readonly Order _order = new Order();
+    private string _error = "";
+
+    protected override async void OnInitialized()
+    {
+        _order.TypeOfCar = "standard";
+        _order.NeededSeats = "2";
+        await JS.InvokeVoidAsync("window.includeCss", "createOrder");
+    }
 
     private async void HandleValidSubmit()
     {
-        Console.WriteLine($"Serialized order: {_order}");
-        await Http.PostAsJsonAsync("api/orders", _order);
+        bool isValid = true;
+        _error = "";
+        if (_order.LocationPoints.StartingAddress == null)
+        {
+            _error = "Starting address can't be empty!<br>";
+            isValid = false;
+        }
+        if (_order.LocationPoints.DestinationAddress == null)
+        {
+            _error += "Destination address can't be empty!";
+            isValid = false;
+        }
+        if (!isValid)
+        {
+            return;
+        }
+        
+       var response = await Http.PostAsJsonAsync("api/orders", _order);
+        if (!response.IsSuccessStatusCode)
+        {
+            _error = "Don't try to hack me";
+        }
     }
+
+
+
 }
