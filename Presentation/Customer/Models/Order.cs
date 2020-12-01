@@ -19,7 +19,7 @@ namespace Customer.Models
 
         [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
-        public int NeededSeats { get; set; }
+        public string NeededSeats { get; set; }
 
         public Order()
         {
