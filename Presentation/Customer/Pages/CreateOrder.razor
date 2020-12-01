@@ -3,11 +3,11 @@
 @using Customer.Models
 @using Customer.Services.Order
 @inject IJSRuntime JS
-
+  
 
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
-
+<link href="css/createOrder.css" rel="stylesheet" />
 <h1>Create order</h1>
 <EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
@@ -75,7 +75,6 @@
     {
         _order.TypeOfCar = "standard";
         _order.NeededSeats = "2";
-        await JS.InvokeVoidAsync("window.includeCss", "createOrder");
     }
 
     private async void HandleValidSubmit()

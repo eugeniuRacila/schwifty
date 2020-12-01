@@ -89,14 +89,6 @@
                 disableDefaultUI: true,
             });
         };
-        
-        window.includeCss = (args) =>{
-            let element = document.createElement("link");
-            element.setAttribute("rel", "stylesheet");
-            element.setAttribute("type", "text/css");
-            element.setAttribute("href", "css/"+args+".css");//location of the css that we want     include for the page
-            document.getElementsByTagName("head")[0].appendChild(element);
-        }
 
         function error() {
             console.log("Unable to retrieve your location");
