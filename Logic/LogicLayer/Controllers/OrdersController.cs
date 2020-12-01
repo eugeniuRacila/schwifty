@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,6 +26,13 @@ namespace LogicLayer.Controllers
             _orderService = orderService;
         }
         
+        [HttpGet]
+        public async Task<ActionResult<IList<Order>>> GetOrders()
+        {
+            var receivedOrders = await _orderService.GetOrdersAsync();
+
+            return receivedOrders;
+        }
 
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)

@@ -9,6 +9,7 @@ namespace Driver.Services
         public Action<IList<Order>> OrdersUpdate;
 
         public abstract void AddOrder(string jsonPayload);
+        public abstract void InitializeOrdersPool(IList<Order> orders);
         public abstract IList<Order> GetAllOrders();
     }
 }

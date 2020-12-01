@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LogicLayer.Models;
 using Newtonsoft.Json;
@@ -8,6 +9,16 @@ namespace LogicLayer.Services
 {
     public class OrderService : IOrderService
     {
+        public async Task<List<Order>> GetOrdersAsync()
+        {
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest("orders", Method.GET);
+            
+            var response = await client.ExecuteAsync(request);
+
+            return JsonConvert.DeserializeObject<List<Order>>(response.Content);
+        }
+        
         public async Task<Order> CreateOrderAsync(Order orderToCreate)
         {
             var jsonOrder = JsonConvert.SerializeObject(orderToCreate);
