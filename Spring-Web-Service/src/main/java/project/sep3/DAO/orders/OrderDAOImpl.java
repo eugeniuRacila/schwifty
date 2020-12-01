@@ -14,7 +14,7 @@ import project.sep3.models.Order;
 import java.util.List;
 
 public class OrderDAOImpl implements OrderDAO {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     public OrderDAOImpl() {
         Configuration con = new Configuration().configure().addAnnotatedClass(Order.class);
