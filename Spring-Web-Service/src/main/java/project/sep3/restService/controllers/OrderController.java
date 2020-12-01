@@ -31,4 +31,9 @@ public class OrderController {
             System.out.println(order.getTypeOfCar());
             return orderDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
     }
+
+    @PatchMapping
+    public Order take(@RequestBody Order order, @RequestParam int driverId) {
+        return orderDAO.take(order, driverId);
+    }
 }

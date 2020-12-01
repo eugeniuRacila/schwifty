@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface OrderDAO {
     Order create(int customerId, String typeOfCar, LocationPoints locationPoints, int neededSeats);
+    Order take(Order order, int driverId);
     List<Order> readAll();
 }
