@@ -8,7 +8,6 @@ import project.sep3.DAO.orders.OrderDAO;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -27,8 +26,7 @@ public class OrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Order create(@RequestBody Order order)  {
-
-            System.out.println(order.getTypeOfCar());
-            return orderDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
+        System.out.println(order.getTypeOfCar());
+        return orderDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
     }
 }
