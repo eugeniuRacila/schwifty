@@ -1,5 +1,10 @@
 @using Driver.Services
-@inject IWebSocketService WebSocketService
+@using Newtonsoft.Json
+@using Driver.Models
+
+@inject HttpClient HttpClient;
+@inject IWebSocketService WebSocketService;
+@inject AbstractOrderService OrderService;
 
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
@@ -18,5 +23,11 @@
     {
         await base.OnInitializedAsync();
         await Task.Run(() => WebSocketService.InitializeWebSocketsAsync());
+        
+        // Initial orders fetch
+        var receivedOrdersJson = await HttpClient.GetStringAsync("api/orders");
+        var receivedOrders =  JsonConvert.DeserializeObject<List<Order>>(receivedOrdersJson);
+        
+        OrderService.InitializeOrdersPool(receivedOrders);
     }
 }
