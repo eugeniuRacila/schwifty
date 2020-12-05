@@ -18,6 +18,5 @@ namespace Customer.Services.Order
         //     _list.Add(new Message("Initial message"));
         // }
         //
-        
     }
 }

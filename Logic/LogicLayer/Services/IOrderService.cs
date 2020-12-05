@@ -6,5 +6,6 @@ namespace LogicLayer.Services
     public interface IOrderService
     {
          Task<Order> CreateOrderAsync(Order orderToCreate);
+         Task<Order> TakeOrderAsync(Order order, int driverId);
     }
 }

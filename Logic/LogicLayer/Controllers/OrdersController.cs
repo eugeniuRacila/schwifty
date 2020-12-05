@@ -44,5 +44,25 @@ namespace LogicLayer.Controllers
             
             return createdOrder;
         }
+        
+        [HttpPatch]
+        public async Task<ActionResult<Order>> TakeOrder([FromBody] Order order, int driverId)
+        {
+            Console.WriteLine($"OrdersController -> takeOrder : {order}");
+            
+            var takenOrder = await _orderService.TakeOrderAsync(order, driverId);
+
+            // Broadcast order to all drivers
+            Package package = new Package("OrderService", "UpdateOrder", JsonConvert.SerializeObject(takenOrder));
+            string jsonPackage = JsonConvert.SerializeObject(package);
+            
+            foreach (var sock in _manager.GetDriverSockets())
+            {
+                if (sock.Value.State == WebSocketState.Open)
+                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            
+            return takenOrder;
+        }
     }
 }

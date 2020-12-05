@@ -1,7 +1,8 @@
-﻿namespace Customer.Services
+﻿
+
+namespace Customer.Services
 {
     public interface IMutualService
     {
-        
     }
 }
