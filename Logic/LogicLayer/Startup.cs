@@ -40,6 +40,7 @@ namespace LogicLayer
             services.AddControllers().AddNewtonsoftJson();
             services.AddWebSocketServerConnectionManager();
             services.AddScoped<IOrderService,OrderService>();
+            services.AddScoped<IDriverService,DriverService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

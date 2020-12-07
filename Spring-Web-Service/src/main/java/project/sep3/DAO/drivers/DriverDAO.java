@@ -1,0 +1,7 @@
+package project.sep3.DAO.drivers;
+
+import project.sep3.models.Driver;
+
+public interface DriverDAO {
+    Driver create(String firstName, String lastName, String email, String phoneNumber, String password);
+}

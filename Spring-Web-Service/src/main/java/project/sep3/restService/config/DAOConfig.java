@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import project.sep3.DAO.customers.CustomerDAO;
 import project.sep3.DAO.customers.CustomerDAOImpl;
+import project.sep3.DAO.drivers.DriverDAO;
+import project.sep3.DAO.drivers.DriverDAOImpl;
 import project.sep3.DAO.orders.OrderDAO;
 import project.sep3.DAO.orders.OrderDAOImpl;
 
@@ -22,5 +24,11 @@ public class DAOConfig {
     @Scope("singleton")
     public CustomerDAO CustomerDAO() {
         return new CustomerDAOImpl();
+    }
+
+    @Bean
+    @Scope("singleton")
+    public DriverDAO DriverDAO() {
+        return new DriverDAOImpl();
     }
 }

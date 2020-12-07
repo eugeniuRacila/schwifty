@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Driver.Models;
+using Driver.Services.hub;
 using Newtonsoft.Json;
 
 namespace Driver.Services

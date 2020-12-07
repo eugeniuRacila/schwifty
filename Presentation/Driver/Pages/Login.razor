@@ -1,0 +1,30 @@
+﻿@inject AbstractUserService DriverService
+@inject NavigationManager NavigationManager
+@page "/Login"
+@using Driver.Services.user
+<h3>Login</h3>
+
+<h2><b>Login</b></h2>
+<hr>
+
+<div class="col-6">
+    <input type="text" @bind="email" class="form-control" placeholder="email address">
+</div>
+<br />
+<div class="col-6">
+    <input type="password" @bind="password" class="form-control" placeholder="password">
+</div>
+<br />
+<div class="col-6">
+    <button class="btn btn-primary" @onclick="LoginUser">Login</button>
+</div>
+
+@code {
+    private string email;
+    private string password;
+    
+    public async Task LoginUser()
+    {
+        await DriverService.LoginUser(email, password);
+    }
+}
