@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import project.sep3.models.Order;
 import project.sep3.DAO.orders.OrderDAO;
+import project.sep3.models.State;
 
 import java.util.List;
 
@@ -26,9 +27,15 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Order create(@RequestBody Order order)  {
+    public Order create(@RequestBody Order order) {
+        System.out.println(order.getStateId());
+        return orderDAO.create(order);
+    }
 
-            System.out.println(order.getTypeOfCar());
-            return orderDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
+    @PostMapping
+    @RequestMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody Order order) {
+        orderDAO.update(order);
     }
 }
