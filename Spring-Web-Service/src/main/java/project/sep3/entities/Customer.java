@@ -1,8 +1,9 @@
-package project.sep3.models;
+package project.sep3.entities;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="customers")
@@ -21,19 +22,21 @@ public class Customer {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "created_at", nullable = true)
-    private Integer createdAt;
+    private Date createdAt = new Date();
 
     @Column(name = "updated_at", nullable = true)
     private Integer updatedAt;
 
-    public Customer() {}
+    public Customer() { }
 
     public Customer(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -62,6 +65,10 @@ public class Customer {
         return password;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -80,5 +87,9 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

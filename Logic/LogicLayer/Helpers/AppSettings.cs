@@ -1,0 +1,7 @@
+﻿namespace LogicLayer.Helpers
+{
+    public class AppSettings
+    {
+        public string Secret { get; set; }
+    }
+}

@@ -1,13 +1,12 @@
 package project.sep3.DAO.customers;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import project.sep3.models.Customer;
+import project.sep3.entities.Customer;
+import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
     private final SessionFactory sessionFactory;
@@ -34,7 +33,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Customer create(String firstName, String lastName, String email, String password) {
-        //Customer customerToCreate = new Customer(firstName, lastName, email, password);
         Customer customerToCreate = new Customer();
         customerToCreate.setFirstName(firstName);
         customerToCreate.setLastName(lastName);
@@ -50,4 +48,22 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         return customerToCreate;
     }
+
+    @Override
+    public Customer findByEmail(String email) {
+        Session session = getNewSession();
+        String sql = "SELECT * FROM customers WHERE email = :email";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(Customer.class);
+        query.setParameter("email", email);
+        List results = query.list();
+        session.close();
+
+        if (results.isEmpty())
+            return null;
+
+        return (Customer) results.get(0);
+    }
+
+
 }

@@ -1,0 +1,73 @@
+﻿@page "/login"
+
+@using System.ComponentModel.DataAnnotations
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/pages/CreateAccountForm.css">
+
+<!-- Content -->
+<div class="create-account-form page-side-padding">
+    <div class="create-account-form__text">
+        <h3 class="head-line-3 margin-b-16">Get to your destination</h3>
+        <p class="paragraph margin-b-32">But first, you need to create an account. Enter the required information below to begin ordering rides!</p>
+    </div>
+    <div class="form">
+        <EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="form-inputs margin-b-32">
+                <div class="input-container margin-b-16">
+                    <InputText type="email" class="input-container__input" id="email-address" @bind-Value="loginModel.Email"></InputText>
+                    <label class="input-container__label @(loginModel.Email.Length > 0 ? "input-container__label--completed" : "")" for="first-name">Email</label>
+                    <ValidationMessage For="@(() => loginModel.Email)" />
+                </div>
+                <div class="input-container margin-b-16">
+                    <InputText type="password" class="input-container__input" id="password" @bind-Value="loginModel.Password"></InputText>
+                    <label class="input-container__label @(loginModel.Password.Length > 0 ? "input-container__label--completed" : "")" for="last-name">Password</label>
+                    <ValidationMessage For="@(() => loginModel.Password)" />
+                </div>
+            </div>
+            <div class="form-submit">
+                <button class="form-submit__button button button--large margin-b-16">Login</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    protected override void OnInitialized()
+    {
+        // redirect to home if already logged in
+        if (AuthenticationService.User != null)
+        {
+            NavigationManager.NavigateTo("");
+        }
+    }
+
+    private async void HandleValidSubmit()
+    {
+        try
+        {
+            await AuthenticationService.Login(loginModel.Email, loginModel.Password);
+            var returnUrl = NavigationManager.QueryString("returnUrl") ?? "/";
+            NavigationManager.NavigateTo(returnUrl);
+        }
+        catch (Exception ex)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private class LoginModel
+    {
+        [Required]
+        public string Email { get; set; } = "";
+
+        [Required]
+        public string Password { get; set; } = "";
+    }
+}

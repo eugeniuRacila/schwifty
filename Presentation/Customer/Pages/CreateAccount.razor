@@ -1,90 +1,28 @@
 ﻿@page "/create-account"
-@using Customer.Models
 
+<!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccount.css">
 
-@if (!_hasClickedCreateButton)
-{
-    <div class="create-account">
-        <div class="map"></div>
-        <div class="content page-side-padding">
-            <div class="content__header">
-                <p class="head-line-tag">Create an account</p>
-                <a class="link--small" href="#">Login</a>
-            </div>
-            <h2 class="head-line-2 margin-b-16">Get comfortable rides faster and safer</h2>
-            <p class="paragraph margin-b-32">Schwifty provides an innovative way of taxi ordering by doing that with Blazor</p>
-            <button class="button margin-b-32" @onclick="OpenCreateAccountForm">Create an account</button>
-            <div class="content-footer">
-                <a class="suggestion" href="#">
-                    <div class="suggestion__icon content-footer__icon"></div>
-                    <span>Want to be a driver? Let's start the engine</span>
-                </a>
-            </div>
+<!-- Content -->
+<div class="create-account">
+    <div class="map"></div>
+    <div class="content page-side-padding">
+        <div class="content__header">
+            <p class="head-line-tag">Create an account</p>
+            <a class="link--small" href="#">Login</a>
+        </div>
+        <h2 class="head-line-2 margin-b-16">Get comfortable rides faster and safer</h2>
+        <p class="paragraph margin-b-32">Schwifty provides an innovative way of taxi ordering by doing that with Blazor</p>
+        <NavLink class="button button--link margin-b-32" href="create-account/form">Create an account</NavLink>
+        <div class="content-footer">
+            <a class="suggestion" href="#">
+                <div class="suggestion__icon content-footer__icon"></div>
+                <span>Want to be a driver? Let's start the engine</span>
+            </a>
         </div>
     </div>
-}
-else
-{
-    <div class="create-account-form page-side-padding">
-        <div class="create-account-form__text">
-            <h3 class="head-line-3 margin-b-16">Get to your destination</h3>
-            <p class="paragraph margin-b-32">But first, you need to create an account. Enter the required information below to begin ordering rides!</p>
-        </div>
-        <div class="form">
-            <EditForm Model="@_userRegistration" OnValidSubmit="@HandleValidSubmit">
-                <DataAnnotationsValidator />
-                <div class="form-inputs margin-b-32">
-                    <div class="input-container margin-b-16">
-                        <InputText type="text" class="input-container__input" id="first-name" @bind-Value="_userRegistration.FirstName"></InputText>
-                        <label class="input-container__label @(_userRegistration.FirstName.Length > 0 ? "input-container__label--completed" : "")" for="first-name">First name</label>
-                        <ValidationMessage For="@(() => _userRegistration.FirstName)" />
-                    </div>
-                    <div class="input-container margin-b-16">
-                        <InputText type="text" class="input-container__input" id="last-name" @bind-Value="_userRegistration.LastName"></InputText>
-                        <label class="input-container__label @(_userRegistration.LastName.Length > 0 ? "input-container__label--completed" : "")" for="last-name">Last name</label>
-                        <ValidationMessage For="@(() => _userRegistration.LastName)" />
-                    </div>
-                    <div class="input-container margin-b-16">
-                        <InputText type="email" class="input-container__input" id="email-address" @bind-Value="_userRegistration.Email"></InputText>
-                        <label class="input-container__label @(_userRegistration.Email.Length > 0 ? "input-container__label--completed" : "")" for="email-address">Email address</label>
-                        <ValidationMessage For="@(() => _userRegistration.Email)" />
-                    </div>
-                    <div class="input-container margin-b-16">
-                        <InputText type="password" class="input-container__input" id="password" @bind-Value="_userRegistration.Password"></InputText>
-                        <label class="input-container__label @(_userRegistration.Password.Length > 0 ? "input-container__label--completed" : "")" for="password">Password</label>
-                        <ValidationMessage For="@(() => _userRegistration.Password)" />
-                    </div>
-                    <div class="input-container margin-b-16">
-                        <InputText type="password" class="input-container__input" id="confirm-password" @bind-Value="_userRegistration.ConfirmPassword"></InputText>
-                        <label class="input-container__label @(_userRegistration.ConfirmPassword.Length > 0 ? "input-container__label--completed" : "")" for="confirm-password">Confirm password</label>
-                        <ValidationMessage For="@(() => _userRegistration.Password)" />
-                    </div>
-                </div>
-                <div class="form-submit">
-                    <button class="form-submit__button button button--large margin-b-16">Create account</button>
-                    <div class="form-agreement__checkbox-container">
-                        <input required id="terms-and-policy" type="checkbox" class="form-agreement__checkbox">
-                        <label for="terms-and-policy" class="paragraph paragraph--small paragraph--black">By creating an account, you agree to the Terms and Conditions and Privacy Policy</label>
-                    </div>
-                </div>
-            </EditForm>
-        </div>
-
-    </div>   
-}
+</div>
 
 @code {
-    private readonly UserRegistration _userRegistration = new UserRegistration();
-    private bool _hasClickedCreateButton = false;
-
-    private void OpenCreateAccountForm()
-    {
-        _hasClickedCreateButton = true;
-    }
-
-    private void HandleValidSubmit()
-    {
-        
-    }
+    
 }

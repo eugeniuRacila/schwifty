@@ -1,13 +1,17 @@
 ﻿@page "/create-order"
 
+@attribute [Authorize]
+
 @using Customer.Models
 @using Customer.Services.Order
-@inject IJSRuntime JS
-  
+@using Microsoft.AspNetCore.Authorization
 
+@inject IJSRuntime JS
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
+
 <link href="css/createOrder.css" rel="stylesheet" />
+
 <h1>Create order</h1>
 <EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
