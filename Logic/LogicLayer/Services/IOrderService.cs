@@ -8,5 +8,7 @@ namespace LogicLayer.Services
     {
         Task<List<Order>> GetOrdersAsync();
         Task<Order> CreateOrderAsync(Order orderToCreate);
+        
+        void NextOrderStatusAsync(Order order);
     }
 }

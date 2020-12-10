@@ -33,5 +33,18 @@ namespace LogicLayer.Services
             
             return JsonConvert.DeserializeObject<Order>(response.Content);
         }
+
+        public void NextOrderStatusAsync(Order order)
+        {
+            order.NextStatus();
+            var jsonOrder = JsonConvert.SerializeObject(order);
+
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest("orders/update", Method.POST) {RequestFormat = DataFormat.Json};
+
+            request.AddJsonBody(jsonOrder);
+            
+            client.ExecuteAsync(request);
+        }
     }
 }
