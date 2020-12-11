@@ -3,6 +3,7 @@ package project.sep3.models;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name="drivers")
@@ -30,19 +31,22 @@ public class Driver {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Basic
+    @Temporal(TemporalType.DATE)
     @Column(name = "created_at", nullable = true)
-    private Integer createdAt;
+    private Date createdAt;
 
     @Column(name = "updated_at", nullable = true)
     private Integer updatedAt;
 
     public Driver() {}
 
-    public Driver(String firstName, String lastName, String email, String password) {
+    public Driver(String firstName, String lastName, String email, String phoneNumber, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
     public Integer getId() {

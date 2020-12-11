@@ -6,7 +6,10 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import project.sep3.entities.Customer;
 import project.sep3.models.Driver;
+
+import java.util.List;
 
 public class DriverDAOImpl implements DriverDAO{
     private final SessionFactory sessionFactory;
@@ -31,6 +34,7 @@ public class DriverDAOImpl implements DriverDAO{
         transaction.commit();
     }
 
+    @Override
     public Driver create(String firstName, String lastName, String email, String phoneNumber, String password) {
         Driver driverToCreate = new Driver();
         driverToCreate.setFirstName(firstName);
@@ -51,22 +55,20 @@ public class DriverDAOImpl implements DriverDAO{
         return driverToCreate;
     }
 
-    public Driver get(String email, String password) {
+    @Override
+    public Driver findByEmail(String email) {
         Session session = getNewSession();
-        Criteria criteria = session.createCriteria(Driver.class);
-        Driver driver =(Driver)criteria.add(Restrictions.eq("email", email)).uniqueResult();
-        System.out.println("I am here + " + driver);
+        String sql = "SELECT * FROM drivers WHERE email = :email";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(Driver.class);
+        query.setParameter("email", email);
+        List results = query.list();
         session.close();
-        return driver;
-    }
 
-    public Driver get(int id) {
-        Session session = getNewSession();
-        Criteria criteria = session.createCriteria(Driver.class);
-        Driver driver =(Driver) session.get(Driver.class, id);
-        System.out.println("I am here + " + driver);
-        session.close();
-        return driver;
+        if (results.isEmpty())
+            return null;
+
+        return (Driver) results.get(0);
     }
 
 }

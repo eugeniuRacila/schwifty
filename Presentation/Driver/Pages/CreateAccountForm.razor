@@ -45,6 +45,11 @@ else
                     <label class="input-container__label @(_userRegistration.Email.Length > 0 ? "input-container__label--completed" : "")" for="email-address">Email address</label>
                     <ValidationMessage For="@(() => _userRegistration.Email)" />
                 </div>
+                 <div class="input-container margin-b-16">
+                     <InputText type="text" class="input-container__input" id="phone-number" @bind-Value="_userRegistration.PhoneNumber"></InputText>
+                     <label class="input-container__label @(_userRegistration.PhoneNumber.Length > 0 ? "input-container__label--completed" : "")" for="phone-number">Phone number</label>
+                     <ValidationMessage For="@(() => _userRegistration.PhoneNumber)" />
+                 </div>
                 <div class="input-container margin-b-16">
                     <InputText type="password" class="input-container__input" id="password" @bind-Value="_userRegistration.Password"></InputText>
                     <label class="input-container__label @(_userRegistration.Password.Length > 0 ? "input-container__label--completed" : "")" for="password">Password</label>
@@ -74,7 +79,7 @@ else
 
     private async void HandleValidSubmit()
     {
-        var response = await Http.PostAsJsonAsync("/api/auth/customer/register", _userRegistration);
+        var response = await Http.PostAsJsonAsync("/api/auth/driver/register", _userRegistration);
 
         if (response.IsSuccessStatusCode)
         {

@@ -1,0 +1,45 @@
+﻿.create-account-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 32px;
+    position: relative;
+}
+
+.create-account-form .form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.create-account-form .form > form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.create-account-form .form .form-submit {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.form-agreement__checkbox-container {
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 32px;
+}
+
+.form-agreement__checkbox {
+    margin: 2px 8px 0 0;
+}
+
+.account-created {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+}

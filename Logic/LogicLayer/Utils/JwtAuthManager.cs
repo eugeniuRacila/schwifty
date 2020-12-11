@@ -16,6 +16,7 @@ namespace LogicLayer.Utils
     {
         IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary { get; }
         JwtAuthResult GenerateTokens(Customer customer, Claim[] claims, DateTime now);
+        JwtAuthResult GenerateTokens(Driver driver, Claim[] claims, DateTime now);
         JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now);
         void RemoveExpiredRefreshTokens(DateTime now);
         void RemoveRefreshTokenByEmail(string email);
@@ -77,6 +78,41 @@ namespace LogicLayer.Utils
             var refreshToken = new RefreshToken
             {
                 Email = customer.Email,
+                TokenString = GenerateRefreshTokenString(),
+                ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
+            };
+            
+            _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (s, t) => refreshToken);
+
+            return new JwtAuthResult
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+        }
+        
+        public JwtAuthResult GenerateTokens(Driver driver, Claim[] claims, DateTime now)
+        {
+            var shouldAddAudienceClaim = string.IsNullOrWhiteSpace(claims?.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
+
+            var jwtToken = new JwtSecurityToken(
+                _jwtTokenConfig.Issuer,
+                shouldAddAudienceClaim ? _jwtTokenConfig.Audience : string.Empty,
+                claims,
+                expires: now.AddMinutes(_jwtTokenConfig.AccessTokenExpiration),
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature));
+            
+            jwtToken.Payload["id"] = driver.Id;
+            jwtToken.Payload["email"] = driver.Email;
+            jwtToken.Payload["firstName"] = driver.FirstName;
+            jwtToken.Payload["lastName"] = driver.LastName;
+            jwtToken.Payload["phoneNumber"] = driver.PhoneNumber;
+            
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+
+            var refreshToken = new RefreshToken
+            {
+                Email = driver.Email,
                 TokenString = GenerateRefreshTokenString(),
                 ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
             };

@@ -17,6 +17,9 @@ namespace Driver.Models
         public string Password { get; set; } = "";
         
         [Required]
+        public string PhoneNumber { get; set; } = "";
+        
+        [Required]
         public string ConfirmPassword { get; set; } = "";
     }
 }

@@ -21,17 +21,24 @@ namespace Driver
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddScoped(
-                sp => new HttpClient {BaseAddress = new Uri("https://localhost:5001")});
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5001") });
             
-            builder.Services.AddSingleton<AbstractOrderService, OrderService>();
-            builder.Services.AddSingleton<AuthenticationService, AuthenticationService>();
-            builder.Services.AddSingleton<ServicesHub>();
+            builder.Services
+                .AddScoped<IAuthenticationService, AuthenticationService>()
+                .AddScoped<IHttpService, HttpService>()
+                .AddScoped<ILocalStorageService, LocalStorageService>()
+                .AddSingleton<AbstractOrderService, OrderService>()
+                .AddSingleton<ServicesHub>();
             
             // WebSockets injection
             builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
+            
+            var host = builder.Build();
 
-            await builder.Build().RunAsync();
+            var authenticationService = host.Services.GetRequiredService<IAuthenticationService>();
+            await authenticationService.Initialize();
+            
+            await host.RunAsync();
         }
     }
 }
