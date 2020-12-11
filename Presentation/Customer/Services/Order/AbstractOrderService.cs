@@ -6,7 +6,5 @@ namespace Customer.Services.Order
 {
     public abstract class AbstractOrderService : IMutualService
     {
-       
-        
     }
 }

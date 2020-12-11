@@ -48,6 +48,15 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
+    public Order take(Order order, int driverId) {
+        order.setDriverId(driverId);
+        Session session = getNewSession();
+        saveOrder(session, order);
+        session.close();
+        return order;
+    }
+
+    @Override
     public void update(Order order) {
         Session session = getNewSession();
         updateOrder(session,order);

@@ -37,4 +37,9 @@ public class OrderController {
     public void update(@RequestBody Order order) {
         orderDAO.update(order);
     }
+
+    @PatchMapping
+    public Order take(@RequestBody Order order, @RequestParam int driverId) {
+        return orderDAO.take(order, driverId);
+    }
 }

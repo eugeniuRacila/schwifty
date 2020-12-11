@@ -9,5 +9,6 @@ import java.util.List;
 public interface OrderDAO {
     Order create(Order order);
     void update(Order order);
+    Order take(Order order, int driverId);
     List<Order> readAll();
 }
