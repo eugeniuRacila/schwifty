@@ -22,7 +22,7 @@ namespace Driver
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(
-                sp => new HttpClient {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
+                sp => new HttpClient {BaseAddress = new Uri("https://localhost:5001")});
             
             builder.Services.AddSingleton<AbstractOrderService, OrderService>();
             builder.Services.AddSingleton<AuthenticationService, AuthenticationService>();

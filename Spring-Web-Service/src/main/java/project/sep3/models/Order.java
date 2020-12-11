@@ -22,7 +22,8 @@ public class Order {
     private String typeOfCar;
     @Column(name = "needed_Seats", nullable = false)
     private int neededSeats;
-
+    @Column(name = "state_id", nullable = false)
+    private Integer stateId;
 
     @Embedded
     private LocationPoints locationPoint;
@@ -30,11 +31,6 @@ public class Order {
     public Integer getId() {
         return id;
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
 
     public LocationPoints getLocationPoint() {
         return locationPoint;
@@ -80,5 +76,13 @@ public class Order {
 
     public int getNeededSeats() {
         return neededSeats;
+    }
+
+    public int getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(int stateId) {
+        this.stateId = stateId;
     }
 }

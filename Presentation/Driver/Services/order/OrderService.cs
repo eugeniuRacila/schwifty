@@ -24,6 +24,15 @@ namespace Driver.Services.order
             
             _list.Add(orderToCreate);
             
+            // Rerender HTML observer
+            OrdersUpdate?.Invoke(GetAllOrders());
+        }
+        
+        public override void InitializeOrdersPool(IList<Order> orders)
+        {
+            _list = orders;
+            
+            // Rerender HTML observer
             OrdersUpdate?.Invoke(GetAllOrders());
         }
 
