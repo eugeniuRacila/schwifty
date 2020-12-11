@@ -10,23 +10,26 @@
 
 <!-- Content -->
 <div class="create-account-form page-side-padding">
+    <div class="margin-b-32">
+        <NavMenu />
+    </div>
     <div class="create-account-form__text">
         <h3 class="head-line-3 margin-b-16">Get to your destination</h3>
         <p class="paragraph margin-b-32">But first, you need to create an account. Enter the required information below to begin ordering rides!</p>
     </div>
     <div class="form">
         <EditForm Model="@loginModel" OnValidSubmit="@HandleValidSubmit">
-            <DataAnnotationsValidator />
+            <DataAnnotationsValidator/>
             <div class="form-inputs margin-b-32">
                 <div class="input-container margin-b-16">
                     <InputText type="email" class="input-container__input" id="email-address" @bind-Value="loginModel.Email"></InputText>
                     <label class="input-container__label @(loginModel.Email.Length > 0 ? "input-container__label--completed" : "")" for="first-name">Email</label>
-                    <ValidationMessage For="@(() => loginModel.Email)" />
+                    <ValidationMessage For="@(() => loginModel.Email)"/>
                 </div>
                 <div class="input-container margin-b-16">
                     <InputText type="password" class="input-container__input" id="password" @bind-Value="loginModel.Password"></InputText>
                     <label class="input-container__label @(loginModel.Password.Length > 0 ? "input-container__label--completed" : "")" for="last-name">Password</label>
-                    <ValidationMessage For="@(() => loginModel.Password)" />
+                    <ValidationMessage For="@(() => loginModel.Password)"/>
                 </div>
             </div>
             <div class="form-submit">

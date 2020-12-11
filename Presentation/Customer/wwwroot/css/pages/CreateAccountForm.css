@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     padding-top: 32px;
+    position: relative;
 }
 
 .create-account-form .form {

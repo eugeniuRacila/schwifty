@@ -70,11 +70,19 @@ namespace LogicLayer.Controllers
 
             if (response.IsSuccessful)
             {
-                var jwtResult = _jwtAuthManager.GenerateTokens(loginRequest.Email, new Claim[0], DateTime.Now);
-                Console.WriteLine($"User [{loginRequest.Email}] logged in the system.");
+                Console.WriteLine(response.Content);
+
+                Customer foundCustomer = JsonConvert.DeserializeObject<Customer>(response.Content);
+                Console.WriteLine(foundCustomer.FirstName + foundCustomer.LastName);
+                
+                var jwtResult = _jwtAuthManager.GenerateTokens(foundCustomer, new Claim[0], DateTime.Now);
+
                 return Ok(new LoginResult
                 {
+                    Id = foundCustomer.Id,
                     Email = loginRequest.Email,
+                    FirstName = foundCustomer.FirstName,
+                    LastName = foundCustomer.LastName,
                     Role = "customer",
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString

@@ -15,7 +15,7 @@ namespace LogicLayer.Utils
     public interface IJwtAuthManager
     {
         IImmutableDictionary<string, RefreshToken> UsersRefreshTokensReadOnlyDictionary { get; }
-        JwtAuthResult GenerateTokens(string username, Claim[] claims, DateTime now);
+        JwtAuthResult GenerateTokens(Customer customer, Claim[] claims, DateTime now);
         JwtAuthResult Refresh(string refreshToken, string accessToken, DateTime now);
         void RemoveExpiredRefreshTokens(DateTime now);
         void RemoveRefreshTokenByEmail(string email);
@@ -56,10 +56,9 @@ namespace LogicLayer.Utils
             }
         }
 
-        public JwtAuthResult GenerateTokens(string email, Claim[] claims, DateTime now)
+        public JwtAuthResult GenerateTokens(Customer customer, Claim[] claims, DateTime now)
         {
             var shouldAddAudienceClaim = string.IsNullOrWhiteSpace(claims?.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Aud)?.Value);
-            var jwtPayload = new JwtPayload();
 
             var jwtToken = new JwtSecurityToken(
                 _jwtTokenConfig.Issuer,
@@ -68,14 +67,20 @@ namespace LogicLayer.Utils
                 expires: now.AddMinutes(_jwtTokenConfig.AccessTokenExpiration),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature));
             
+            jwtToken.Payload["id"] = customer.Id;
+            jwtToken.Payload["email"] = customer.Email;
+            jwtToken.Payload["firstName"] = customer.FirstName;
+            jwtToken.Payload["lastName"] = customer.LastName;
+            
             var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
             var refreshToken = new RefreshToken
             {
-                Email = email,
+                Email = customer.Email,
                 TokenString = GenerateRefreshTokenString(),
                 ExpireAt = now.AddMinutes(_jwtTokenConfig.RefreshTokenExpiration)
             };
+            
             _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (s, t) => refreshToken);
 
             return new JwtAuthResult
@@ -103,7 +108,15 @@ namespace LogicLayer.Utils
                 throw new SecurityTokenException("Invalid token");
             }
 
-            return GenerateTokens(email, principal.Claims.ToArray(), now); // need to recover the original claims
+            Customer customer = new Customer
+            {
+                Id = (int) jwtToken.Payload["id"],
+                Email = (string) jwtToken.Payload["email"],
+                FirstName = (string) jwtToken.Payload["firstName"],
+                LastName = (string) jwtToken.Payload["lastName"]
+            };
+
+            return GenerateTokens(customer, principal.Claims.ToArray(), now); // need to recover the original claims
         }
         
         public (ClaimsPrincipal, JwtSecurityToken) DecodeJwtToken(string token)

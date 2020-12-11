@@ -1,5 +1,6 @@
 ﻿@page "/create-account/form"
-@using Customer.Models
+
+@inject HttpClient Http
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccountForm.css">
@@ -8,14 +9,18 @@
 <div class="create-account-form page-side-padding">
 @if (_createdAccountSuccessfully)
 {
-<div class="account-created">
-    <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
-    <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
-    <NavLink class="button button--link margin-b-32" href="NavLinkMatch.All">Order a ride</NavLink>
-</div>
+    <div class="account-created">
+        <NavMenu IsFixed="true" HasPadding="true" />
+        <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
+        <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
+        <NavLink class="button button--link margin-b-32" href="NavLinkMatch.All">Order a ride</NavLink>
+    </div>
 }
 else
 {
+    <div class="margin-b-32">
+        <NavMenu />
+    </div>
     <div class="create-account-form__text">
         <h3 class="head-line-3 margin-b-16">Get to your destination</h3>
         <p class="paragraph margin-b-32">But first, you need to create an account. Enter the required information below to begin ordering rides!</p>
@@ -66,8 +71,14 @@ else
     private readonly UserRegistration _userRegistration = new UserRegistration();
     private bool _createdAccountSuccessfully;
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
-        _createdAccountSuccessfully = true;
+        var response = await Http.PostAsJsonAsync("/api/auth/customer/register", _userRegistration);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _createdAccountSuccessfully = true;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }
