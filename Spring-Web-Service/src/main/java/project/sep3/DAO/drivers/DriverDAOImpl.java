@@ -8,10 +8,6 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.sep3.models.Driver;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.ArrayList;
-import java.util.List;
-
 public class DriverDAOImpl implements DriverDAO{
     private final SessionFactory sessionFactory;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -35,7 +31,6 @@ public class DriverDAOImpl implements DriverDAO{
         transaction.commit();
     }
 
-    @Override
     public Driver create(String firstName, String lastName, String email, String phoneNumber, String password) {
         Driver driverToCreate = new Driver();
         driverToCreate.setFirstName(firstName);
@@ -56,7 +51,6 @@ public class DriverDAOImpl implements DriverDAO{
         return driverToCreate;
     }
 
-    @Override
     public Driver get(String email, String password) {
         Session session = getNewSession();
         Criteria criteria = session.createCriteria(Driver.class);
@@ -75,7 +69,4 @@ public class DriverDAOImpl implements DriverDAO{
         return driver;
     }
 
-  public ArrayList<Driver> get() {
-      Session session = getNewSession();
-  }
 }
