@@ -14,6 +14,7 @@ import project.sep3.DAO.orders.OrderDAOImpl;
 @Configuration
 @ComponentScan(basePackages = "project.sep3.restService")
 public class DAOConfig {
+
     @Bean
     @Scope("singleton")
     public OrderDAO OrdersDAO() {
@@ -31,4 +32,5 @@ public class DAOConfig {
     public DriverDAO DriverDAO() {
         return new DriverDAOImpl();
     }
+
 }

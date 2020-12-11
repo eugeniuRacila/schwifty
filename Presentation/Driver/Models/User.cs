@@ -32,6 +32,15 @@ namespace Driver.Models
         [JsonProperty("createdOn")]
         [JsonPropertyName("createdOn")]
         public long CreatedOn { get; set; }
+        
+        [JsonProperty("accessToken")]
+        [JsonPropertyName("accessToken")]
+        public string AccessToken { get; set; }
+        
+        [JsonProperty("refreshToken")]
+        [JsonPropertyName("refreshToken")]
+        public string RefreshToken { get; set; }
+        
 
         public override string ToString()
         {

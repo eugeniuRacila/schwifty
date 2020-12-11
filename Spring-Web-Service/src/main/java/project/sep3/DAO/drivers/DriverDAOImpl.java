@@ -1,13 +1,16 @@
 package project.sep3.DAO.drivers;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.sep3.models.Driver;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DriverDAOImpl implements DriverDAO{
     private final SessionFactory sessionFactory;
@@ -52,4 +55,27 @@ public class DriverDAOImpl implements DriverDAO{
 
         return driverToCreate;
     }
+
+    @Override
+    public Driver get(String email, String password) {
+        Session session = getNewSession();
+        Criteria criteria = session.createCriteria(Driver.class);
+        Driver driver =(Driver)criteria.add(Restrictions.eq("email", email)).uniqueResult();
+        System.out.println("I am here + " + driver);
+        session.close();
+        return driver;
+    }
+
+    public Driver get(int id) {
+        Session session = getNewSession();
+        Criteria criteria = session.createCriteria(Driver.class);
+        Driver driver =(Driver) session.get(Driver.class, id);
+        System.out.println("I am here + " + driver);
+        session.close();
+        return driver;
+    }
+
+  public ArrayList<Driver> get() {
+      Session session = getNewSession();
+  }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Driver.Models;
 
@@ -28,11 +29,6 @@ namespace Driver.Services.user
                 Console.WriteLine(e);
                 throw;
             }
-        }
-        
-        public override async Task LoginUser(string email, string password)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
