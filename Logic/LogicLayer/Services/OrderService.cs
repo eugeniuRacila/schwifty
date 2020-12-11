@@ -21,6 +21,7 @@ namespace LogicLayer.Services
         
         public async Task<Order> CreateOrderAsync(Order orderToCreate)
         {
+            orderToCreate._orderStatus = OrderCreated.GetInst();
             var jsonOrder = JsonConvert.SerializeObject(orderToCreate);
             var client = new RestClient("http://localhost:8080/");
             var request = new RestRequest("orders", Method.POST) {RequestFormat = DataFormat.Json};
@@ -36,6 +37,8 @@ namespace LogicLayer.Services
 
         public async Task<Order> TakeOrderAsync(Order order, int driverId)
         {
+            NextOrderStatusAsync(order);
+            
             var jsonOrder = JsonConvert.SerializeObject(order);
             var client = new RestClient("http://localhost:8080/");
             var request = new RestRequest("orders", Method.PATCH) {RequestFormat = DataFormat.Json};
