@@ -1,0 +1,31 @@
+﻿.create-account {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-account > .map {
+    flex: 1;
+}
+
+.map {
+    background-color: #fcfcfc;
+}
+
+.content {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.content__header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.content-footer__icon {
+    background-color: #000000;
+    border-radius: 15px;
+    height: 29px;
+    width: 46px;
+}
