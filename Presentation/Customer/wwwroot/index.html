@@ -86,7 +86,6 @@
         constructor(map) {
             this.map = map;
             let startingLat = document.getElementById("startingLat");
-            startingLat.value = 5;
             this.originPlaceId = "";
             this.destinationPlaceId = "";
             this.travelMode = google.maps.TravelMode.DRIVING;
@@ -103,19 +102,23 @@
 
             // Specify just the place data fields that you need.
             destinationAutocomplete.setFields(["place_id"]);
-            this.setupPlaceChangedListener(originAutocomplete, "ORIG");
-            this.setupPlaceChangedListener(destinationAutocomplete, "DEST");
+            this.setupPlaceChangedListener(originAutocomplete, "ORIG", originInput);
+            this.setupPlaceChangedListener(destinationAutocomplete, "DEST", destinationInput);
 
             this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
             this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
 
         }
 
-        setupPlaceChangedListener(autocomplete, mode) {
+       
+
+        setupPlaceChangedListener(autocomplete, mode, input) {
             autocomplete.bindTo("bounds", this.map);
+
+        
+
             autocomplete.addListener("place_changed", async () => {
                 let placeId = autocomplete.getPlace().place_id;
-                console.log(await this.getAddressByPlaceId(placeId));
 
                 if (!placeId) {
                     window.alert("Please select an option from the dropdown list.");
@@ -124,12 +127,35 @@
 
                 if (mode === "ORIG") {
                     this.originPlaceId = placeId;
+                    getLngAndLat(input, "starting");
                 } else {
                     this.destinationPlaceId = placeId;
+                    getLngAndLat(input, "destination");
                 }
                 this.route();
             });
+
+            function getLngAndLat(input, mode) {
+                let lat = document.getElementById(mode+"Lat");
+                let lng = document.getElementById(mode+"Lng");
+                let loc = [];
+                let geocoder  = new google.maps.Geocoder();
+                geocoder.geocode({'address': input.value}, function (results, status){
+                    if(status == google.maps.GeocoderStatus.OK){
+                        loc[0] = results[0].geometry.location.lat();
+                        loc[1] = results[0].geometry.location.lng();
+                        lat.value = loc[0];
+                        lng.value = loc[0];
+                        lat.dispatchEvent(new Event("change"));
+                        lng.dispatchEvent(new Event("change"));
+                    }
+                    else{
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
         }
+       
 
 
         route() {
@@ -151,17 +177,6 @@
                     }
                 }
             );
-        }
-
-         async getAddressByPlaceId(place_id) {
-            let geocoder = new google.maps.Geocoder();
-            let result = await geocoder.geocode({
-                placeId: place_id
-            }, (results, status) => {
-                return results[0].formatted_address;
-            });
-            console.log(result);
-            return result;
         }
     }
 

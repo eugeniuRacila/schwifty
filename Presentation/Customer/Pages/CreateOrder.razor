@@ -38,11 +38,11 @@
             </div>
             <div id="inputs">
                 <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" class="control" placeholder="Input starting address"/>
-                <InputNumber min="-90" max="90" id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" disabled="true"/>
-                <InputNumber min="-180" max="180" id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" disabled="true"/>
+                <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" disabled="true"/>
+                <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" disabled="true"/>
                 <InputText id="destinationAddress" @bind-Value="_order.LocationPoints.DestinationAddress" class="control" placeholder="Input destination address"/>
-                <InputNumber min="0" max="90" id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" disabled="true"/>
-                <InputNumber min="-180" max="180" id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" disabled="true"/>
+                <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" disabled="true"/>
+                <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" disabled="true"/>
                 <select id="typeOfCar" @bind="_order.TypeOfCar">
                     <option value="standard">Standard</option>
                     <option value="comfort">Comfort</option>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div id="wrapper_button">
-            <button type="submit">Submit</button>
+            <button type="submit" >Submit</button>
         </div>
     </div>
 </EditForm>
@@ -83,30 +83,16 @@
 
     private async void HandleValidSubmit()
     {
-    
-        bool isValid = true;
-        _error = "";
-        if (_order.LocationPoints.StartingAddress == null)
+        Console.WriteLine(_order.ToString());
+        if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
-            _error = "Starting address can't be empty!<br>";
-            isValid = false;
+            
+            var response = await Http.PostAsJsonAsync("api/orders", _order);
+            if (!response.IsSuccessStatusCode)
+            {
+                _error = "Don't try to hack me";
+            }
         }
-        if (_order.LocationPoints.DestinationAddress == null)
-        {
-            _error += "Destination address can't be empty!";
-            isValid = false;
-        }
-        if (!isValid)
-        {
-            return;
-        }
-
-        var response = await Http.PostAsJsonAsync("api/orders", _order);
-        if (!response.IsSuccessStatusCode)
-        {
-            _error = "Don't try to hack me";
-        }
-       
     }
 
 
