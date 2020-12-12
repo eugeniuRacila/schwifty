@@ -145,12 +145,13 @@ namespace LogicLayer.Controllers
                 
                 var jwtResult = _jwtAuthManager.GenerateTokens(foundDriver, new Claim[0], DateTime.Now);
 
-                return Ok(new LoginResult
+                return Ok(new DriverLoginResult
                 {
                     Id = foundDriver.Id,
                     Email = loginRequest.Email,
                     FirstName = foundDriver.FirstName,
                     LastName = foundDriver.LastName,
+                    PhoneNumber = foundDriver.PhoneNumber,
                     Role = "customer",
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString

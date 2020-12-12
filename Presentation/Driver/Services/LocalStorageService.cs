@@ -1,8 +1,9 @@
-using Microsoft.JSInterop;
+﻿using System;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
-namespace Driver.Services.authentication
+namespace Driver.Services
 {
     public interface ILocalStorageService
     {
@@ -37,6 +38,7 @@ namespace Driver.Services.authentication
 
         public async Task RemoveItem(string key)
         {
+            Console.WriteLine($"Item '{key}' is being removed from local storage");
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
     }

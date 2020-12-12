@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Driver.Services.order;
-using Driver.Services.user;
 
 
 namespace Driver.Services.hub
@@ -9,10 +8,9 @@ namespace Driver.Services.hub
     {
         public Dictionary<string, IMutualService> Services = new Dictionary<string, IMutualService>();
 
-        public ServicesHub(AbstractOrderService orderService, AbstractUserService driverService)
+        public ServicesHub(AbstractOrderService orderService)
         {
             Services.Add("OrderService", orderService);
-            Services.Add("UserService", driverService);
         }
     }
 }

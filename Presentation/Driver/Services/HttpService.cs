@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -10,8 +8,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Driver.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
 
-namespace Driver.Services.authentication
+namespace Driver.Services
 {
     public interface IHttpService
     {
@@ -20,7 +20,8 @@ namespace Driver.Services.authentication
     }
 
     public class HttpService : IHttpService
-    { private HttpClient _httpClient;
+    {
+        private HttpClient _httpClient;
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
         private IConfiguration _configuration;

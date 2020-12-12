@@ -48,9 +48,11 @@ public class StateDAOImpl implements StateDAO {
     @Override
     public List<State> readAll() {
         Session session = getNewSession();
+        Transaction tx = session.beginTransaction();
         Query query = session.createQuery("from State");
         query.setCacheable(true);
         List<State> states = query.list();
+        tx.commit();
         session.close();
         return states;
     }

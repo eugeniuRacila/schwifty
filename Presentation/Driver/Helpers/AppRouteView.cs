@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using Driver.Services.authentication;
+using Driver.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
