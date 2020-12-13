@@ -1,24 +1,101 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Driver</title>
+    <title>CustomerBlazorWA</title>
     <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .app-initialization {
+            align-items: center;
+            background-color: #ffffff;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            position: fixed;
+            width: 100%;
+        }
+
+        .brand-title {
+            color: #000000;
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            /* animation initial state */
+            opacity: 0;
+            transform: translateY(50%);
+            /* animation */
+            animation: fade-in 600ms ease forwards;
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(50%);
+            }
+
+            25% {
+                opacity: 0;
+                transform: translateY(50%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <app>Loading...</app>
+    <app id="app">
+        <div class="app-initialization">
+            <h1 class="brand-title brand-title--animation-props">schwifty</h1>
+        </div>
+    </app>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script>
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+
+
+        // Initialize and add the map
+        window.initMap = () => {
+            navigator.geolocation.getCurrentPosition(success, error);
+        }
+        // On success
+        function success(pos) {
+            var crd = pos.coords;
+            latitud = crd.latitude
+            longitud = crd.longitude
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: latitud, lng: longitud },
+                zoom: 14,
+                disableDefaultUI: true,
+            });
+        };
+
+        function error() {
+            console.log("Unable to retrieve your location");
+        }
+    </script>
+    <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv0miz6dQTzDIn24ol-mnVGqwEt6GFUjg&libraries=&v=weekly" defer></script>
 </body>
 
 </html>

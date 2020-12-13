@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Customer.Models;
-using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
 
 namespace Customer.Services.Order
 {
@@ -10,14 +7,18 @@ namespace Customer.Services.Order
     /// </summary>
     public class OrderService : AbstractOrderService
     {
-        // private IList<Message> _list;
+        // private readonly IHttpService _httpService;
         //
-        // public OrderService()
+        // public OrderService(IHttpService httpService)
         // {
-        //     _list = new List<Message>();
-        //     _list.Add(new Message("Initial message"));
+        //     _httpService = httpService;
         // }
         //
-        
+        // public override async Task<Models.Order> CreateOrderAsync(Models.Order orderToCreate)
+        // {
+        //     Models.Order createdOrder = await _httpService.Post<Models.Order>("/api/orders", orderToCreate);
+        //
+        //     return createdOrder;
+        // }
     }
 }

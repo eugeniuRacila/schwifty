@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LogicLayer.Models;
 using LogicLayer.Services;
 using LogicLayer.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace LogicLayer.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrdersController : Controller
@@ -26,6 +29,7 @@ namespace LogicLayer.Controllers
             _orderService = orderService;
         }
         
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IList<Order>>> GetOrders()
         {
@@ -33,31 +37,36 @@ namespace LogicLayer.Controllers
 
             return receivedOrders;
         }
+        
+        // [AllowAnonymous]
+        // [HttpGet]
+        // [Route("{orderId:int}")]
+        // public async Task<ActionResult<IList<Order>>> GetOrders(int orderId)
+        // {
+        //     var receivedOrders = await _orderService.GetOrdersAsync();
+        //
+        //     return receivedOrders;
+        // }
 
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
-            
-            Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
-            if (!isOrderValid(orderToCreate))
-            {
-                Console.WriteLine("The data of order:" + orderToCreate.OrderId + " was corrupted. Empty order is returned" );
-                return new Order();
-            }
+            // Assign customer id to the created order
+            orderToCreate.CustomerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
 
             var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
-                //Console.WriteLine("Here: " + createdOrder);
-                // Broadcast order to all drivers
-                Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
-                string jsonPackage = JsonConvert.SerializeObject(package);
             
-                foreach (var sock in _manager.GetDriverSockets())
-                {
-                    if (sock.Value.State == WebSocketState.Open)
-                        await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
-                }
+            // Broadcast order to all drivers
+            Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
+            string jsonPackage = JsonConvert.SerializeObject(package);
+        
+            foreach (var sock in _manager.GetDriverSockets())
+            {
+                if (sock.Value.State == WebSocketState.Open)
+                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
 
-                return createdOrder;
+            return createdOrder;
         }
 
         private bool isOrderValid(Order order)
@@ -97,6 +106,37 @@ namespace LogicLayer.Controllers
         private bool IsCorrectAmountOfSeats(int seats)
         {
             return seats == 2 || seats == 5 || seats == 8;
+        }
+        
+        [HttpPatch]
+        [Route("take-order/{orderId:int}")]
+        public async Task<ActionResult<Order>> TakeOrder(int orderId)
+        {
+            var driverId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+            
+            Console.WriteLine($"OrdersController -> takeOrder : {orderId}");
+            
+            // Get the order from data layer
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest($"orders/{orderId}", Method.GET) {RequestFormat = DataFormat.Json};
+
+            var response = await client.ExecuteAsync(request);
+            
+            Order foundOrder = JsonConvert.DeserializeObject<Order>(response.Content);
+            
+            var takenOrder = await _orderService.TakeOrderAsync(foundOrder, driverId);
+
+            // Broadcast order to all drivers
+            Package package = new Package("OrderService", "UpdateOrder", JsonConvert.SerializeObject(takenOrder));
+            string jsonPackage = JsonConvert.SerializeObject(package);
+            
+            foreach (var sock in _manager.GetDriverSockets())
+            {
+                if (sock.Value.State == WebSocketState.Open)
+                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            
+            return takenOrder;
         }
     }
 }

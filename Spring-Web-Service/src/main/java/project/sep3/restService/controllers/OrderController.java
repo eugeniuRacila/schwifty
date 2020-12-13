@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import project.sep3.models.Order;
 import project.sep3.DAO.orders.OrderDAO;
+import project.sep3.models.State;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/orders")
@@ -24,11 +24,22 @@ public class OrderController {
         return orderDAO.readAll();
     }
 
+    @GetMapping
+    @RequestMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Order getById(@PathVariable String id) {
+        return orderDAO.getById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Order create(@RequestBody Order order)  {
+    public Order create(@RequestBody Order order) {
+        System.out.println(order.getStateId());
+        return orderDAO.create(order);
+    }
 
-            System.out.println(order.getTypeOfCar());
-            return orderDAO.create(order.getCustomerId(), order.getTypeOfCar(), order.getLocationPoint(), order.getNeededSeats());
+    @PatchMapping
+    public Order take(@RequestBody Order order) {
+        return orderDAO.take(order);
     }
 }

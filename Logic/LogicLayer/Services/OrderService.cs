@@ -21,6 +21,7 @@ namespace LogicLayer.Services
         
         public async Task<Order> CreateOrderAsync(Order orderToCreate)
         {
+            orderToCreate._orderStatus = OrderCreated.GetInst();
             var jsonOrder = JsonConvert.SerializeObject(orderToCreate);
             var client = new RestClient("http://localhost:8080/");
             var request = new RestRequest("orders", Method.POST) {RequestFormat = DataFormat.Json};
@@ -32,6 +33,39 @@ namespace LogicLayer.Services
             Console.WriteLine($"OrderService -> CreateOrderAsync : {response.Content}");
             
             return JsonConvert.DeserializeObject<Order>(response.Content);
+        }
+
+        public async Task<Order> TakeOrderAsync(Order order, int driverId)
+        {
+            order.DriverId = driverId;
+            NextOrderStatusAsync(order);
+            
+            var jsonOrder = JsonConvert.SerializeObject(order);
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest("orders", Method.PATCH) {RequestFormat = DataFormat.Json};
+            
+            request.AddJsonBody(jsonOrder);
+            
+            var response = await client.ExecuteAsync(request);
+
+            Console.WriteLine($"OrderService -> TakeOrderAsync : {response.Content}");
+            
+            return JsonConvert.DeserializeObject<Order>(response.Content);
+        }
+
+        public async void NextOrderStatusAsync(Order order)
+        {
+            Console.WriteLine($"Order status (pre): {order.StateId}");
+            order.NextStatus();
+            Console.WriteLine($"Order status (after): {order.StateId}");
+            var jsonOrder = JsonConvert.SerializeObject(order);
+
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest("orders/update", Method.POST) {RequestFormat = DataFormat.Json};
+
+            request.AddJsonBody(jsonOrder);
+            
+            await client.ExecuteAsync(request);
         }
     }
 }
