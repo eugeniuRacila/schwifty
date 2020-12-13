@@ -18,8 +18,7 @@ namespace Customer.Services
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
         private readonly ClientWebSocket _webSocket = new ClientWebSocket();
         private readonly ServicesHub _servicesHub;
-
-        private string _socketConnectionId;
+        
 
         public WebSocketService(ServicesHub servicesHub)
         {

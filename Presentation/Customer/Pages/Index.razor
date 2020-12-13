@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 
 <style>
@@ -108,10 +109,14 @@
     </div>
 </div>
 
+<button @onclick="@changePageToCreatOrder">Create order</button>
+
+
 @code {
-    protected override async Task OnInitializedAsync()
+
+    private void changePageToCreatOrder()
     {
-        await base.OnInitializedAsync();
-        await JS.InvokeVoidAsync("window.initMap");
+      NavigationManager.NavigateTo("/create-order");
     }
+  
 }

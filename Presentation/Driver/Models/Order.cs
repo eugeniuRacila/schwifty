@@ -20,6 +20,10 @@ namespace Driver.Models
         [JsonProperty("carId")]
         [JsonPropertyName("carId")]
         public int CarId { get; set; }
+        
+        [JsonProperty("stateId")]
+        [JsonPropertyName("stateId")]
+        public int StateId { get; set; }
 
         [JsonProperty("locationPoint")]
         [JsonPropertyName("locationPoint")]

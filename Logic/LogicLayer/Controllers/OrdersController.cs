@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -7,11 +8,13 @@ using System.Threading.Tasks;
 using LogicLayer.Models;
 using LogicLayer.Services;
 using LogicLayer.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace LogicLayer.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class OrdersController : Controller
@@ -25,6 +28,7 @@ namespace LogicLayer.Controllers
             _orderService = orderService;
         }
         
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IList<Order>>> GetOrders()
         {
@@ -33,20 +37,16 @@ namespace LogicLayer.Controllers
             return receivedOrders;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
-            
-            Console.WriteLine($"OrdersController -> orderToCreate : {orderToCreate}");
-            if (!isOrderValid(orderToCreate))
-            {
-                Console.WriteLine("The data of order:" + orderToCreate.OrderId + " was corrupted. Empty order is returned" );
-                return new Order();
-            }
+            // Assign customer id to the created order
+            orderToCreate.CustomerId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
 
             var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
-                //Console.WriteLine("Here: " + createdOrder);
-                // Broadcast order to all drivers
+            
+            // Broadcast order to all drivers
             Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
             string jsonPackage = JsonConvert.SerializeObject(package);
         

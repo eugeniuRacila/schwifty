@@ -4,67 +4,71 @@
 
 @using Customer.Services.Order
 @using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Headers
 
 @inject IJSRuntime JS
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
+@inject IAuthenticationService AuthenticationService;
 
-<link href="css/createOrder.css" rel="stylesheet" />
+<link href="css/createOrder.css" rel="stylesheet"/>
 
 <h1>Create order</h1>
 <EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
 
-    <div id="fields">
-        <div id="labels">
-            <label for="startingAddress">
-                Starting address:
-            </label>
-            <label for="startingLat">
-                Starting lat:
-            </label>
-            <label for="startingLng">
-                Starting lng:
-            </label>
-            <label for="destinationPoint">
-                Destination address:
-            </label>
-            <label for="destinationPoint">
-                Destination lat:
-            </label>
-            <label for="destinationLng">
-                Destination lng:
-            </label>
-            <label for="typeOfCar">
-                Type of car:
-            </label>
-            <label for="amountOfSeats">
-                Needed seats:
-            </label>
+    <div id="main-container">
+        <div id="fields">
+            <div id="labels">
+                <label for="startingLat">
+                    Starting lat:
+                </label>
+                <label for="startingLng">
+                    Starting lng:
+                </label>
+                <label for="destinationPoint">
+                    Destination lat:
+                </label>
+                <label for="destinationLng">
+                    Destination lng:
+                </label>
+                <label for="typeOfCar">
+                    Type of car:
+                </label>
+                <label for="amountOfSeats">
+                    Needed seats:
+                </label>
 
+            </div>
+            <div id="inputs">
+                <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" class="control" placeholder="Input starting address"/>
+                <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" disabled="true"/>
+                <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" disabled="true"/>
+                <InputText id="destinationAddress" @bind-Value="_order.LocationPoints.DestinationAddress" class="control" placeholder="Input destination address"/>
+                <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" disabled="true"/>
+                <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" disabled="true"/>
+                <select id="typeOfCar" @bind="_order.TypeOfCar">
+                    <option value="standard">Standard</option>
+                    <option value="comfort">Comfort</option>
+                    <option value="VIP">VIP</option>
+                </select>
+                <select id="amountOfSeats" @bind="_order.NeededSeats">
+                    <option value="2">2</option>
+                    <option value="6">5</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
         </div>
-        <div id="inputs">
-            <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress"/>
-            <InputNumber min="-90" max="90" id="startingLat" @bind-Value="_order.LocationPoints.StartingLat"/>
-            <InputNumber min="-180" max="180" id="startingLng" @bind-Value="_order.LocationPoints.StartingLng"/>
-            <InputText id="destinationPoint" @bind-Value="_order.LocationPoints.DestinationAddress"/>
-            <InputNumber min="0" max="90" id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat"/>
-            <InputNumber min="-180" max="180" id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng"/>
-            <select id="typeOfCar" @bind="_order.TypeOfCar">
-                <option value="standard">Standard</option>
-                <option value="comfort">Comfort</option>
-                <option value="VIP">VIP</option>
-            </select>
-            <select  id="amountOfSeats" @bind="_order.NeededSeats">
-                <option value="2">2</option>
-                <option value="6">5</option>
-                <option value="8">8</option>
-            </select>
+        <div class="map-container">
+            <div id="map" class="map-placeholder">
+
+            </div>
+        </div>
+        <div id="wrapper_button">
+            <button type="submit" >Submit</button>
         </div>
     </div>
-    <button type="submit">Submit</button>
-    <p id="error-label">@_error</p>
 </EditForm>
 
 
@@ -76,33 +80,26 @@
 
     protected override async void OnInitialized()
     {
+        await base.OnInitializedAsync();
+        
         _order.TypeOfCar = "standard";
         _order.NeededSeats = "2";
+        
+        await JS.InvokeVoidAsync("window.initMap");
     }
 
     private async void HandleValidSubmit()
     {
-        bool isValid = true;
-        _error = "";
-        if (_order.LocationPoints.StartingAddress == null)
+        Console.WriteLine(_order.ToString());
+        if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
-            _error = "Starting address can't be empty!<br>";
-            isValid = false;
-        }
-        if (_order.LocationPoints.DestinationAddress == null)
-        {
-            _error += "Destination address can't be empty!";
-            isValid = false;
-        }
-        if (!isValid)
-        {
-            return;
-        }
-        
-       var response = await Http.PostAsJsonAsync("api/orders", _order);
-        if (!response.IsSuccessStatusCode)
-        {
-            _error = "Don't try to hack me";
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);;
+            var response = await Http.PostAsJsonAsync("api/orders", _order);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _error = "Don't try to hack me";
+            }
         }
     }
 }

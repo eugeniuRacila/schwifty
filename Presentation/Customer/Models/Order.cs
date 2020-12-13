@@ -50,6 +50,13 @@ namespace Customer.Models
         
             [JsonProperty("destinationLng")]
             public double DestinationLng { get; set; }
+
+            public override string ToString()
+            {
+                return "Starting address: " + StartingAddress + "\nDestination address: " + DestinationAddress +
+                       "\nStarting lat: " + StartingLat + "\nStarting lng: " + StartingLng + "\nDestination lat" +
+                       DestinationLat + "\nDestination lng:" + DestinationLng;
+            }
         }
     }
 }
