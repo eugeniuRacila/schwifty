@@ -43,9 +43,10 @@
 
     protected override void OnInitialized()
     {
-        // redirect to home if already logged in
+    // redirect to home if already logged in
         if (AuthenticationService.User != null)
         {
+            Console.WriteLine(AuthenticationService.User.Email);
             NavigationManager.NavigateTo("");
         }
     }
