@@ -31,7 +31,7 @@ namespace Driver.Models
 
         [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
-        public int NeededSeats { get; set; }
+        public string NeededSeats { get; set; }
 
         [JsonProperty("createdOn")]
         [JsonPropertyName("createdOn")]

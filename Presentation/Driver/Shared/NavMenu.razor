@@ -1,33 +1,38 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Driver</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿<!-- Styles -->
+<link rel="stylesheet" href="css/components/NavMenu.css">
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+<!-- Content -->
+<header class="header @HeaderFixedCssClass @HeaderPaddingCssClass">
+    <div class="header__navigation">
+        <div class="header__logo">
+            <NavLink href="" Match="NavLinkMatch.All">
+                <h1 class="header__schwifty">schwifty</h1>
             </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> See orders
-            </NavLink>
-        </li>
-    </ul>
-</div>
+        </div>
+        <div class="header__actions">
+            <NavLink href="create-account" class="header__link">Sign up</NavLink>
+            <div class="header__nav-toggle">
+                <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="26" height="2" fill="black"/>
+                    <rect y="10" width="26" height="2" fill="black"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <nav class="nav">
 
+    </nav>
+</header>
+
+<!-- Code -->
 @code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
+    [Parameter]
+    public bool IsFixed { get; set; }
+    
+    [Parameter]
+    public bool HasPadding { get; set; }
+    
+    private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
+    
+    private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
 }

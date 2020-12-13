@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Driver.Models;
 
-namespace Driver.Services
+namespace Driver.Services.order
 {
     public abstract class AbstractOrderService : IMutualService
     {

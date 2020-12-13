@@ -5,45 +5,45 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import project.sep3.DAO.customers.CustomerDAO;
-import project.sep3.entities.Customer;
+import project.sep3.DAO.drivers.DriverDAO;
+import project.sep3.models.Driver;
 import project.sep3.models.LoginRequest;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
-    private final CustomerDAO customerDAO;
+public class AuthDriverController {
+    private final DriverDAO driverDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public AuthController(CustomerDAO customerDAO) {
-        this.customerDAO = customerDAO;
+    public AuthDriverController(DriverDAO driverDAO) {
+        this.driverDAO = driverDAO;
     }
 
     @PostMapping
-    @RequestMapping("customer/register")
+    @RequestMapping("driver/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Customer create(@RequestBody Customer customer) {
+    public Driver createDriver(@RequestBody Driver driver) {
         // Check if email address is already taken
-        if (customerDAO.findByEmail(customer.getEmail()) == null) {
+        if (driverDAO.findByEmail(driver.getEmail()) == null) {
             System.out.println("Email is not taken");
-            return customerDAO.create(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPassword());
+            return driverDAO.create(driver.getFirstName(), driver.getLastName(), driver.getEmail(), driver.getPhoneNumber(), driver.getPassword());
         }
         System.out.println("Email is taken");
         throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Email is already registered");
     }
 
     @PostMapping
-    @RequestMapping("customer/login")
+    @RequestMapping("driver/login")
     @ResponseStatus(HttpStatus.OK)
-    public Customer login(@RequestBody LoginRequest loginRequest) {
-        Customer foundCustomer = customerDAO.findByEmail(loginRequest.email);
+    public Driver loginDriver(@RequestBody LoginRequest loginRequest) {
+        Driver foundDriver = driverDAO.findByEmail(loginRequest.email);
 
         // Check if user exists
-        if (foundCustomer != null) {
+        if (foundDriver != null) {
             // Check if password matches the hashed one
-            if (bCryptPasswordEncoder.matches(loginRequest.password, foundCustomer.getPassword())) {
-                return foundCustomer;
+            if (bCryptPasswordEncoder.matches(loginRequest.password, foundDriver.getPassword())) {
+                return foundDriver;
             }
 
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password does not match");
@@ -59,4 +59,3 @@ public class AuthController {
 //
 //    }
 }
-

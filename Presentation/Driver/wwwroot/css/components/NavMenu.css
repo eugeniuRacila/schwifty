@@ -1,0 +1,54 @@
+﻿.header {
+    width: 100%;
+}
+
+.header--fixed {
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+.header--padding {
+    padding: 32px 24px 0;
+}
+
+.header__navigation {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.header__logo > a {
+    text-decoration: none;
+}
+
+.header__schwifty {
+    color: #000000;
+    font-family: Poppins, sans-serif;
+    font-style: normal;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 30px;
+}
+
+.header__actions {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header__link {
+    background-color: #EFF2F6;
+    border-radius: 16px;
+    color: #000000;
+    display: inline-block;
+    font-family: Inter, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    padding: 7px 12px;
+    text-decoration: none;
+    margin-right: 24px;
+}

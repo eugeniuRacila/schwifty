@@ -52,11 +52,13 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public Customer findByEmail(String email) {
         Session session = getNewSession();
+        Transaction transaction = session.beginTransaction();
         String sql = "SELECT * FROM customers WHERE email = :email";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(Customer.class);
         query.setParameter("email", email);
         List results = query.list();
+        transaction.commit();
         session.close();
 
         if (results.isEmpty())

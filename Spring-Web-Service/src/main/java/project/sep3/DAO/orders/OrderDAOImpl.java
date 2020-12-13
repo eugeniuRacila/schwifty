@@ -18,33 +18,49 @@ public class OrderDAOImpl implements OrderDAO {
 
     public OrderDAOImpl() {
         Configuration con = new Configuration().configure().addAnnotatedClass(Order.class);
-        ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(
-                con.getProperties()).buildServiceRegistry();
+        ServiceRegistry reg = new ServiceRegistryBuilder().applySettings(con.getProperties()).buildServiceRegistry();
         sessionFactory = con.buildSessionFactory(reg);
     }
 
-
-    private Session getNewSession(){
+    private Session getNewSession() {
         return sessionFactory.openSession();
     }
-    private void saveOrder(Session session,Order order){
+
+    private void saveOrder(Session session, Order order) {
         Transaction tx = session.beginTransaction();
         session.save(order);
         tx.commit();
     }
 
+    private void updateOrder(Session session, Order order){
+        Transaction tx = session.beginTransaction();
+        session.update(order);
+        tx.commit();
+    }
+
 
     @Override
-    public Order create(int customerId, String typeOfCar, LocationPoints locationPoints, int neededSeats) {
-        Order order = new Order();
-        order.setCustomerId(customerId);
-        order.setLocationPoint(locationPoints);
-        order.setTypeOfCar(typeOfCar);
-        order.setNeededSeats(neededSeats);
+    public Order create(Order order) {
         Session session = getNewSession();
         saveOrder(session, order);
         session.close();
         return order;
+    }
+
+    @Override
+    public Order take(Order order, int driverId) {
+        order.setDriverId(driverId);
+        Session session = getNewSession();
+        saveOrder(session, order);
+        session.close();
+        return order;
+    }
+
+    @Override
+    public void update(Order order) {
+        Session session = getNewSession();
+        updateOrder(session,order);
+        session.close();
     }
 
     @Override

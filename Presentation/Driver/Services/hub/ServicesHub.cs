@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Driver.Services.order;
 
-namespace Driver.Services
+
+namespace Driver.Services.hub
 {
     public class ServicesHub
     {
