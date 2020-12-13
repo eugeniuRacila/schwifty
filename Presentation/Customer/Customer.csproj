@@ -18,4 +18,9 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\CreateAccount\CreateAccount.razor" />
+    <_ContentIncludedByDefault Remove="Pages\CreateAccountLanding\CreateAccountLanding.razor" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,90 @@
+﻿@page "/create-account/form"
+@using Driver.Models
+
+@inject HttpClient Http
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/pages/CreateAccountForm.css">
+
+<!-- Content -->
+<div class="create-account-form page-side-padding">
+@if (_createdAccountSuccessfully)
+{
+    <div class="account-created">
+        <NavMenu IsFixed="true" HasPadding="true" />
+        <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
+        <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
+        <NavLink class="button button--link margin-b-32" href="NavLinkMatch.All">Order a ride</NavLink>
+    </div>
+}
+else
+{
+    <div class="margin-b-32">
+        <NavMenu />
+    </div>
+    <div class="create-account-form__text">
+        <h3 class="head-line-3 margin-b-16">Get to your destination</h3>
+        <p class="paragraph margin-b-32">But first, you need to create an account. Enter the required information below to begin ordering rides!</p>
+    </div>
+    <div class="form">
+        <EditForm Model="@_userRegistration" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="form-inputs margin-b-32">
+                <div class="input-container margin-b-16">
+                    <InputText type="text" class="input-container__input" id="first-name" @bind-Value="_userRegistration.FirstName"></InputText>
+                    <label class="input-container__label @(_userRegistration.FirstName.Length > 0 ? "input-container__label--completed" : "")" for="first-name">First name</label>
+                    <ValidationMessage For="@(() => _userRegistration.FirstName)" />
+                </div>
+                <div class="input-container margin-b-16">
+                    <InputText type="text" class="input-container__input" id="last-name" @bind-Value="_userRegistration.LastName"></InputText>
+                    <label class="input-container__label @(_userRegistration.LastName.Length > 0 ? "input-container__label--completed" : "")" for="last-name">Last name</label>
+                    <ValidationMessage For="@(() => _userRegistration.LastName)" />
+                </div>
+                <div class="input-container margin-b-16">
+                    <InputText type="email" class="input-container__input" id="email-address" @bind-Value="_userRegistration.Email"></InputText>
+                    <label class="input-container__label @(_userRegistration.Email.Length > 0 ? "input-container__label--completed" : "")" for="email-address">Email address</label>
+                    <ValidationMessage For="@(() => _userRegistration.Email)" />
+                </div>
+                 <div class="input-container margin-b-16">
+                     <InputText type="text" class="input-container__input" id="phone-number" @bind-Value="_userRegistration.PhoneNumber"></InputText>
+                     <label class="input-container__label @(_userRegistration.PhoneNumber.Length > 0 ? "input-container__label--completed" : "")" for="phone-number">Phone number</label>
+                     <ValidationMessage For="@(() => _userRegistration.PhoneNumber)" />
+                 </div>
+                <div class="input-container margin-b-16">
+                    <InputText type="password" class="input-container__input" id="password" @bind-Value="_userRegistration.Password"></InputText>
+                    <label class="input-container__label @(_userRegistration.Password.Length > 0 ? "input-container__label--completed" : "")" for="password">Password</label>
+                    <ValidationMessage For="@(() => _userRegistration.Password)" />
+                </div>
+                <div class="input-container margin-b-16">
+                    <InputText type="password" class="input-container__input" id="confirm-password" @bind-Value="_userRegistration.ConfirmPassword"></InputText>
+                    <label class="input-container__label @(_userRegistration.ConfirmPassword.Length > 0 ? "input-container__label--completed" : "")" for="confirm-password">Confirm password</label>
+                    <ValidationMessage For="@(() => _userRegistration.Password)" />
+                </div>
+            </div>
+            <div class="form-submit">
+                <button class="form-submit__button button button--large margin-b-16">Create account</button>
+                <div class="form-agreement__checkbox-container">
+                    <input required id="terms-and-policy" type="checkbox" class="form-agreement__checkbox">
+                    <label for="terms-and-policy" class="paragraph paragraph--small paragraph--black">By creating an account, you agree to the Terms and Conditions and Privacy Policy</label>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+}
+</div>
+
+@code {
+    private readonly UserRegistration _userRegistration = new UserRegistration();
+    private bool _createdAccountSuccessfully;
+
+    private async void HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("/api/auth/driver/register", _userRegistration);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _createdAccountSuccessfully = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

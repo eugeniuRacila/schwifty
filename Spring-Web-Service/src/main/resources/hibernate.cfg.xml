@@ -2,6 +2,7 @@
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD//EN"
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.sqlite.JDBC</property>
@@ -13,6 +14,7 @@
         <property name="hibernate.cache.use_second_level_cache">true</property>
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property>
         <property name="hibernate.cache.use_query_cache">true</property>
-
+        <mapping class="project.sep3.models.State"/>
+        <mapping class="project.sep3.models.Order"/>
     </session-factory>
 </hibernate-configuration>

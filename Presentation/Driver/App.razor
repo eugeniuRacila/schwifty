@@ -1,33 +1,13 @@
-@using Driver.Services
-@using Newtonsoft.Json
-@using Driver.Models
-
-@inject HttpClient HttpClient;
-@inject IWebSocketService WebSocketService;
-@inject AbstractOrderService OrderService;
+@inject NavigationManager NavigationManager
 
 <Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <AppRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
     <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
+        @{ 
+            // redirect to home page if not found
+            NavigationManager.NavigateTo(""); 
+        }
     </NotFound>
 </Router>
-
-@code
-{
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await Task.Run(() => WebSocketService.InitializeWebSocketsAsync());
-        
-        // Initial orders fetch
-        var receivedOrdersJson = await HttpClient.GetStringAsync("api/orders");
-        var receivedOrders =  JsonConvert.DeserializeObject<List<Order>>(receivedOrdersJson);
-        
-        OrderService.InitializeOrdersPool(receivedOrders);
-    }
-}

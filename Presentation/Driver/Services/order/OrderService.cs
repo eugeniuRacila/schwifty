@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Driver.Models;
 using Newtonsoft.Json;
 
-namespace Driver.Services
+namespace Driver.Services.order
 {
     public class OrderService : AbstractOrderService
     {
