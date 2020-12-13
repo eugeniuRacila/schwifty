@@ -31,9 +31,9 @@ namespace Customer.Services
             await _webSocket.ConnectAsync(new Uri("wss://localhost:5001/"), _disposalTokenSource.Token);
 
             if (_webSocket.State == WebSocketState.Open)
-                Console.WriteLine("Successfully connected to server (websocket)");
+                Console.WriteLine("WebSocket connection successfully established");
             else
-                Console.WriteLine("An error happened when establishing websocket connection");
+                Console.WriteLine("[ERROR] WebSocket connection was not established");
 
             _ = ReceiveLoop();
         }
