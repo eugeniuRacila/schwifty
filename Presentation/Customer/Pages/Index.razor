@@ -1,117 +1,14 @@
 ﻿@page "/"
 
+@inject NavigationManager NavigationManager
 @inject IJSRuntime JS
-
-<style>
-    .container {
-        height: 100%;
-        position: fixed;
-        width: 100%;
-    }
-
-    .map-placeholder {
-        height: 100%;
-        position: absolute;
-        width: 100%;
-        z-index: 0;
-    }
-
-    .index-layout {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        justify-content: space-between;
-        padding: 24px 24px 32px;
-        pointer-events: none;
-        position: relative;
-        z-index: 1;
-    }
-
-    .index-layout__header {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .index-layout__footer {
-        display: flex;
-    }
-
-    .place-card {
-        align-items: center;
-        background: #FFFFFF;
-        border-radius: 16px;
-        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
-        display: flex;
-        flex-direction: column;
-        margin-right: 12px;
-        padding: 20px 16px 16px;
-        width: 132px;
-    }
-
-    .place-card__icon {
-        margin-bottom: 16px;
-    }
-
-    .place-card__title {
-        font-size: 15px;
-        font-weight: 600;
-        margin-bottom: 4px;
-        text-align: center;
-    }
-
-    .place-card__description {
-        color: #C4C4C4;
-        font-size: 13px;
-        font-weight: 400;
-        line-height: 17px;
-        margin-bottom: auto;
-        text-align: center;
-    }
-</style>
-
-<div class="container">
-    <NavLink href="create-order">Create order</NavLink>
-    <div id="map" class="map-placeholder">
-        <!--<img src="assets/images/InApp1Background.png" alt="map placeholder" />-->
-    </div>
-    <div class="index-layout">
-        <div class="index-layout__header">
-            <svg display="block" viewBox="0 0 24 24" width="36" height="36" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </div>
-        <div class="index-layout__footer">
-            <div class="place-card">
-                <div class="place-card__icon">
-                    <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="29" cy="29" r="29" fill="black"/>
-                        <path d="M29 39C34.5228 39 39 34.5228 39 29C39 23.4772 34.5228 19 29 19C23.4772 19 19 23.4772 19 29C19 34.5228 23.4772 39 29 39Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M39 29H35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M23 29H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M29 23V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M29 39V35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <p class="place-card__title">Destination</p>
-                <p class="place-card__description">Add a new address</p>
-            </div>
-            <div class="place-card">
-                <div class="place-card__icon">
-                    <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
-                        <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <p class="place-card__title">Home</p>
-                <p class="place-card__description">55 minutes</p>
-            </div>
-        </div>
-    </div>
-</div>
+<button @onclick="@changePageToCreatOrder">Create order</button>
 
 @code {
-    protected override async Task OnInitializedAsync()
+
+    private void changePageToCreatOrder()
     {
-        await base.OnInitializedAsync();
-        await JS.InvokeVoidAsync("window.initMap");
+      NavigationManager.NavigateTo("/create-order");
     }
+  
 }

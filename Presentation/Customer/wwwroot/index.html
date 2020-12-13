@@ -2,14 +2,14 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>CustomerBlazorWA</title>
-    <base href="/" />
+    <base href="/"/>
     <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="manifest.json" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="manifest.json" rel="manifest"/>
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png"/>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -57,45 +57,164 @@
 </head>
 
 <body>
-    <app id="app">
-        <div class="app-initialization">
-            <h1 class="brand-title brand-title--animation-props">schwifty</h1>
-        </div>
-    </app>
-
-    <div id="blazor-error-ui">
-        An unhandled error has occurred.
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
+<app id="app">
+    <div class="app-initialization">
+        <h1 class="brand-title brand-title--animation-props">schwifty</h1>
     </div>
-    <script>
-    </script>
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script>
+</app>
 
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+<script src="_framework/blazor.webassembly.js"></script>
+<script>
+    window.initMap = () => {
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
 
-        // Initialize and add the map
-        window.initMap = () => {
-            navigator.geolocation.getCurrentPosition(success, error);
+    // On success
+    function success(pos) {
+        let langAndLat = createObjLatAndLong(pos);
+        const map = intializeDanishMap(langAndLat);
+        new AutocompleteDirectionsHandler(map);
+    }
+
+    class AutocompleteDirectionsHandler {
+
+        constructor(map) {
+            this.map = map;
+            let startingLat = document.getElementById("startingLat");
+            this.originPlaceId = "";
+            this.destinationPlaceId = "";
+            this.travelMode = google.maps.TravelMode.DRIVING;
+            this.directionsService = new google.maps.DirectionsService();
+            this.directionsRenderer = new google.maps.DirectionsRenderer();
+            this.directionsRenderer.setMap(map);
+            const originInput = document.getElementById("startingAddress");
+
+            const destinationInput = document.getElementById("destinationAddress");
+            const originAutocomplete = new google.maps.places.Autocomplete(originInput);
+            // Specify just the place data fields that you need.
+            originAutocomplete.setFields(["place_id"]);
+            const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
+
+            // Specify just the place data fields that you need.
+            destinationAutocomplete.setFields(["place_id"]);
+            this.setupPlaceChangedListener(originAutocomplete, "ORIG", originInput);
+            this.setupPlaceChangedListener(destinationAutocomplete, "DEST", destinationInput);
+
+            this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+            this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+
         }
-        // On success
-        function success(pos) {
-            var crd = pos.coords;
-            latitud = crd.latitude
-            longitud = crd.longitude
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: latitud, lng: longitud },
-                zoom: 14,
-                disableDefaultUI: true,
+
+       
+
+        setupPlaceChangedListener(autocomplete, mode, input) {
+            autocomplete.bindTo("bounds", this.map);
+
+        
+
+            autocomplete.addListener("place_changed", async () => {
+                let placeId = autocomplete.getPlace().place_id;
+
+                if (!placeId) {
+                    window.alert("Please select an option from the dropdown list.");
+                    return;
+                }
+
+                if (mode === "ORIG") {
+                    this.originPlaceId = placeId;
+                    getLngAndLat(input, "starting");
+                } else {
+                    this.destinationPlaceId = placeId;
+                    getLngAndLat(input, "destination");
+                }
+                this.route();
             });
-        };
 
-        function error() {
-            console.log("Unable to retrieve your location");
+            function getLngAndLat(input, mode) {
+                let lat = document.getElementById(mode+"Lat");
+                let lng = document.getElementById(mode+"Lng");
+                let loc = [];
+                let geocoder  = new google.maps.Geocoder();
+                geocoder.geocode({'address': input.value}, function (results, status){
+                    if(status == google.maps.GeocoderStatus.OK){
+                        loc[0] = results[0].geometry.location.lat();
+                        loc[1] = results[0].geometry.location.lng();
+                        lat.value = loc[0];
+                        lng.value = loc[0];
+                        lat.dispatchEvent(new Event("change"));
+                        lng.dispatchEvent(new Event("change"));
+                    }
+                    else{
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
         }
-    </script>
-    <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv0miz6dQTzDIn24ol-mnVGqwEt6GFUjg&libraries=&v=weekly" defer></script>
+       
+
+
+        route() {
+            if (!this.originPlaceId || !this.destinationPlaceId) {
+                return;
+            }
+            const me = this;
+            this.directionsService.route(
+                {
+                    origin: {placeId: this.originPlaceId},
+                    destination: {placeId: this.destinationPlaceId},
+                    travelMode: this.travelMode,
+                },
+                (response, status) => {
+                    if (status === "OK") {
+                        me.directionsRenderer.setDirections(response);
+                    } else {
+                        window.alert("Directions request failed due to " + status);
+                    }
+                }
+            );
+        }
+    }
+
+    function error() {
+        console.log("Unable to retrieve your location");
+    }
+
+
+    function intializeDanishMap(langAndLat) {
+        const DENMARK_Bounds = {
+            north: 57.73,
+            south: 54.80,
+            west: 8.09,
+            east: 12.69
+        }
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 10,
+            center: langAndLat,
+            disableDefaultUI: true,
+            restriction: {
+                latLngBounds: DENMARK_Bounds,
+                strictBounds: false,
+            }
+        });
+        return map;
+    }
+
+    function createObjLatAndLong(pos) {
+        let crd = pos.coords;
+        let latitud = crd.latitude;
+        let longitud = crd.longitude;
+        return {lat: latitud, lng: longitud};
+    }
+
+</script>
+<script>navigator.serviceWorker.register('service-worker.js');</script>
+<script defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgxC4saQ9uOCZE_JHOFvEUK-3VnsPqAdQ&libraries=places"></script>
 </body>
 
 </html>

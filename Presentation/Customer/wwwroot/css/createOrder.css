@@ -1,38 +1,153 @@
 ﻿body {
     background-color: #0f6674;
-    text-align: center;   
+    text-align: center;
+}
+
+.control{
+    margin-top: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 32px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+html, body{
+    height: 100%;
+}
+
+form{
+    height: 100%;
+}
+
+#main-container{
+    height: inherit;
+    position: relative;
+}
+
+#wrapper_button{
+    position: absolute;
+    top: 31%;
+    left: 17%;
 }
 
 
-#fields{
+#startingAddress, #destinationAddress{
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 12px;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 300px;
+}
+
+#startingAddress:focus, #destinationAddress:focus {
+    border-color: #4d90fe;
+}
+
+
+#fields {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 
-#labels, #inputs{
+#labels, #inputs {
     display: flex;
     flex-direction: column;
 }
 
-#labels{
+#labels {
     align-items: flex-end;
     margin-right: 5px;
 }
 
-#labels label{
+#labels label {
     margin-bottom: 3%;
 }
 
-#inputs input, #inputs select{
+#inputs input, #inputs select {
     margin-bottom: 6%;
     border-radius: 17px;
     margin-left: 2%;
 }
 
-#error-label{
+#error-label {
     color: red;
     font-family: Arial, serif;
+}
+
+#main-container{
+    display: flex;
+    justify-content: space-around;
+}
+
+.map-container {
+    height: 50%;
+    width: 50%;
+}
+
+.map-placeholder {
+    height: 82%;
+    position: absolute;
+    width: 55%;
+    z-index: 0;
+}
+
+.index-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    padding: 24px 24px 32px;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+}
+
+.index-layout__header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.index-layout__footer {
+    display: flex;
+}
+
+.place-card {
+    align-items: center;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    margin-right: 12px;
+    padding: 20px 16px 16px;
+    width: 132px;
+}
+
+.place-card__icon {
+    margin-bottom: 16px;
+}
+
+.place-card__title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.place-card__description {
+    color: #C4C4C4;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 17px;
+    margin-bottom: auto;
+    text-align: center;
 }
 
 
