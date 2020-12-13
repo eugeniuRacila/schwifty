@@ -14,6 +14,7 @@ namespace LogicLayer.Controllers
 {
     [Authorize]
     [ApiController]
+    // TODO 'RoutePrefix' instead of 'Route'
     [Route("api/[controller]")]
     public class AuthController : Controller
     {

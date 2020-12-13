@@ -4,25 +4,31 @@
 @using Driver.Services.order
 @inject AbstractOrderService OrderService;
 
-<h1>Orders</h1>
-
-@foreach (var order in _orders)
-{
-    <p>Order: @order.OrderId</p>
-    <ul>
-        <li>CustomerId: @order.CustomerId</li>
-        <li>StartingAddress: @order.LocationPoints.StartingAddress</li>
-        <li>StartingLat: @order.LocationPoints.StartingLat</li>
-        <li>StartingLng: @order.LocationPoints.StartingLng</li>
-        <li>DestinationAddress: @order.LocationPoints.DestinationAddress</li>
-        <li>DestinationLat: @order.LocationPoints.DestinationLat</li>
-        <li>DestinationLng: @order.LocationPoints.DestinationLng</li>
-        <li>NeededSeats: @order.NeededSeats</li>
-        <li>TypeOfCar: @order.TypeOfCar</li>
-        <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
-    </ul>
-    <hr/>
-}
+<div style="padding: 50px;">
+    <h1>Orders</h1>
+    
+    @foreach (var order in _orders)
+    {
+        <div style="padding: 16px 20px;">
+            <p>Order: @order.OrderId</p>
+            <ul>
+                <li>CustomerId: @order.CustomerId</li>
+                <li>StartingAddress: @order.LocationPoints.StartingAddress</li>
+                <li>StartingLat: @order.LocationPoints.StartingLat</li>
+                <li>StartingLng: @order.LocationPoints.StartingLng</li>
+                <li>DestinationAddress: @order.LocationPoints.DestinationAddress</li>
+                <li>DestinationLat: @order.LocationPoints.DestinationLat</li>
+                <li>DestinationLng: @order.LocationPoints.DestinationLng</li>
+                <li>NeededSeats: @order.NeededSeats</li>
+                <li>TypeOfCar: @order.TypeOfCar</li>
+                <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
+            </ul>
+            <br>
+            <button @onclick="@(e => TakeOrder(@order.OrderId))">Take order</button>
+            <hr/>
+        </div>
+    }
+</div>
 
 @code {
     private IList<Order> _orders = new List<Order>();
@@ -32,6 +38,11 @@
         await base.OnInitializedAsync();
         _orders = OrderService.GetAllOrders();
         OrderService.OrdersUpdate += OnNotify;
+    }
+
+    private async void TakeOrder(string orderId)
+    {
+        
     }
     
     private async void OnNotify(IList<Order> orders)

@@ -1,4 +1,5 @@
-﻿
+﻿@inject IAuthenticationService AuthenticationService
+
 <!-- Styles -->
 <link rel="stylesheet" href="css/components/NavMenu.css">
 
@@ -11,7 +12,15 @@
             </NavLink>
         </div>
         <div class="header__actions">
-            <NavLink href="create-account" class="header__link">Sign up</NavLink>
+            @if (AuthenticationService.User == null)
+            {
+                <NavLink href="create-account" class="header__link">Sign up</NavLink>
+            }
+            else
+            {
+                <NavLink href="create-order" class="header__link">Create order</NavLink>
+            }
+            
             <div class="header__nav-toggle">
                 <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="26" height="2" fill="black"/>

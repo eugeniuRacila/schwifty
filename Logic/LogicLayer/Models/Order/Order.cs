@@ -42,8 +42,8 @@ namespace LogicLayer.Models
         [JsonPropertyName("stateId")]
         public int StateId
         {
-            get => _orderStatus.GetId();
-            set { _stateId = value; }
+            get => _stateId;
+            set => _stateId = value;
         }
 
         public OrderStatus _orderStatus { get; internal set; }

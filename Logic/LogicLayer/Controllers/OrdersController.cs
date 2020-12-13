@@ -11,6 +11,7 @@ using LogicLayer.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RestSharp;
 
 namespace LogicLayer.Controllers
 {
@@ -36,13 +37,22 @@ namespace LogicLayer.Controllers
 
             return receivedOrders;
         }
+        
+        // [AllowAnonymous]
+        // [HttpGet]
+        // [Route("{orderId:int}")]
+        // public async Task<ActionResult<IList<Order>>> GetOrders(int orderId)
+        // {
+        //     var receivedOrders = await _orderService.GetOrdersAsync();
+        //
+        //     return receivedOrders;
+        // }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
             // Assign customer id to the created order
-            orderToCreate.CustomerId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+            orderToCreate.CustomerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
 
             var createdOrder = await _orderService.CreateOrderAsync(orderToCreate);
             
@@ -99,11 +109,22 @@ namespace LogicLayer.Controllers
         }
         
         [HttpPatch]
-        public async Task<ActionResult<Order>> TakeOrder([FromBody] Order order, int driverId)
+        [Route("take-order/{orderId:int}")]
+        public async Task<ActionResult<Order>> TakeOrder(int orderId)
         {
-            Console.WriteLine($"OrdersController -> takeOrder : {order}");
+            var driverId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
             
-            var takenOrder = await _orderService.TakeOrderAsync(order, driverId);
+            Console.WriteLine($"OrdersController -> takeOrder : {orderId}");
+            
+            // Get the order from data layer
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest($"orders/{orderId}", Method.GET) {RequestFormat = DataFormat.Json};
+
+            var response = await client.ExecuteAsync(request);
+            
+            Order foundOrder = JsonConvert.DeserializeObject<Order>(response.Content);
+            
+            var takenOrder = await _orderService.TakeOrderAsync(foundOrder, driverId);
 
             // Broadcast order to all drivers
             Package package = new Package("OrderService", "UpdateOrder", JsonConvert.SerializeObject(takenOrder));
