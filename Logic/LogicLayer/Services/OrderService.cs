@@ -37,6 +37,7 @@ namespace LogicLayer.Services
 
         public async Task<Order> TakeOrderAsync(Order order, int driverId)
         {
+            order.DriverId = driverId;
             NextOrderStatusAsync(order);
             
             var jsonOrder = JsonConvert.SerializeObject(order);
@@ -52,9 +53,11 @@ namespace LogicLayer.Services
             return JsonConvert.DeserializeObject<Order>(response.Content);
         }
 
-        public void NextOrderStatusAsync(Order order)
+        public async void NextOrderStatusAsync(Order order)
         {
+            Console.WriteLine($"Order status (pre): {order.StateId}");
             order.NextStatus();
+            Console.WriteLine($"Order status (after): {order.StateId}");
             var jsonOrder = JsonConvert.SerializeObject(order);
 
             var client = new RestClient("http://localhost:8080/");
@@ -62,7 +65,7 @@ namespace LogicLayer.Services
 
             request.AddJsonBody(jsonOrder);
             
-            client.ExecuteAsync(request);
+            await client.ExecuteAsync(request);
         }
     }
 }

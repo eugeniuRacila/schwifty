@@ -77,6 +77,8 @@ namespace Driver.Services
                 throw new Exception(error["message"]);
             }
 
+            Console.WriteLine("Response: " + response.StatusCode);
+
             return await response.Content.ReadFromJsonAsync<T>();
         }
     }

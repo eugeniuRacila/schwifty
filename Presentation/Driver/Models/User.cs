@@ -7,7 +7,11 @@ namespace Driver.Models
     {
         [JsonProperty("id")]
         [JsonPropertyName("id")]
-        public string DriverId { get; set; }
+        public int Id { get; set; }
+        
+        [JsonProperty("email")]
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
         
         [JsonProperty("firstName")]
         [JsonPropertyName("firstName")]
@@ -17,21 +21,13 @@ namespace Driver.Models
         [JsonPropertyName("lastName")]
         public string LastName { get; set; }
         
-        [JsonProperty("email")]
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
-        
         [JsonProperty("phoneNumber")]
         [JsonPropertyName("phoneNumber")]
         public string PhoneNumber { get; set; }
-        
-        [JsonProperty("password")]
-        [JsonPropertyName("password")]
-        public string Password { get; set; }
-
-        [JsonProperty("createdOn")]
-        [JsonPropertyName("createdOn")]
-        public long CreatedOn { get; set; }
+                
+        [JsonProperty("role")]
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
         
         [JsonProperty("accessToken")]
         [JsonPropertyName("accessToken")]
@@ -40,11 +36,5 @@ namespace Driver.Models
         [JsonProperty("refreshToken")]
         [JsonPropertyName("refreshToken")]
         public string RefreshToken { get; set; }
-        
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
     }
 }

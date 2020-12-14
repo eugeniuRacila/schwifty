@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Driver.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -37,7 +38,9 @@ namespace Driver.Services
 
         public async Task Login(string email, string password)
         {
+            Console.WriteLine("Login");
             User = await _httpService.Post<User>("/api/auth/driver/login", new { email, password });
+            Console.WriteLine("Login" + User + User.Email);
             await _localStorageService.SetItem("user", User);
         }
 

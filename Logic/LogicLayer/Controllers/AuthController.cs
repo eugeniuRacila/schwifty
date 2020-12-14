@@ -14,6 +14,7 @@ namespace LogicLayer.Controllers
 {
     [Authorize]
     [ApiController]
+    // TODO 'RoutePrefix' instead of 'Route'
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
@@ -135,7 +136,7 @@ namespace LogicLayer.Controllers
             request.AddJsonBody(jsonLoginRequest);
             
             var response = await client.ExecuteAsync(request);
-
+            Console.WriteLine(response.StatusCode);
             if (response.IsSuccessful)
             {
                 Console.WriteLine(response.Content);
@@ -152,7 +153,7 @@ namespace LogicLayer.Controllers
                     FirstName = foundDriver.FirstName,
                     LastName = foundDriver.LastName,
                     PhoneNumber = foundDriver.PhoneNumber,
-                    Role = "customer",
+                    Role = "driver",
                     AccessToken = jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString
                 });

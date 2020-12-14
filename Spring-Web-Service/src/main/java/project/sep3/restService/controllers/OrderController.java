@@ -24,6 +24,13 @@ public class OrderController {
         return orderDAO.readAll();
     }
 
+    @GetMapping
+    @RequestMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Order getById(@PathVariable String id) {
+        return orderDAO.getById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Order create(@RequestBody Order order) {
@@ -31,15 +38,8 @@ public class OrderController {
         return orderDAO.create(order);
     }
 
-    @PostMapping
-    @RequestMapping("/update")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody Order order) {
-        orderDAO.update(order);
-    }
-
     @PatchMapping
-    public Order take(@RequestBody Order order, @RequestParam int driverId) {
-        return orderDAO.take(order, driverId);
+    public Order take(@RequestBody Order order) {
+        return orderDAO.take(order);
     }
 }

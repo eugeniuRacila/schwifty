@@ -21,7 +21,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        justify-content: space-between;
+        justify-content: flex-end;
         padding: 24px 24px 32px;
         pointer-events: none;
         position: relative;
@@ -71,15 +71,11 @@
 </style>
 
 <div class="container">
-    <NavMenu HasPadding="true" />
-    <NavLink href="create-order">Create order</NavLink>
+    <NavMenu HasPadding="true" IsFixed="true" />
     <div id="map" class="map-placeholder">
         <!--<img src="assets/images/InApp1Background.png" alt="map placeholder" />-->
     </div>
     <div class="index-layout">
-        <div class="index-layout__header">
-            <svg display="block" viewBox="0 0 24 24" width="36" height="36" stroke="black" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </div>
         <div class="index-layout__footer">
             <div class="place-card">
                 <div class="place-card__icon">
@@ -109,7 +105,9 @@
         </div>
     </div>
 </div>
+
 <button @onclick="@changePageToCreatOrder">Create order</button>
+
 
 @code {
 
