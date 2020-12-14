@@ -3,23 +3,14 @@
 @using System.Text.RegularExpressions
 
 @inject HttpClient Http
-
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
 <!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccountForm.css">
 
 <!-- Content -->
 <div class="create-account-form page-side-padding">
-    @if (_createdAccountSuccessfully)
-    {
-        <div class="account-created">
-            <NavMenu IsFixed="true" HasPadding="true"/>
-            <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
-            <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
-            <NavLink class="button button--link margin-b-32" href="create-order">Order a ride</NavLink>
-        </div>
-    }
-    else
-    {
+ 
         <div class="margin-b-32">
             <NavMenu/>
         </div>
@@ -71,7 +62,6 @@
                 </div>
             </EditForm>
         </div>
-    }
 </div>
 
 @code {
@@ -93,7 +83,10 @@
 
         if (response.IsSuccessStatusCode)
         {
+            await AuthenticationService.Login(_userRegistration.Email, _userRegistration.Password);
             _createdAccountSuccessfully = true;
+            NavigationManager.NavigateTo("");
+         
             await InvokeAsync(StateHasChanged);
         }
     }

@@ -14,13 +14,14 @@
         <div class="header__actions">
             @if (AuthenticationService.User == null)
             {
-                <NavLink href="create-account" class="header__link">Sign up</NavLink>
+                <NavLink href="create-account/form" class="header__link">Sign up</NavLink>
+                <NavLink href="login" class="header__link active">Log in</NavLink>
             }
             else
             {
-                <NavLink href="create-order" class="header__link">Create order</NavLink>
+                <NavLink href="orders" class="header__link">All orders</NavLink>
             }
-            
+
             <div class="header__nav-toggle">
                 <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="26" height="2" fill="black"/>
@@ -35,14 +36,16 @@
 </header>
 
 <!-- Code -->
+
 @code {
+
     [Parameter]
     public bool IsFixed { get; set; }
-    
+
     [Parameter]
     public bool HasPadding { get; set; }
-    
+
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
-    
+
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
 }
