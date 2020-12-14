@@ -60,10 +60,10 @@ namespace LogicLayer.Controllers
             Package package = new Package("OrderService", "AddOrder", JsonConvert.SerializeObject(createdOrder));
             string jsonPackage = JsonConvert.SerializeObject(package);
         
-            foreach (var sock in _manager.GetDriverSockets())
+            foreach (var ws in _manager.GetDriverSockets())
             {
-                if (sock.Value.State == WebSocketState.Open)
-                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+                if (ws.Value.Socket.State == WebSocketState.Open)
+                    await ws.Value.Socket.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
             }
 
             return createdOrder;
@@ -130,10 +130,10 @@ namespace LogicLayer.Controllers
             Package package = new Package("OrderService", "UpdateOrder", JsonConvert.SerializeObject(takenOrder));
             string jsonPackage = JsonConvert.SerializeObject(package);
             
-            foreach (var sock in _manager.GetDriverSockets())
+            foreach (var ws in _manager.GetDriverSockets())
             {
-                if (sock.Value.State == WebSocketState.Open)
-                    await sock.Value.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
+                if (ws.Value.Socket.State == WebSocketState.Open)
+                    await ws.Value.Socket.SendAsync(Encoding.UTF8.GetBytes(jsonPackage), WebSocketMessageType.Text, true, CancellationToken.None);
             }
             
             return takenOrder;

@@ -5,6 +5,37 @@
 
 <!-- Content -->
 <header class="header @HeaderFixedCssClass @HeaderPaddingCssClass">
+    <nav class="nav @NavCollapseCssClass">
+        <div class="nav__container">
+            <ul class="nav__links-list">
+                <li class="nav__link-item">
+                    <NavLink href="/" class="nav__link">Home</NavLink>
+                </li>
+
+                @if (AuthenticationService.User != null)
+                {
+                    <li class="nav__link-item">
+                        <NavLink href="create-order" class="nav__link">Order a ride</NavLink>
+                    </li>
+                    <li class="nav__link-item">
+                        <NavLink href="profile" class="nav__link">Profile</NavLink>
+                    </li>
+                    <li class="nav__link-item">
+                        <NavLink href="logout" class="nav__link">Log out</NavLink>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav__link-item">
+                        <NavLink href="create-account" class="nav__link">Create an account</NavLink>
+                    </li>
+                    <li class="nav__link-item">
+                        <NavLink href="login" class="nav__link">Log in</NavLink>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
     <div class="header__navigation">
         <div class="header__logo">
             <NavLink href="" Match="NavLinkMatch.All">
@@ -22,20 +53,31 @@
             }
             
             <div class="header__nav-toggle">
-                <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="26" height="2" fill="black"/>
-                    <rect y="10" width="26" height="2" fill="black"/>
-                </svg>
+                <button @onclick="ToggleNavMenu">
+                    @if (collapseNavMenu)
+                    {
+                        <svg width="26" height="12" viewBox="0 0 26 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="26" height="2" fill="black"/>
+                            <rect y="10" width="26" height="2" fill="black"/>
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="1.51471" y="0.100586" width="26" height="2" transform="rotate(45 1.51471 0.100586)" fill="black"/>
+                            <rect y="18.3848" width="26" height="2" transform="rotate(-45 0 18.3848)" fill="black"/>
+                        </svg>
+                    }
+                </button>
             </div>
         </div>
     </div>
-    <nav class="nav">
-
-    </nav>
 </header>
 
 <!-- Code -->
 @code {
+    private bool collapseNavMenu = true;
+
     [Parameter]
     public bool IsFixed { get; set; }
     
@@ -45,4 +87,12 @@
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
     
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
+
+    private string NavCollapseCssClass => collapseNavMenu ? "" : "nav--visible";
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+        Console.WriteLine("clicked on toggle");
+    }
 }

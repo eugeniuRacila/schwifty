@@ -161,6 +161,7 @@ input {
     left: 16px;
     line-height: 27px;
     padding: 5px 8px;
+    pointer-events: none;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);

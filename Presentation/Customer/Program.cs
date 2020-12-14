@@ -22,10 +22,8 @@ namespace Customer
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddSingleton<AbstractOrderService, OrderService>()
-                .AddSingleton<ServicesHub>();
-            
-            // WebSockets injection
-            builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
+                .AddSingleton<ServicesHub>()
+                .AddSingleton<IWebSocketService, WebSocketService>();
             
             var host = builder.Build();
 
