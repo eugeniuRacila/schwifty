@@ -1,33 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Customer.Models;
-using Customer.Services.Order;
 using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Customer.Services
 {
+    public interface IWebSocketService
+    {
+        Task InitializeWebSocketsAsync(int userId);
+        Task CloseWebSocketsAsync();
+    }
+    
     public class WebSocketService : IWebSocketService
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions();
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
-        private readonly ClientWebSocket _webSocket = new ClientWebSocket();
+        private ClientWebSocket _webSocket;
         private readonly ServicesHub _servicesHub;
-        
 
         public WebSocketService(ServicesHub servicesHub)
         {
             _servicesHub = servicesHub;
         }
         
-        public async Task InitializeWebSocketsAsync()
+        public async Task InitializeWebSocketsAsync(int userId = 0)
         {
-            await _webSocket.ConnectAsync(new Uri("wss://localhost:5001/"), _disposalTokenSource.Token);
+            _webSocket = new ClientWebSocket();
+
+            await _webSocket.ConnectAsync(new Uri($"wss://localhost:5001/customer?id={userId}"), _disposalTokenSource.Token);
 
             if (_webSocket.State == WebSocketState.Open)
                 Console.WriteLine("WebSocket connection successfully established");
@@ -36,7 +40,12 @@ namespace Customer.Services
 
             _ = ReceiveLoop();
         }
-        
+
+        public async Task CloseWebSocketsAsync()
+        {
+            await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+            Console.WriteLine(_webSocket.State);
+        }
 
         private async Task ReceiveLoop()
         {
@@ -88,6 +97,8 @@ namespace Customer.Services
                 Console.WriteLine($"After call");
                 // how to notify other pages when server send any information ???
             }
+
+            Console.WriteLine("Sockets closed");
         }
         
         public void Dispose()
