@@ -21,16 +21,16 @@ namespace Driver
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5001") });
-            
+
             builder.Services
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddSingleton<AbstractOrderService, OrderService>()
-                .AddSingleton<ServicesHub>();
+                .AddScoped<ServicesHub>()
+                .AddScoped<AbstractOrderService, OrderService>();
             
             // WebSockets injection
-            builder.Services.AddSingleton<IWebSocketService, WebSocketService>();
+            builder.Services.AddScoped<IWebSocketService, WebSocketService>();
             
             var host = builder.Build();
 
