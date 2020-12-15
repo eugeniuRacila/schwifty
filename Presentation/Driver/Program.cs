@@ -26,10 +26,11 @@ namespace Driver
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddSingleton<AbstractOrderService, OrderService>()
-                .AddSingleton<ServicesHub>()
-                // WebSockets injection
-                .AddSingleton<IWebSocketService, WebSocketService>();
+                .AddScoped<ServicesHub>()
+                .AddScoped<AbstractOrderService, OrderService>();
+            
+            // WebSockets injection
+            builder.Services.AddScoped<IWebSocketService, WebSocketService>();
             
             var host = builder.Build();
 
