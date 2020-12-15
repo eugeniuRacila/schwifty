@@ -14,7 +14,7 @@ namespace Driver.Services
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions();
         private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
-        private readonly ClientWebSocket _webSocket = new ClientWebSocket();
+        private ClientWebSocket _webSocket;
         private readonly ServicesHub _servicesHub;
 
         private string _socketConnectionId;
@@ -24,9 +24,11 @@ namespace Driver.Services
             _servicesHub = servicesHub;
         }
         
-        public async Task InitializeWebSocketsAsync()
+        public async Task InitializeWebSocketsAsync(int userId = 0)
         {
-            await _webSocket.ConnectAsync(new Uri("wss://localhost:5001/driver"), _disposalTokenSource.Token);
+            _webSocket = new ClientWebSocket();
+            
+            await _webSocket.ConnectAsync(new Uri($"wss://localhost:5001/driver?id={userId}"), _disposalTokenSource.Token);
 
             if (_webSocket.State == WebSocketState.Open)
                 Console.WriteLine("WebSocket connection successfully established");
@@ -41,6 +43,12 @@ namespace Driver.Services
         //     var dataToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes("Hello, websocket!"));
         //     await _webSocket.SendAsync(dataToSend, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
         // }
+        
+        public async Task CloseWebSocketsAsync()
+        {
+            await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, null, CancellationToken.None);
+            Console.WriteLine(_webSocket.State);
+        }
 
         async Task ReceiveLoop()
         {

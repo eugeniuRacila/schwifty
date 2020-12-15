@@ -4,6 +4,6 @@ namespace Driver.Services
 {
     public interface IWebSocketService
     {
-        Task InitializeWebSocketsAsync();
+        Task InitializeWebSocketsAsync(int userId);
     }
 }
