@@ -73,11 +73,18 @@ public class CustomerDAOImpl implements CustomerDAO {
     public Order getActiveOrder(int customerId) {
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("from Order WHERE state_id != 6 and customer_id ="+customerId+";");
+        Query query = session.createQuery("from Order WHERE state_id != 6 and customer_id ="+customerId);
         query.setCacheable(true);
-        Order order = (Order) query.list().get(0);
+
+        List<Order> list = query.list();
         transaction.commit();
         session.close();
+
+        if (list.size() == 0){
+            return null;
+        }
+
+        Order order = list.get(0);
         return order;
     }
 
