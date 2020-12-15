@@ -1,0 +1,11 @@
+﻿.map-container {
+    height: 50%;
+    width: 50%;
+}
+
+.map-placeholder {
+    height: 82%;
+    position: absolute;
+    width: 55%;
+    z-index: 0;
+}

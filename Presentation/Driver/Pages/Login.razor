@@ -46,7 +46,6 @@
     // redirect to home if already logged in
         if (AuthenticationService.User != null)
         {
-            Console.WriteLine(AuthenticationService.User.Email);
             NavigationManager.NavigateTo("");
         }
     }

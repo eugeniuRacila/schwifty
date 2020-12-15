@@ -4,7 +4,6 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Customer.Services;
-using Customer.Services.Order;
 
 namespace Customer
 {

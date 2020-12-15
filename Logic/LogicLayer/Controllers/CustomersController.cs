@@ -17,12 +17,16 @@ namespace LogicLayer.Controllers
      public class CustomersController : Controller
      {
           private readonly IOrderService _orderService;
+
+          public CustomersController(IOrderService orderService)
+          {
+               _orderService = orderService;
+          }
           
           [HttpGet]
-          [Route("/orders/active")]
+          [Route("orders/active")]
           public async Task<ActionResult<Order>> GetActiveOrder()
           {
-               // todo: check if it is customer or driver
                int customerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
                var order = await _orderService.GetCustomerActiveOrder(customerId);
                return order;

@@ -5,11 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Customer.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Customer.Services
 {
@@ -41,6 +42,7 @@ namespace Customer.Services
         public async Task<T> Get<T>(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
+            
             return await sendRequest<T>(request);
         }
 
@@ -48,6 +50,7 @@ namespace Customer.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            
             return await sendRequest<T>(request);
         }
 
@@ -76,6 +79,8 @@ namespace Customer.Services
                 var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
                 throw new Exception(error["message"]);
             }
+
+            Console.WriteLine($"response.Content: {await response.Content.ReadFromJsonAsync<T>()}");
 
             return await response.Content.ReadFromJsonAsync<T>();
         }

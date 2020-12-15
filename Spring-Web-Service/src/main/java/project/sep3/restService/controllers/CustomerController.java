@@ -26,7 +26,8 @@ public class CustomerController {
     @RequestMapping("/{custId}/orders/active")
     public Order GetCustomerActiveOrder(@PathVariable("custId") String custId) {
         int customerId = Integer.parseInt(custId);
-        return customerDAO.getActiveOrder(customerId);
+        var res = customerDAO.getActiveOrder(customerId);
+        return res;
     }
 
 

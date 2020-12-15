@@ -1,0 +1,28 @@
+﻿@page "/current-order/{startingAddress}/{destinationAddress}"
+@inject IJSRuntime JS
+
+<link href="css/currentOrder.css" rel="stylesheet"/>
+<p id="startingAddressId">@startingAddress</p>
+<p id = "destinationAddressId">@destinationAddress</p>
+<h3>CurrentOrder</h3>
+<div class="map-container">
+    <div id="map" class="map-placeholder">
+
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string startingAddress { get; set; }
+
+    [Parameter]
+    public string destinationAddress { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.InvokeVoidAsync("window.initMap", startingAddress, destinationAddress);
+    }
+
+}

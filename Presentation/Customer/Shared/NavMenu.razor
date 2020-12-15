@@ -1,5 +1,4 @@
-﻿@using Customer.Services.Order
-@inject IAuthenticationService AuthenticationService
+﻿@inject IAuthenticationService AuthenticationService
 @inject AbstractOrderService OrderService;
 
 <!-- Styles -->
@@ -79,7 +78,10 @@
 
 <!-- Code -->
 @code {
+
     // private bool HasActiveOrders => OrderService.hasActiveOrder();
+
+    private bool HasActiveOrders   {get;set;} = false;
 
     private bool collapseNavMenu = true;
 
@@ -89,19 +91,16 @@
     [Parameter]
     public bool HasPadding { get; set; }
     
+    private Order activeOrder { get; set; }
+    
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
     
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
-
-    
     
     protected override async Task OnInitializedAsync()
     {
-        if (AuthenticationService.User != null)
-        {
-            // await OrderService.UpdMyActiveOrder();
-            // Console.WriteLine(OrderService.hasActiveOrder());
-        }
+        // activeOrder = await OrderService.GetMyActiveOrder();
+        // HasActiveOrders = activeOrder != null;
         await base.OnInitializedAsync();
     }
 

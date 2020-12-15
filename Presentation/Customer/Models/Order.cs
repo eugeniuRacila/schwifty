@@ -5,6 +5,10 @@ namespace Customer.Models
 {
     public class Order
     {
+        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+        
         [JsonProperty("customerId")]
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }

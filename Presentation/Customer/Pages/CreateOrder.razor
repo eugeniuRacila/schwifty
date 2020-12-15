@@ -1,8 +1,6 @@
 ﻿@page "/create-order"
 
 @attribute [Authorize]
-
-@using Customer.Services.Order
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Headers
 @using Customer.Models
@@ -71,7 +69,6 @@
         </div>
     </div>
 </EditForm>
-
 
 @code {
     // Get user ID from the clientService

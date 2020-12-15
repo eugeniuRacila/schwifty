@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Customer.Models;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 
 namespace Customer.Services
 {
@@ -18,19 +20,22 @@ namespace Customer.Services
         private NavigationManager _navigationManager;
         private ILocalStorageService _localStorageService;
         private readonly IWebSocketService _webSocketService;
-        
+        private readonly AbstractOrderService _orderService;
+
         public User User { get; private set; }
         
         public AuthenticationService(
             IHttpService httpService,
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
-            IWebSocketService webSocketService
+            IWebSocketService webSocketService,
+            AbstractOrderService orderService
         ) {
             _httpService = httpService;
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
             _webSocketService = webSocketService;
+            _orderService = orderService;
         }
         
         public async Task Initialize()
@@ -39,7 +44,11 @@ namespace Customer.Services
             
             // Initialize web sockets connection
             if (User != null)
+            {
                 await _webSocketService.InitializeWebSocketsAsync(User.Id);
+                Order foundActiveOrder = await _orderService.GetActiveOrder();
+                // Console.WriteLine($"foundActiveOrder: {JsonConvert.SerializeObject(foundActiveOrder)}");
+            }
         }
 
         public async Task Login(string email, string password)
