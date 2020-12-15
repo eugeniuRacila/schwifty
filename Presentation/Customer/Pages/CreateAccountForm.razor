@@ -1,6 +1,8 @@
 ﻿@page "/create-account/form"
 
 @inject HttpClient Http
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccountForm.css">
@@ -77,8 +79,11 @@ else
 
         if (response.IsSuccessStatusCode)
         {
+            await AuthenticationService.Login(_userRegistration.Email, _userRegistration.Password);
+            NavigationManager.NavigateTo("/");
             _createdAccountSuccessfully = true;
             await InvokeAsync(StateHasChanged);
+            
         }
     }
 }

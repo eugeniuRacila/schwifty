@@ -5,7 +5,6 @@ import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import project.sep3.entities.Customer;
 import project.sep3.models.Order;
 
 import java.util.List;
@@ -36,14 +35,21 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public Order getById(String id) {
+    public Order getById(int id) {
+
+        //query.addEntity(Order.class);
+
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();
+
         String sql = "FROM Order o WHERE o.id IN (:id)";
+        System.out.println("id:" + id);
+
         Query query = session.createQuery(sql);
-        //query.addEntity(Order.class);
-        query.setParameter("id", Integer.parseInt(id));
+        System.out.println(id);
+        query.setParameter("id", id);
         List results = query.list();
+
         transaction.commit();
         session.close();
 

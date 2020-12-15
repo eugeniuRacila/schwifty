@@ -1,8 +1,9 @@
 ﻿@page "/orders"
 
-@using Driver.Models
 @using Driver.Services.order
-@inject AbstractOrderService OrderService;
+@inject AbstractOrderService OrderService
+@inject NavigationManager NavigationManager
+
 
 <div style="padding: 50px;">
     <h1>Orders</h1>
@@ -24,7 +25,7 @@
                 <li>Created on: @DateTimeOffset.FromUnixTimeSeconds(order.CreatedOn)</li>
             </ul>
             <br>
-            <button @onclick="@(e => TakeOrder(@order.OrderId))">Take order</button>
+            <button class="button" @onclick="@(e => TakeOrder(order))">Take order</button>
             <hr/>
         </div>
     }
@@ -40,9 +41,13 @@
         OrderService.OrdersUpdate += OnNotify;
     }
 
-    private async void TakeOrder(string orderId)
+    private async Task TakeOrder(Order order)
     {
-        
+        string startingAddress = order.LocationPoints.StartingAddress;
+        string destinationAddress = order.LocationPoints.DestinationAddress;
+        NavigationManager.NavigateTo($"/current-order/{startingAddress}/{destinationAddress}");
+        OrderService.TakeOrder(order);
+        _orders.Remove(order);
     }
     
     private async void OnNotify(IList<Order> orders)

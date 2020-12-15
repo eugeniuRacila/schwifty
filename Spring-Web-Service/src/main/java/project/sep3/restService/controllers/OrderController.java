@@ -27,7 +27,7 @@ public class OrderController {
     @GetMapping
     @RequestMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Order getById(@PathVariable String id) {
+    public Order getById(@PathVariable int id) {
         return orderDAO.getById(id);
     }
 

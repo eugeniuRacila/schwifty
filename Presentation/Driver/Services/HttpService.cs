@@ -17,6 +17,7 @@ namespace Driver.Services
     {
         Task<T> Get<T>(string uri);
         Task<T> Post<T>(string uri, object value);
+        Task<T> Patch<T>(string uri, object value);
     }
 
     public class HttpService : IHttpService
@@ -47,6 +48,13 @@ namespace Driver.Services
         public async Task<T> Post<T>(string uri, object value)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
+            request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
+            return await sendRequest<T>(request);
+        }
+        
+        public async Task<T> Patch<T>(string uri, object value)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Patch, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
             return await sendRequest<T>(request);
         }
