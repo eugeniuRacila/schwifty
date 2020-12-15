@@ -37,14 +37,14 @@ namespace LogicLayer.Middlewares
                 {
                     _manager.AddDriverSocket(userId, webSocket);
                     isDriver = true;
+                    Console.WriteLine($"New socket (driver) connection established (with user id: {userId})");
                 }
                 else
                 {
                     _manager.AddSocket(userId, webSocket);
+                    Console.WriteLine($"New socket (customer) connection established (with user id: {userId})");
                 }
-
-                Console.WriteLine($"New socket connection established (with user id: {userId})");
-
+                
                 //Send ConnID Back
                 // await SendConnID(webSocket, conn);
 
