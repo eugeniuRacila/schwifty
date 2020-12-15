@@ -5,6 +5,7 @@
 @using Customer.Services.Order
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Headers
+@using Customer.Models
 
 @inject IJSRuntime JS
 @inject HttpClient Http
@@ -81,10 +82,10 @@
     protected override async void OnInitialized()
     {
         await base.OnInitializedAsync();
-        
+
         _order.TypeOfCar = "standard";
         _order.NeededSeats = "2";
-        
+
         await JS.InvokeVoidAsync("window.initMap");
     }
 

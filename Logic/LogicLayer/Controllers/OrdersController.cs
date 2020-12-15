@@ -108,6 +108,15 @@ namespace LogicLayer.Controllers
             return seats == 2 || seats == 5 || seats == 8;
         }
         
+        [HttpGet]
+        [Route("/active")]
+        public async Task<ActionResult<Order>> GetCustomerActiveOrder()
+        {
+            int customerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+            var order = await _orderService.GetCustomerActiveOrder(customerId);
+            return order;
+        }
+        
         [HttpPatch]
         [Route("take-order/{orderId:int}")]
         public async Task<ActionResult<Order>> TakeOrder(int orderId)

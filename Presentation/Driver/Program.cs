@@ -28,7 +28,6 @@ namespace Driver
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddSingleton<AbstractOrderService, OrderService>()
                 .AddSingleton<ServicesHub>()
-                // WebSockets injection
                 .AddSingleton<IWebSocketService, WebSocketService>();
             
             var host = builder.Build();

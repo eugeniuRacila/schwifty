@@ -80,10 +80,12 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public List<Order> readAll() {
         Session session = getNewSession();
+        Transaction transaction = session.beginTransaction();
         Query query = session.createQuery("from Order");
         query.setCacheable(true);
         System.out.println(query.list().size());
         List orders = query.list();
+        transaction.commit();
         session.close();
         return orders;
     }
