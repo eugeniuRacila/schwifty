@@ -1,17 +1,33 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using LogicLayer.Models;
+using LogicLayer.Services;
 using LogicLayer.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-// namespace LogicLayer.Controllers
-// {
-//     [ApiController]
-//     [Route("api/[controller]")]
-//     public class CustomersController : Controller
-//     {
+namespace LogicLayer.Controllers
+{
+     [ApiController]
+     [Route("api/[controller]")]
+     public class CustomersController : Controller
+     {
+          private readonly IOrderService _orderService;
+          
+          [HttpGet]
+          [Route("/orders/active")]
+          public async Task<ActionResult<Order>> GetActiveOrder()
+          {
+               // todo: check if it is customer or driver
+               int customerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+               var order = await _orderService.GetCustomerActiveOrder(customerId);
+               return order;
+          }
+          
 //         private readonly IJwtAuthManager _jwtAuthManager;
 //
 //         public CustomersController(IJwtAuthManager jwtAuthManager)
@@ -77,5 +93,5 @@ using Microsoft.AspNetCore.Mvc;
 //
 //         [JsonPropertyName("refreshToken")]
 //         public string RefreshToken { get; set; }
-//     }
-// }
+     }
+}

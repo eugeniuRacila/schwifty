@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using LogicLayer.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LogicLayer.Services
 {
@@ -11,5 +12,6 @@ namespace LogicLayer.Services
         Task<List<Order>> GetOrdersAsync();
 
         void NextOrderStatusAsync(Order order);
+        Task<ActionResult<Order>> GetCustomerActiveOrder(int customerId);
     }
 }

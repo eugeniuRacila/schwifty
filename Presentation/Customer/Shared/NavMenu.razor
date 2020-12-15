@@ -1,4 +1,6 @@
-﻿@inject IAuthenticationService AuthenticationService
+﻿@using Customer.Services.Order
+@inject IAuthenticationService AuthenticationService
+@inject OrderService OrderService;
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/components/NavMenu.css">
@@ -18,7 +20,8 @@
             }
             else
             {
-                <NavLink href="create-order" class="header__link">Create order</NavLink>
+                <NavLink href="create-order" class="header__link" hidden="!@HasActiveOrders">Create order</NavLink>
+                <NavLink href="create-order" class="header__link" hidden="@HasActiveOrders">Active order</NavLink>
             }
             
             <div class="header__nav-toggle">
@@ -36,13 +39,25 @@
 
 <!-- Code -->
 @code {
+    private bool HasActiveOrders   {get;set;} = false;
+    
     [Parameter]
     public bool IsFixed { get; set; }
     
     [Parameter]
     public bool HasPadding { get; set; }
     
+    private Order activeOrder { get; set; }
+    
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
     
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        activeOrder = await OrderService.GetMyActiveOrder();
+        HasActiveOrders = activeOrder != null;
+        await base.OnInitializedAsync();
+    }
+
 }

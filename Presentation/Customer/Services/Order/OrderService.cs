@@ -7,12 +7,11 @@ namespace Customer.Services.Order
     /// </summary>
     public class OrderService : AbstractOrderService
     {
-        // private readonly IHttpService _httpService;
-        //
-        // public OrderService(IHttpService httpService)
-        // {
-        //     _httpService = httpService;
-        // }
+        private readonly IHttpService _httpService;
+        public OrderService(IHttpService httpService)
+        {
+            _httpService = httpService;
+        }
         //
         // public override async Task<Models.Order> CreateOrderAsync(Models.Order orderToCreate)
         // {
@@ -20,5 +19,11 @@ namespace Customer.Services.Order
         //
         //     return createdOrder;
         // }
+
+        public async Task<Models.Order> GetMyActiveOrder()
+        {
+            Models.Order activeOrder = await _httpService.Get<Models.Order>("/api/customers/orders/active");
+            return activeOrder;
+        }
     }
 }

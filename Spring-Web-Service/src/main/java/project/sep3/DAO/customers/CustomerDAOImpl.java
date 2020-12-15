@@ -6,6 +6,8 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.sep3.entities.Customer;
+import project.sep3.models.Order;
+
 import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
@@ -65,6 +67,18 @@ public class CustomerDAOImpl implements CustomerDAO {
             return null;
 
         return (Customer) results.get(0);
+    }
+
+    @Override
+    public Order getActiveOrder(int customerId) {
+        Session session = getNewSession();
+        Transaction transaction = session.beginTransaction();
+        Query query = session.createQuery("from Order WHERE state_id != 6 and customer_id ="+customerId+";");
+        query.setCacheable(true);
+        Order order = (Order) query.list().get(0);
+        transaction.commit();
+        session.close();
+        return order;
     }
 
 
