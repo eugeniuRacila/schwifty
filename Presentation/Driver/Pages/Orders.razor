@@ -1,7 +1,9 @@
 ﻿@page "/orders"
 
 @using Driver.Services.order
-@inject AbstractOrderService OrderService;
+@inject AbstractOrderService OrderService
+@inject NavigationManager NavigationManager
+
 
 <div style="padding: 50px;">
     <h1>Orders</h1>
@@ -41,6 +43,9 @@
 
     private async Task TakeOrder(Order order)
     {
+        string startingAddress = order.LocationPoints.StartingAddress;
+        string destinationAddress = order.LocationPoints.DestinationAddress;
+        NavigationManager.NavigateTo($"/current-order/{startingAddress}/{destinationAddress}");
         OrderService.TakeOrder(order);
         _orders.Remove(order);
     }

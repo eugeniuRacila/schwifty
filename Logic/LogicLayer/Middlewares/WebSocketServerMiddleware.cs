@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LogicLayer.Models;
 using LogicLayer.Utils;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -26,21 +27,23 @@ namespace LogicLayer.Middlewares
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
-                Console.WriteLine($"WebSocketServerMiddleware -> InvokeAsync, at path: '{context.Request.Path}'");
                 WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                bool isDriver = false;
                 
-                string conn;
+                bool isDriver = false;
+
+                var userId = int.Parse(context.Request.Query["id"]);
 
                 if (context.Request.Path.ToString().ToLower() == "/driver")
                 {
-                    conn = _manager.AddDriverSocket(webSocket);
+                    _manager.AddDriverSocket(userId, webSocket);
                     isDriver = true;
                 }
                 else
                 {
-                    conn = _manager.AddSocket(webSocket);
+                    _manager.AddSocket(userId, webSocket);
                 }
+
+                Console.WriteLine($"New socket connection established (with user id: {userId})");
 
                 //Send ConnID Back
                 // await SendConnID(webSocket, conn);
@@ -56,26 +59,22 @@ namespace LogicLayer.Middlewares
                     } 
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        string id;
-                        WebSocket ws;
+                        WebSocketConnection webSocketConnection;
                         
                         if (isDriver)
                         {
-                            id = _manager.GetDriverSockets().FirstOrDefault(s => s.Value == webSocket).Key;
-                            _manager.GetDriverSockets().TryRemove(id, out ws);
-                            Console.WriteLine($"Managed Connections: {_manager.GetDriverSockets().Count}");
+                            WebSocketConnection foundWebSocket = _manager.GetDriverSockets().FirstOrDefault(s => s.Value.Socket == webSocket).Value;
+                            _manager.GetDriverSockets().TryRemove(foundWebSocket.SocketConnectionId, out webSocketConnection);
                         }
                         else
                         {
-                            id = _manager.GetCustomerSockets().FirstOrDefault(s => s.Value == webSocket).Key;
-                            _manager.GetCustomerSockets().TryRemove(id, out ws);
-                            Console.WriteLine($"Managed Connections: {_manager.GetCustomerSockets().Count}");
+                            WebSocketConnection foundWebSocket = _manager.GetCustomerSockets().FirstOrDefault(s => s.Value.Socket == webSocket).Value;
+                            _manager.GetCustomerSockets().TryRemove(foundWebSocket.SocketConnectionId, out webSocketConnection);
                         }
                         
-                        Console.WriteLine($"Receive -> Close on: {id}");
-                        
+                        Console.WriteLine($"Socket connection closed -> close for user id: {webSocketConnection?.UserId}");
 
-                        await ws.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+                        await webSocketConnection.Socket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
                     }
                 });
             }
@@ -99,8 +98,8 @@ namespace LogicLayer.Middlewares
                 var sock = _manager.GetCustomerSockets().FirstOrDefault(s => s.Key == routeOb.To.ToString());
                 if (sock.Value != null)
                 {
-                    if (sock.Value.State == WebSocketState.Open)
-                        await sock.Value.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()), WebSocketMessageType.Text, true, CancellationToken.None);
+                    if (sock.Value.Socket.State == WebSocketState.Open)
+                        await sock.Value.Socket.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 else
                 {
@@ -112,8 +111,8 @@ namespace LogicLayer.Middlewares
                 Console.WriteLine("Broadcast");
                 foreach (var sock in _manager.GetCustomerSockets())
                 {
-                    if (sock.Value.State == WebSocketState.Open)
-                        await sock.Value.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()), WebSocketMessageType.Text, true, CancellationToken.None);
+                    if (sock.Value.Socket.State == WebSocketState.Open)
+                        await sock.Value.Socket.SendAsync(Encoding.UTF8.GetBytes(routeOb.Message.ToString()), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
         }

@@ -23,9 +23,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await Task.Run(() => WebSocketService.InitializeWebSocketsAsync());
 
-    // Initial orders fetch
+        // Initial orders fetch
         var receivedOrdersJson = await HttpClient.GetStringAsync("api/orders");
         var receivedOrders =  JsonConvert.DeserializeObject<List<Order>>(receivedOrdersJson);
 

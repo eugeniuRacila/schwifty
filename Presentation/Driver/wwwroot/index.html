@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>CustomerBlazorWA</title>
+    <title>DriverBlazorWA</title>
     <base href="/" />
     <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
     <link href="css/app.css" rel="stylesheet" />
@@ -75,27 +75,69 @@
 
 
         // Initialize and add the map
-        window.initMap = () => {
+        window.initMap = (startingAddress, destinationAddress) => {
             navigator.geolocation.getCurrentPosition(success, error);
         }
         // On success
         function success(pos) {
-            var crd = pos.coords;
-            latitud = crd.latitude
-            longitud = crd.longitude
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: latitud, lng: longitud },
-                zoom: 14,
-                disableDefaultUI: true,
-            });
+            let langAndLat = createObjLatAndLong(pos);
+            const map = intializeDanishMap(langAndLat);
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+            calculateAndDisplayRoute(directionsService, directionsRenderer)
         };
 
+        function calculateAndDisplayRoute(directionsService, directionsRenderer) 
+        {
+            directionsService.route(
+                {
+                    origin: {
+                        query: document.getElementById("startingAddressId").innerHTML,
+                    },
+                    destination: {
+                        query: document.getElementById("destinationAddressId").innerHTML,
+                    },
+                    travelMode: google.maps.TravelMode.DRIVING,
+                },
+                (response, status) =>{
+                    directionsRenderer.setDirections(response);
+                }
+                );
+        }
+        function intializeDanishMap(langAndLat) {
+            const DENMARK_Bounds = {
+                north: 57.73,
+                south: 54.80,
+                west: 8.09,
+                east: 12.69
+            }
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: langAndLat,
+                disableDefaultUI: true,
+                restriction: {
+                    latLngBounds: DENMARK_Bounds,
+                    strictBounds: false,
+                }
+            });
+            return map;
+        }
+        
+        function createObjLatAndLong(pos) {
+            let crd = pos.coords;
+            let latitud = crd.latitude;
+            let longitud = crd.longitude;
+            return {lat: latitud, lng: longitud};
+        }
         function error() {
             console.log("Unable to retrieve your location");
         }
     </script>
     <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv0miz6dQTzDIn24ol-mnVGqwEt6GFUjg&libraries=&v=weekly" defer></script>
+    <script defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBgxC4saQ9uOCZE_JHOFvEUK-3VnsPqAdQ&libraries=places"></script>
+</body>
 </body>
 
 </html>

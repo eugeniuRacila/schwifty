@@ -1,6 +1,8 @@
 ﻿@page "/create-account/form"
 
 @inject HttpClient Http
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccountForm.css">
@@ -13,7 +15,7 @@
         <NavMenu IsFixed="true" HasPadding="true" />
         <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
         <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
-        <NavLink class="button button--link margin-b-32" href="NavLinkMatch.All">Order a ride</NavLink>
+        <NavLink class="button button--link margin-b-32" href="create-order">Order a ride</NavLink>
     </div>
 }
 else
@@ -77,8 +79,11 @@ else
 
         if (response.IsSuccessStatusCode)
         {
+            await AuthenticationService.Login(_userRegistration.Email, _userRegistration.Password);
+            NavigationManager.NavigateTo("/");
             _createdAccountSuccessfully = true;
             await InvokeAsync(StateHasChanged);
+            
         }
     }
 }
