@@ -15,7 +15,7 @@
 <link href="css/createOrder.css" rel="stylesheet"/>
 
 <h1>Create order</h1>
-<EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@_order">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
 
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div id="wrapper_button">
-            <button type="submit">Submit</button>
+            <button type="submit" @onclick="HandleValidSubmit">Submit</button>
         </div>
     </div>
 </EditForm>

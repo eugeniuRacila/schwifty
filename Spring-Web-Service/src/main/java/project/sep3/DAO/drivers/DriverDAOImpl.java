@@ -2,11 +2,9 @@ package project.sep3.DAO.drivers;
 
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import project.sep3.entities.Customer;
 import project.sep3.models.Driver;
 
 import java.util.List;
@@ -59,9 +57,8 @@ public class DriverDAOImpl implements DriverDAO{
     public Driver findByEmail(String email) {
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();
-        String sql = "SELECT * FROM drivers WHERE email = :email";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(Driver.class);
+        String sql = "FROM Driver WHERE email = :email";
+        Query query = session.createQuery(sql);
         query.setParameter("email", email);
         List results = query.list();
         transaction.commit();

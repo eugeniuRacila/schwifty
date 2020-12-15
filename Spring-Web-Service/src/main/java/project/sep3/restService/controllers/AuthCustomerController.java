@@ -6,9 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import project.sep3.DAO.customers.CustomerDAO;
-import project.sep3.DAO.drivers.DriverDAO;
-import project.sep3.entities.Customer;
-import project.sep3.models.Driver;
+import project.sep3.models.Customer;
 import project.sep3.models.LoginRequest;
 
 @RestController
@@ -54,11 +52,6 @@ public class AuthCustomerController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email is not registered");
     }
 
-//    @PostMapping
-//    @RequestMapping("/auth/customer")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void login(@RequestBody AuthRequest authRequest) {
-//
-//    }
+
 }
 
