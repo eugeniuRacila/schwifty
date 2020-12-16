@@ -17,7 +17,12 @@ namespace LogicLayer.Models
             }
             return OrderStatus;
         }
-        
+
+        public string GetDesc()
+        {
+            return "Your Driver arrived the starting point and is waiting for you!";
+        }
+
         public int GetId()
         {
             return id;

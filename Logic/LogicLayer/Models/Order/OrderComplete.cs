@@ -17,7 +17,12 @@ namespace LogicLayer.Models
             }
             return OrderStatus;
         }
-        
+
+        public string GetDesc()
+        {
+            return "Thank you for using Schwifty!";
+        }
+
         public int GetId()
         {
             return id;

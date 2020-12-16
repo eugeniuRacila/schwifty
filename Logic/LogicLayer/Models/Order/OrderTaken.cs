@@ -17,7 +17,12 @@ namespace LogicLayer.Models
             }
             return OrderStatus;
         }
-        
+
+        public string GetDesc()
+        {
+            return "Your driver is on its way!";
+        }
+
         public int GetId()
         {
             return id;
