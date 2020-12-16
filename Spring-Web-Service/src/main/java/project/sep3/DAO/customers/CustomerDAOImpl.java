@@ -83,9 +83,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         if (list.size() == 0){
             return null;
         }
-
-        Order order = list.get(0);
-        return order;
+        return list.get(0);
     }
 
 

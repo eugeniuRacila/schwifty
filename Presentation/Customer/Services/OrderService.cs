@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Customer.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,7 +32,8 @@ namespace Customer.Services
             {
                 var httpService = scope.ServiceProvider.GetService<IHttpService>();
 
-                foundActiveOrder = await httpService.Get<Order>("/api/customers/orders/active");
+                foundActiveOrder = await httpService.Post<Order>("/api/customers/orders/active", new {});
+                Console.WriteLine("Active order: " + foundActiveOrder);
             }
 
             ActiveOrder = foundActiveOrder;

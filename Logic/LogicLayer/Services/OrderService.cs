@@ -72,7 +72,7 @@ namespace LogicLayer.Services
         public async Task<ActionResult<Order>> GetCustomerActiveOrder(int customerId)
         {
             var client = new RestClient("http://localhost:8080/");
-            var request = new RestRequest($"customers/{customerId}/orders/active", Method.GET) {RequestFormat = DataFormat.Json};
+             var request = new RestRequest($"/customers/{customerId}/orders/active", Method.GET) {RequestFormat = DataFormat.Json};
             var response = await client.ExecuteAsync(request);   
             return JsonConvert.DeserializeObject<Order>(response.Content);
         }

@@ -23,12 +23,13 @@ namespace LogicLayer.Controllers
                _orderService = orderService;
           }
           
-          [HttpGet]
+          [HttpPost]
           [Route("orders/active")]
           public async Task<ActionResult<Order>> GetActiveOrder()
           {
                int customerId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
                var order = await _orderService.GetCustomerActiveOrder(customerId);
+               Console.WriteLine("active order: "+order);
                return order;
           }
           
