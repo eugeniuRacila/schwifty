@@ -24,6 +24,16 @@ namespace Customer.Models
         [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }
+        
+        [JsonProperty("stateId")]
+        [JsonPropertyName("stateId")]
+        public int stateId { get; set; }
+        
+        [JsonProperty("stateDesc")]
+        [JsonPropertyName("stateDesc")]
+        public string stateDesc { get; set; }
+        
+        
 
         public Order()
         {

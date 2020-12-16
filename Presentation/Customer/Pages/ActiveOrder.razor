@@ -1,0 +1,33 @@
+@page "/active-order"
+
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Headers
+@using Customer.Models
+
+@inject IJSRuntime JS
+@inject HttpClient Http
+@inject AbstractOrderService OrderService;
+@inject IAuthenticationService AuthenticationService;
+
+@* <link href="css/activeOrder.css" rel="stylesheet"/> *@
+
+<h1>Active order</h1>
+<br>
+<b>From:</b> @OrderService.ActiveOrder.LocationPoints.StartingAddress
+<br>
+<b>To:</b> @OrderService.ActiveOrder.LocationPoints.DestinationAddress
+<br>
+<b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
+<br>
+<b>Type of the car:</b> @OrderService.ActiveOrder.TypeOfCar
+<br>
+<b>Status:</b> @OrderService.ActiveOrder.stateDesc
+
+@code {
+    protected override async void OnInitialized()
+    {
+        await base.OnInitializedAsync();
+        // await JS.InvokeVoidAsync("window.initMap");
+    }
+}
