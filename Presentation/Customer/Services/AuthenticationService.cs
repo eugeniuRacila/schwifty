@@ -46,7 +46,6 @@ namespace Customer.Services
             if (User != null)
             {
                 await _webSocketService.InitializeWebSocketsAsync(User.Id);
-                Order foundActiveOrder = await _orderService.GetActiveOrder();
                 // Console.WriteLine($"foundActiveOrder: {JsonConvert.SerializeObject(foundActiveOrder)}");
             }
         }
