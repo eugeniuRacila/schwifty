@@ -32,7 +32,8 @@ namespace Customer.Services
             NavigationManager navigationManager,
             ILocalStorageService localStorageService,
             IConfiguration configuration
-        ) {
+        )
+        {
             _httpClient = httpClient;
             _navigationManager = navigationManager;
             _localStorageService = localStorageService;
@@ -42,7 +43,7 @@ namespace Customer.Services
         public async Task<T> Get<T>(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            
+
             return await sendRequest<T>(request);
         }
 
@@ -50,7 +51,7 @@ namespace Customer.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            
+
             return await sendRequest<T>(request);
         }
 
@@ -71,6 +72,9 @@ namespace Customer.Services
             {
                 _navigationManager.NavigateTo("logout");
                 return default;
+            }else if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return default;
             }
 
             // throw exception on error response
@@ -80,9 +84,9 @@ namespace Customer.Services
                 throw new Exception(error["message"]);
             }
 
-            Console.WriteLine($"response.Content: {await response.Content.ReadFromJsonAsync<T>()}");
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            var res = await response.Content.ReadFromJsonAsync<T>();
+            Console.WriteLine("res:" + res);
+            return res;
         }
     }
 }

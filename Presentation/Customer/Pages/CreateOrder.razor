@@ -81,7 +81,7 @@
         await base.OnInitializedAsync();
 
         _order.TypeOfCar = "standard";
-        _order.NeededSeats = "2";
+        _order.NeededSeats = 2;
 
         await JS.InvokeVoidAsync("window.initMap");
     }

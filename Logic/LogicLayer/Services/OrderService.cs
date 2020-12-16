@@ -56,9 +56,7 @@ namespace LogicLayer.Services
 
         public async void NextOrderStatusAsync(Order order)
         {
-            Console.WriteLine($"Order status (pre): {order.StateId}");
             order.NextStatus();
-            Console.WriteLine($"Order status (after): {order.StateId}");
             var jsonOrder = JsonConvert.SerializeObject(order);
 
             var client = new RestClient("http://localhost:8080/");

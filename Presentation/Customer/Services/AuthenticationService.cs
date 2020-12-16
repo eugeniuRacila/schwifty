@@ -45,6 +45,7 @@ namespace Customer.Services
             // Initialize web sockets connection
             if (User != null)
             {
+                await _orderService.UpdMyActiveOrder();
                 await _webSocketService.InitializeWebSocketsAsync(User.Id);
                 // Console.WriteLine($"foundActiveOrder: {JsonConvert.SerializeObject(foundActiveOrder)}");
             }
@@ -54,9 +55,15 @@ namespace Customer.Services
         {
             User = await _httpService.Post<User>("/api/auth/customer/login", new { email, password });
             await _localStorageService.SetItem("user", User);
+
+            if (User != null)
+            {
+                Console.WriteLine("user ok");
+                // Initialize web sockets connection
+                await _webSocketService.InitializeWebSocketsAsync(User.Id);
+                _navigationManager.NavigateTo("");
+            }
             
-            // Initialize web sockets connection
-            await _webSocketService.InitializeWebSocketsAsync(User.Id);
         }
 
         public async Task Logout()
