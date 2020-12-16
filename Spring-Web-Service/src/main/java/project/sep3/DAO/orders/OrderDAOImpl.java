@@ -37,7 +37,6 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order getById(int id) {
 
-        //query.addEntity(Order.class);
 
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();

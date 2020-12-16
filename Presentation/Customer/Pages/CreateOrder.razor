@@ -13,7 +13,7 @@
 <link href="css/createOrder.css" rel="stylesheet"/>
 
 <h1>Create order</h1>
-<EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@_order">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
 
@@ -65,7 +65,7 @@
             </div>
         </div>
         <div id="wrapper_button">
-            <button type="submit">Submit</button>
+            <button type="button" @onclick="HandleValidSubmit">Submit</button>
         </div>
     </div>
 </EditForm>
@@ -74,6 +74,7 @@
     // Get user ID from the clientService
     // First create the clientService
     private readonly Order _order = new Order();
+    private Order previous_order = new Order();
     private string _error = "";
 
     protected override async void OnInitialized()
@@ -91,12 +92,14 @@
         Console.WriteLine(_order.ToString());
         if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
-            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);;
-            var response = await Http.PostAsJsonAsync("api/orders", _order);
-
-            if (!response.IsSuccessStatusCode)
+            if (!_order.LocationPoints.StartingAddress.Equals(previous_order.LocationPoints.StartingAddress) || !_order.LocationPoints.DestinationAddress.Equals(previous_order.LocationPoints.DestinationAddress))
             {
-                _error = "Don't try to hack me";
+                Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);
+                var response = await Http.PostAsJsonAsync("api/orders", _order);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _error = "Don't try to hack me";
+                }
             }
         }
     }

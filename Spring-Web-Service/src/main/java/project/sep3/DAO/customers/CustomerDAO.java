@@ -1,6 +1,6 @@
 package project.sep3.DAO.customers;
 
-import project.sep3.entities.Customer;
+import project.sep3.models.Customer;
 import project.sep3.models.Order;
 
 public interface CustomerDAO {

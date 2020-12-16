@@ -51,11 +51,4 @@ public class AuthDriverController {
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email is not registered");
     }
-
-//    @PostMapping
-//    @RequestMapping("/auth/customer")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void login(@RequestBody AuthRequest authRequest) {
-//
-//    }
 }

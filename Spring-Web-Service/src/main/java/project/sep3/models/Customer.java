@@ -1,4 +1,4 @@
-package project.sep3.entities;
+package project.sep3.models;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
