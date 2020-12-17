@@ -10,12 +10,13 @@
 @inject IAuthenticationService AuthenticationService;
 
 @* <link href="css/activeOrder.css" rel="stylesheet"/> *@
+<link href="css/currentOrder.css" rel="stylesheet"/>
 
 <h1>Active order</h1>
 <br>
-<b>From:</b> @OrderService.ActiveOrder.LocationPoints.StartingAddress
+<b>From:</b> <p id="startingAddressId">@OrderService.ActiveOrder.LocationPoints.StartingAddress</p> 
 <br>
-<b>To:</b> @OrderService.ActiveOrder.LocationPoints.DestinationAddress
+<b>To:</b> <p id="destinationAddressId">@OrderService.ActiveOrder.LocationPoints.DestinationAddress</p>
 <br>
 <b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
 <br>
@@ -23,10 +24,16 @@
 <br>
 <b>Status:</b> @OrderService.ActiveOrder.stateDesc
 
+<div class="map-container">
+    <div id="map" class="map-placeholder">
+
+    </div>
+</div>
+
 @code {
     protected override async void OnInitialized()
     {
         await base.OnInitializedAsync();
-        // await JS.InvokeVoidAsync("window.initMap");
+        await JS.InvokeVoidAsync("initMap", OrderService.ActiveOrder.LocationPoints.StartingAddress, OrderService.ActiveOrder.LocationPoints.DestinationAddress);
     }
 }

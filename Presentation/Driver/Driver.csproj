@@ -46,4 +46,8 @@
       </ServiceWorker>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Services\order" />
+    </ItemGroup>
+
 </Project>

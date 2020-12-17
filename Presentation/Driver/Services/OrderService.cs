@@ -78,9 +78,8 @@ namespace Driver.Services.order
             using (var scope = _serviceScopeFactory.CreateScope())
             { 
                 var httpService = scope.ServiceProvider.GetService<IHttpService>();
-                await httpService.Patch<Order>("api/orders/take-order/" + order.OrderId, order);
+                await httpService.Patch<Order>("api/orders/take-order/" + order.Id, order);
                 _list.Remove(order);
-                await UpdMyActiveOrder();
             }
         }
     }

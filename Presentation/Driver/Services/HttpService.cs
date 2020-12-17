@@ -76,6 +76,9 @@ namespace Driver.Services
             {
                 _navigationManager.NavigateTo("logout");
                 return default;
+            }else if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return default;
             }
 
             // throw exception on error response
@@ -85,9 +88,9 @@ namespace Driver.Services
                 throw new Exception(error["message"]);
             }
 
-            Console.WriteLine("Response: " + response.StatusCode);
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            var res = await response.Content.ReadFromJsonAsync<T>();
+            Console.WriteLine("res:" + res);
+            return res;
         }
     }
 }

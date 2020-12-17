@@ -7,39 +7,41 @@ namespace Driver.Models
     {
         [JsonProperty("id")]
         [JsonPropertyName("id")]
-        public string OrderId { get; set; }
+        public int Id { get; set; }
         
         [JsonProperty("customerId")]
         [JsonPropertyName("customerId")]
         public int CustomerId { get; set; }
-
-        [JsonProperty("driverId")]
-        [JsonPropertyName("driverId")]
-        public int DriverId { get; set; }
-
-        [JsonProperty("carId")]
-        [JsonPropertyName("carId")]
-        public int CarId { get; set; }
         
-        [JsonProperty("stateId")]
-        [JsonPropertyName("stateId")]
-        public int StateId { get; set; }
-
         [JsonProperty("locationPoint")]
         [JsonPropertyName("locationPoint")]
         public LocationPoint LocationPoints { get; set; }
-        
+
         [JsonProperty("typeOfCar")]
         [JsonPropertyName("typeOfCar")]
         public string TypeOfCar { get; set; }
 
         [JsonProperty("neededSeats")]
         [JsonPropertyName("neededSeats")]
-        public string NeededSeats { get; set; }
+        public int NeededSeats { get; set; }
+        
+        [JsonProperty("stateId")]
+        [JsonPropertyName("stateId")]
+        public int stateId { get; set; }
+        
+        [JsonProperty("stateDesc")]
+        [JsonPropertyName("stateDesc")]
+        public string stateDesc { get; set; }
 
         [JsonProperty("createdOn")]
         [JsonPropertyName("createdOn")]
         public long CreatedOn { get; set; }
+
+
+        public Order()
+        {
+            LocationPoints = new LocationPoint();
+        }
 
         public override string ToString()
         {
@@ -49,28 +51,29 @@ namespace Driver.Models
         public class LocationPoint
         {
             [JsonProperty("startingAddress")]
-            [JsonPropertyName("startingAddress")]
             public string StartingAddress { get; set; }
         
             [JsonProperty("startingLat")]
-            [JsonPropertyName("startingLat")]
             public double StartingLat { get; set; }
         
             [JsonProperty("startingLng")]
-            [JsonPropertyName("startingLng")]
             public double StartingLng { get; set; }
         
             [JsonProperty("destinationAddress")]
-            [JsonPropertyName("destinationAddress")]
             public string DestinationAddress { get; set; }
         
-            [JsonProperty("destinationLat")]
-            [JsonPropertyName("destinationLat")]
+            [JsonProperty("destinationLag")]
             public double DestinationLat { get; set; }
         
             [JsonProperty("destinationLng")]
-            [JsonPropertyName("destinationLng")]
             public double DestinationLng { get; set; }
+
+            public override string ToString()
+            {
+                return "Starting address: " + StartingAddress + "\nDestination address: " + DestinationAddress +
+                       "\nStarting lat: " + StartingLat + "\nStarting lng: " + StartingLng + "\nDestination lat" +
+                       DestinationLat + "\nDestination lng:" + DestinationLng;
+            }
         }
     }
 }

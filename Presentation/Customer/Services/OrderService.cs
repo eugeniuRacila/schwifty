@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Customer.Models;
+using Driver.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Customer.Services

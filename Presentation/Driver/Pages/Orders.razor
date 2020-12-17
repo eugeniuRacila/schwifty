@@ -11,7 +11,7 @@
     @foreach (var order in _orders)
     {
         <div style="padding: 16px 20px;">
-            <p>Order: @order.OrderId</p>
+            <p>Order: @order.Id</p>
             <ul>
                 <li>CustomerId: @order.CustomerId</li>
                 <li>StartingAddress: @order.LocationPoints.StartingAddress</li>
@@ -43,12 +43,10 @@
 
     private async Task TakeOrder(Order order)
     {
-        string startingAddress = order.LocationPoints.StartingAddress;
-        string destinationAddress = order.LocationPoints.DestinationAddress;
-        NavigationManager.NavigateTo($"/current-order/{startingAddress}/{destinationAddress}");
-        // OrderService.TakeOrder(order);
+        OrderService.TakeOrder(order);
         _orders.Remove(order);
         await OrderService.UpdMyActiveOrder();
+        NavigationManager.NavigateTo($"/active-order");
     }
     
     private async void OnNotify(IList<Order> orders)

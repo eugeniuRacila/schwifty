@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Headers
 @using Customer.Models
+@using Driver.Models
 @using Newtonsoft.Json
 
 @inject IJSRuntime JS
@@ -171,12 +172,11 @@
     private void NeededSeatsSelection(ChangeEventArgs args)
     {
         Console.WriteLine($"number of seats: {args.Value} was selected");
-        _order.NeededSeats = args.Value.ToString();
+        _order.NeededSeats =  Int32.Parse(args.Value.ToString());
     }
 
     private async void HandleValidSubmit()
     {
-        Console.WriteLine(_order.ToString());
         if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);;
