@@ -1,10 +1,11 @@
 ﻿@inject IAuthenticationService AuthenticationService
+@inject AbstractOrderService OrderService;
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/components/NavMenu.css">
 
 <!-- Content -->
-<header class="header @HeaderFixedCssClass @HeaderPaddingCssClass">
+<header class="header @HeaderFixedCssClass @HeaderPaddingCssClass @HeaderBackgroundCssClass">
     <nav class="nav @NavCollapseCssClass">
         <div class="nav__container">
             <ul class="nav__links-list">
@@ -49,7 +50,8 @@
             }
             else
             {
-                <NavLink href="create-order" class="header__link">Create order</NavLink>
+                 <NavLink href="create-order" class="header__link">Create order</NavLink>
+@*                 <NavLink href="create-order" class="header__link" hidden="@HasActiveOrders">Active order</NavLink> *@
             }
             
             <div class="header__nav-toggle">
@@ -76,6 +78,11 @@
 
 <!-- Code -->
 @code {
+
+    // private bool HasActiveOrders => OrderService.hasActiveOrder();
+
+    private bool HasActiveOrders   {get;set;} = false;
+
     private bool collapseNavMenu = true;
 
     [Parameter]
@@ -84,9 +91,24 @@
     [Parameter]
     public bool HasPadding { get; set; }
     
+    [Parameter]
+    public bool HasBackground { get; set; }
+    
+    private Order activeOrder { get; set; }
+    
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
     
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
+
+    private string HeaderBackgroundCssClass => HasBackground ? "header--background" : null;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // activeOrder = await OrderService.GetMyActiveOrder();
+        // HasActiveOrders = activeOrder != null;
+        await base.OnInitializedAsync();
+    }
+
 
     private string NavCollapseCssClass => collapseNavMenu ? "" : "nav--visible";
 

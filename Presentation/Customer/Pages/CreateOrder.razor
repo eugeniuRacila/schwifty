@@ -1,84 +1,156 @@
 ﻿@page "/create-order"
 
 @attribute [Authorize]
-
-@using Customer.Services.Order
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Headers
 @using Customer.Models
+@using Newtonsoft.Json
 
 @inject IJSRuntime JS
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
 @inject IAuthenticationService AuthenticationService;
+@inject NavigationManager NavigationManager
 
-<link href="css/createOrder.css" rel="stylesheet"/>
+<link rel="stylesheet" href="css/pages/CreateOrder.css">
 
-<h1>Create order</h1>
-<EditForm Model="@_order">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
+<div class="create-order">
+    <div id="map" class="create-order__map @SecondScreenMapCssClass">
+        
+    </div>
+    <div class="create-order__container">
+        <header class="create-order__header">
+            <button class="create-order__exit" @onclick="CloseOrderCreation">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1.51471" y="0.100586" width="26" height="2" transform="rotate(45 1.51471 0.100586)" fill="black"/>
+                    <rect y="18.3848" width="26" height="2" transform="rotate(-45 0 18.3848)" fill="black"/>
+                </svg>
+            </button>
+        </header>
+        <div class="create-order-form @SecondScreenFormCssClass">
+            <EditForm Model="@_order" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+                
+                <div class="create-order-form__first-step @FirstScreenCssClass">
+                    <div class="create-order-form__locations-inputs">
+                        <div class="create-order-form__input create-order-form__input--top">
+                            <InputText id="startingAddress" class="control" @bind-Value="_order.LocationPoints.StartingAddress" placeholder="Starting address"/>
+                        </div>
+                        <div class="create-order-form__input create-order-form__input--bottom">
+                            <InputText id="destinationAddress" class="control" @bind-Value="_order.LocationPoints.DestinationAddress" placeholder="Destination address"/>
+                        </div>
+                    </div>
+                    <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" disabled="true" style="display: none" />
+                    <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" disabled="true" style="display: none" />
+                    <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" disabled="true" style="display: none" />
+                    <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" disabled="true" style="display: none" />
 
-    <div id="main-container">
-        <div id="fields">
-            <div id="labels">
-                <label for="startingLat">
-                    Starting lat:
-                </label>
-                <label for="startingLng">
-                    Starting lng:
-                </label>
-                <label for="destinationPoint">
-                    Destination lat:
-                </label>
-                <label for="destinationLng">
-                    Destination lng:
-                </label>
-                <label for="typeOfCar">
-                    Type of car:
-                </label>
-                <label for="amountOfSeats">
-                    Needed seats:
-                </label>
-
-            </div>
-            <div id="inputs">
-                <InputText id="startingAddress" @bind-Value="_order.LocationPoints.StartingAddress" class="control" placeholder="Input starting address"/>
-                <InputNumber id="startingLat" @bind-Value="_order.LocationPoints.StartingLat" disabled="true"/>
-                <InputNumber id="startingLng" @bind-Value="_order.LocationPoints.StartingLng" disabled="true"/>
-                <InputText id="destinationAddress" @bind-Value="_order.LocationPoints.DestinationAddress" class="control" placeholder="Input destination address"/>
-                <InputNumber id="destinationLat" @bind-Value="_order.LocationPoints.DestinationLat" disabled="true"/>
-                <InputNumber id="destinationLng" @bind-Value="_order.LocationPoints.DestinationLng" disabled="true"/>
-                <select id="typeOfCar" @bind="_order.TypeOfCar">
-                    <option value="standard">Standard</option>
-                    <option value="comfort">Comfort</option>
-                    <option value="VIP">VIP</option>
-                </select>
-                <select id="amountOfSeats" @bind="_order.NeededSeats">
-                    <option value="2">2</option>
-                    <option value="6">5</option>
-                    <option value="8">8</option>
-                </select>
-            </div>
-        </div>
-        <div class="map-container">
-            <div id="map" class="map-placeholder">
-
-            </div>
-        </div>
-        <div id="wrapper_button">
-            <button type="button" @onclick="HandleValidSubmit">Submit</button>
+                    <div class="create-order-form__continue">
+                        <button class="form-submit__button button button--large" type="button" @onclick="ShowSecondScreen">Select car and seats</button>
+                    </div>
+                </div>
+                <div class="create-order-form__second-step @SecondScreenCssClass">
+                    <div class="second-step">
+                        <div class="second-step__section">
+                            <p class="second-step__title">
+                                Select a car
+                            </p>
+                            <div class="second-step__selection">
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-car" @onchange="CarRadioSelection" type="radio" name="type-of-car" checked value="standard">
+                                    <div class="second-step__radio-img">
+                                        <img src="assets/images/econom.png" alt="">
+                                    </div>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-car" @onchange="CarRadioSelection" type="radio" name="type-of-car" value="premium">
+                                    <div class="second-step__radio-img">
+                                        <img src="assets/images/premium.png" alt="">
+                                    </div>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-car" @onchange="CarRadioSelection" type="radio" name="type-of-car" value="spacious">
+                                    <div class="second-step__radio-img">
+                                        <img src="assets/images/spacious.png" alt="">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="second-step__section" style="padding-bottom: 64px;">
+                            <p class="second-step__title">
+                                Select needed seats
+                            </p>
+                            <div class="second-step__selection">
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" checked name="number-of-seats" value="1">
+                                    <span class="second-step__number">1</span>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="2">
+                                    <span class="second-step__number">2</span>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="3">
+                                    <span class="second-step__number">3</span>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="5">
+                                    <span class="second-step__number">5</span>
+                                </label>
+                                <label class="second-step__radio-wrapper">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="7">
+                                    <span class="second-step__number">7</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="second-step__actions">
+                            <button class="second-step__back" @onclick="ShowFirstScreen">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.25 9L3.75 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M9 14.25L3.75 9L9 3.75" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <button class="button second-step__submit">Create order</button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
         </div>
     </div>
-</EditForm>
-
+</div>
 
 @code {
     // Get user ID from the clientService
     // First create the clientService
     private readonly Order _order = new Order();
-    private Order previous_order = new Order();
     private string _error = "";
+    private bool _selectedLocations = false;
+
+    private void CloseOrderCreation()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    
+    private string SecondScreenMapCssClass => _selectedLocations ? "create-order__map--overlay" : null;
+    
+    private string FirstScreenCssClass => _selectedLocations ? "create-order-form__first-step--hide" : null;
+    
+    private string SecondScreenCssClass => !_selectedLocations ? "create-order-form__second-step--hide" : null;
+    
+    private string SecondScreenFormCssClass => _selectedLocations ? "create-order-form--second-step" : null;
+
+    private async void ShowSecondScreen()
+    {
+        _selectedLocations = true;
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    private async void ShowFirstScreen()
+    {
+        _selectedLocations = false;
+        await InvokeAsync(StateHasChanged);
+    }
 
     protected override async void OnInitialized()
     {
@@ -90,19 +162,29 @@
         await JS.InvokeVoidAsync("window.initMap");
     }
 
+    private void CarRadioSelection(ChangeEventArgs args)
+    {
+        Console.WriteLine($"car type: {args.Value} was selected");
+        _order.TypeOfCar = args.Value.ToString();
+    }
+    
+    private void NeededSeatsSelection(ChangeEventArgs args)
+    {
+        Console.WriteLine($"number of seats: {args.Value} was selected");
+        _order.NeededSeats = args.Value.ToString();
+    }
+
     private async void HandleValidSubmit()
     {
         Console.WriteLine(_order.ToString());
         if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
-            if (!_order.LocationPoints.StartingAddress.Equals(previous_order.LocationPoints.StartingAddress) || !_order.LocationPoints.DestinationAddress.Equals(previous_order.LocationPoints.DestinationAddress))
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);;
+            var response = await Http.PostAsJsonAsync("api/orders", _order);
+
+            if (!response.IsSuccessStatusCode)
             {
-                Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);
-                var response = await Http.PostAsJsonAsync("api/orders", _order);
-                if (!response.IsSuccessStatusCode)
-                {
-                    _error = "Don't try to hack me";
-                }
+                _error = "Don't try to hack me";
             }
         }
     }

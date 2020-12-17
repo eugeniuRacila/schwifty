@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Customer.Services.Order;
 
 namespace Customer.Services
 {

@@ -107,7 +107,7 @@ namespace LogicLayer.Controllers
         {
             return seats == 2 || seats == 5 || seats == 8;
         }
-        
+
         [HttpPatch]
         [Route("take-order/{orderId:int}")]
         public async Task<ActionResult<Order>> TakeOrder(int orderId)

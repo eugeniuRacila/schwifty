@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LogicLayer.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -66,6 +67,14 @@ namespace LogicLayer.Services
             request.AddJsonBody(jsonOrder);
             
             await client.ExecuteAsync(request);
+        }
+
+        public async Task<ActionResult<Order>> GetCustomerActiveOrder(int customerId)
+        {
+            var client = new RestClient("http://localhost:8080/");
+            var request = new RestRequest($"customers/{customerId}/orders/active", Method.GET) {RequestFormat = DataFormat.Json};
+            var response = await client.ExecuteAsync(request);   
+            return JsonConvert.DeserializeObject<Order>(response.Content);
         }
     }
 }

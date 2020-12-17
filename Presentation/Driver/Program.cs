@@ -26,8 +26,9 @@ namespace Driver
                 .AddScoped<IAuthenticationService, AuthenticationService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
-                .AddScoped<ServicesHub>()
-                .AddScoped<AbstractOrderService, OrderService>();
+                .AddSingleton<AbstractOrderService, OrderService>()
+                .AddSingleton<ServicesHub>()
+                .AddSingleton<IWebSocketService, WebSocketService>();
             
             // WebSockets injection
             builder.Services.AddScoped<IWebSocketService, WebSocketService>();
