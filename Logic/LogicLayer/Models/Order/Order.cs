@@ -38,11 +38,15 @@ namespace LogicLayer.Models
 
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
-        public OrderStatus _orderStatus { get; internal set; }
+        public OrderStatus _orderStatus
+        {
+            get => OrderStatus.GetById(stateId);
+            set => stateId = value.GetId();
+        }
 
         [JsonProperty("stateId")]
         [JsonPropertyName("stateId")]
-        private int stateId => _orderStatus.GetId();
+        private int stateId { get; set; }
 
         [JsonProperty("stateDesc")]
         [JsonPropertyName("stateDesc")]

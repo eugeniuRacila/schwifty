@@ -74,8 +74,12 @@
     <script>
 
 
+        var startingAddress;
+        var destinationAddress;
         // Initialize and add the map
-        window.initMap = (startingAddress, destinationAddress) => {
+        function initMap(_startingAddress, _destinationAddress){
+            startingAddress = _startingAddress;
+            destinationAddress = _destinationAddress;
             navigator.geolocation.getCurrentPosition(success, error);
         }
         // On success
@@ -90,13 +94,14 @@
 
         function calculateAndDisplayRoute(directionsService, directionsRenderer) 
         {
+            console.log("start: "+startingAddress)
             directionsService.route(
                 {
                     origin: {
-                        query: document.getElementById("startingAddressId").innerHTML,
+                        query: ""+startingAddress,
                     },
                     destination: {
-                        query: document.getElementById("destinationAddressId").innerHTML,
+                        query: ""+destinationAddress,
                     },
                     travelMode: google.maps.TravelMode.DRIVING,
                 },

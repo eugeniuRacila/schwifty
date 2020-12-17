@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
-namespace Customer.Models
+namespace Driver.Models
 {
     public class Order
     {
@@ -32,8 +32,11 @@ namespace Customer.Models
         [JsonProperty("stateDesc")]
         [JsonPropertyName("stateDesc")]
         public string stateDesc { get; set; }
-        
-        
+
+        [JsonProperty("createdOn")]
+        [JsonPropertyName("createdOn")]
+        public long CreatedOn { get; set; }
+
 
         public Order()
         {
