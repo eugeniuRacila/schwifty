@@ -1,4 +1,6 @@
-﻿@inject IAuthenticationService AuthenticationService
+﻿@using Driver.Services.order
+@inject IAuthenticationService AuthenticationService
+@inject AbstractOrderService OrderService;
 
 <!-- Styles -->
 <link rel="stylesheet" href="css/components/NavMenu.css">
@@ -19,7 +21,13 @@
             }
             else
             {
-                <NavLink href="orders" class="header__link">Orders</NavLink>
+                <div hidden="@HasActiveOrders">
+                    <NavLink href="orders" class="header__link">Orders</NavLink>
+                </div>
+                <div hidden="@(!HasActiveOrders)">
+                    <NavLink href="active-order" class="header__link">Active order</NavLink>
+                </div>
+
             }
 
             <div class="header__nav-toggle">
@@ -39,6 +47,8 @@
 
 @code {
 
+    private bool HasActiveOrders => OrderService.hasActiveOrder();
+    
     [Parameter]
     public bool IsFixed { get; set; }
 
@@ -48,4 +58,13 @@
     private string HeaderFixedCssClass => IsFixed ? "header--fixed" : null;
 
     private string HeaderPaddingCssClass => HasPadding ? "header--padding" : null;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationService.User != null)
+        {
+            await OrderService.UpdMyActiveOrder();
+        }
+        await base.OnInitializedAsync();
+    }
 }

@@ -48,6 +48,7 @@
         NavigationManager.NavigateTo($"/current-order/{startingAddress}/{destinationAddress}");
         OrderService.TakeOrder(order);
         _orders.Remove(order);
+        await OrderService.UpdMyActiveOrder();
     }
     
     private async void OnNotify(IList<Order> orders)

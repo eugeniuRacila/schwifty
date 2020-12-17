@@ -17,9 +17,6 @@ namespace Customer.Services
         public abstract Task UpdMyActiveOrder();
     }
     
-    /// <summary>
-    /// We will need it in the future
-    /// </summary>
     public class OrderService : AbstractOrderService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -39,18 +36,6 @@ namespace Customer.Services
 
             Console.WriteLine("Active order: " + ActiveOrder);
         }
-
-        // public override async Task<Models.Order> CreateOrderAsync(Models.Order orderToCreate)
-        // {
-        //     Models.Order createdOrder = await _httpService.Post<Models.Order>("/api/orders", orderToCreate);
-        //
-        //     return createdOrder;
-        // }
-
-        // public async Task<Models.Order> GetMyActiveOrder()
-        // {
-        //     Models.Order activeOrder = await _httpService.Get<Models.Order>("/api/customers/orders/active");
-        //     return activeOrder;
-        // }
+        
     }
 }
