@@ -6,7 +6,7 @@
 <style>
     .container {
         height: 100%;
-        position: fixed;
+        overflow: hidden;
         width: 100%;
     }
 
@@ -14,7 +14,7 @@
         height: 100%;
         position: absolute;
         width: 100%;
-        z-index: 0;
+        /*z-index: 0;*/
     }
 
     .index-layout {
@@ -22,10 +22,8 @@
         flex-direction: column;
         height: 100%;
         justify-content: flex-end;
-        padding: 24px 24px 32px;
         pointer-events: none;
         position: relative;
-        z-index: 1;
     }
 
     .index-layout__header {
@@ -35,15 +33,39 @@
 
     .index-layout__footer {
         display: flex;
+        pointer-events: auto;
+    }
+    
+    .index-layout__footer-container {
+        display: flex;
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        scrollbar-width: none;  /* Firefox */
+        padding: 0 24px 24px;
+        width: 100%;
+    }
+    
+    .index-layout__footer-container::-webkit-scrollbar { 
+        display: none;  /* Safari and Chrome */
+    }
+    
+    .place-card {
+        height: 100%;
     }
 
-    .place-card {
+    .place-card:last-child .place-card__wrapper {
+        margin-right: 24px;
+    }
+    
+    .place-card__wrapper {
         align-items: center;
         background: #FFFFFF;
         border-radius: 16px;
-        box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
+        height: 100%;
         margin-right: 12px;
         padding: 20px 16px 16px;
         width: 132px;
@@ -71,36 +93,106 @@
 </style>
 
 <div class="container">
-    <NavMenu HasPadding="true" IsFixed="true" />
+    <NavMenu HasPadding="true" IsFixed="true" HasBackground="true" />
     <div id="map" class="map-placeholder">
-        <!--<img src="assets/images/InApp1Background.png" alt="map placeholder" />-->
     </div>
     <div class="index-layout">
         <div class="index-layout__footer">
-            <div class="place-card">
-                <div class="place-card__icon">
-                    <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="29" cy="29" r="29" fill="black"/>
-                        <path d="M29 39C34.5228 39 39 34.5228 39 29C39 23.4772 34.5228 19 29 19C23.4772 19 19 23.4772 19 29C19 34.5228 23.4772 39 29 39Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M39 29H35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M23 29H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M29 23V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M29 39V35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+            <div class="index-layout__footer-container">
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="black"/>
+                                <path d="M29 39C34.5228 39 39 34.5228 39 29C39 23.4772 34.5228 19 29 19C23.4772 19 19 23.4772 19 29C19 34.5228 23.4772 39 29 39Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M39 29H35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M23 29H19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M29 23V19" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M29 39V35" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Current</p>
+                        <p class="place-card__description">Use current location</p>
+                    </div>
                 </div>
-                <p class="place-card__title">Destination</p>
-                <p class="place-card__description">Add a new address</p>
-            </div>
-            <div class="place-card">
-                <div class="place-card__icon">
-                    <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
-                        <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
                 </div>
-                <p class="place-card__title">Home</p>
-                <p class="place-card__description">55 minutes</p>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
+                </div>
+                <div class="place-card">
+                    <div class="place-card__wrapper">
+                        <div class="place-card__icon">
+                            <svg display="block" width="58" height="58" viewBox="0 0 58 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="29" cy="29" r="29" fill="#CDCDCD" fill-opacity="0.6"/>
+                                <path d="M20 26L29 19L38 26V37C38 37.5304 37.7893 38.0391 37.4142 38.4142C37.0391 38.7893 36.5304 39 36 39H22C21.4696 39 20.9609 38.7893 20.5858 38.4142C20.2107 38.0391 20 37.5304 20 37V26Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M26 39V29H32V39" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <p class="place-card__title">Home</p>
+                        <p class="place-card__description">55 minutes</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -108,10 +200,10 @@
 
 
 @code {
-
-    private void changePageToCreatOrder()
+    protected override async void OnInitialized()
     {
-      NavigationManager.NavigateTo("/create-order");
+        await base.OnInitializedAsync();
+
+        await JS.InvokeVoidAsync("window.initIndexMap");
     }
-  
 }

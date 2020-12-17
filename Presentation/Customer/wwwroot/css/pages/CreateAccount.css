@@ -8,8 +8,8 @@
     flex: 1;
 }
 
-.map {
-    background-color: #fcfcfc;
+#map {
+    height: 100%;
 }
 
 .content {

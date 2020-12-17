@@ -29,3 +29,10 @@ html {
     right: 0.75rem;
     top: 0.5rem;
 }
+
+/* Google Maps */
+#map .gmnoprint,
+#map .gm-style-cc, 
+#map a > div > img {
+    visibility: hidden;
+}

@@ -29,6 +29,8 @@ namespace Customer.Services
         
         public async Task InitializeWebSocketsAsync(int userId = 0)
         {
+            Console.WriteLine("Initializing web-sockets");
+            
             _webSocket = new ClientWebSocket();
 
             await _webSocket.ConnectAsync(new Uri($"wss://localhost:5001/customer?id={userId}"), _disposalTokenSource.Token);

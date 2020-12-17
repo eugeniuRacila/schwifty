@@ -80,8 +80,6 @@ namespace Customer.Services
                 throw new Exception(error["message"]);
             }
 
-            Console.WriteLine($"response.Content: {await response.Content.ReadFromJsonAsync<T>()}");
-
             return await response.Content.ReadFromJsonAsync<T>();
         }
     }

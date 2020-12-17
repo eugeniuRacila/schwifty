@@ -12,7 +12,7 @@
 @if (_createdAccountSuccessfully)
 {
     <div class="account-created">
-        <NavMenu IsFixed="true" HasPadding="true" />
+        <NavMenu IsFixed="true" HasPadding="true"/>
         <h3 class="head-line-3 margin-b-16">It’s time to order a ride and begin the journey!</h3>
         <p class="paragraph margin-b-32">Remember that it’s always good to read all the rules first and only then to start using the application.</p>
         <NavLink class="button button--link margin-b-32" href="create-order">Order a ride</NavLink>
@@ -20,7 +20,7 @@
 }
 else
 {
-    <div class="margin-b-32">
+    <div class="margin-b-32" style="padding-top: 24px;">
         <NavMenu />
     </div>
     <div class="create-account-form__text">
@@ -80,10 +80,8 @@ else
         if (response.IsSuccessStatusCode)
         {
             await AuthenticationService.Login(_userRegistration.Email, _userRegistration.Password);
-            NavigationManager.NavigateTo("/");
             _createdAccountSuccessfully = true;
             await InvokeAsync(StateHasChanged);
-            
         }
     }
 }

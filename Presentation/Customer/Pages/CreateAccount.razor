@@ -1,12 +1,14 @@
 ﻿@page "/create-account"
 
+@inject IJSRuntime JS
+
 <!-- Styles -->
 <link rel="stylesheet" href="css/pages/CreateAccount.css">
 
 <!-- Content -->
 <div class="create-account">
-    <NavMenu HasPadding="true" IsFixed="true" />
-    <div class="map"></div>
+    <NavMenu HasPadding="true" IsFixed="true" HasBackground="true" />
+    <div id="map"></div>
     <div class="content page-side-padding">
         <div class="content__header">
             <p class="head-line-tag">Create an account</p>
@@ -25,5 +27,10 @@
 </div>
 
 @code {
-    
+    protected override async void OnInitialized()
+    {
+        await base.OnInitializedAsync();
+
+        await JS.InvokeVoidAsync("window.initBasicDenmarkMap");
+    }
 }
