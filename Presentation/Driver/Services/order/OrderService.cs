@@ -9,13 +9,6 @@ namespace Driver.Services.order
     public class OrderService : AbstractOrderService
     {
         private IList<Order> _list;
-        private IHttpService _httpService;
-
-        public OrderService(IHttpService httpService)
-        {
-            _httpService = httpService;
-            _list = new List<Order>();
-        }
 
         public override void AddOrder(string jsonPayload)
         {
@@ -44,10 +37,10 @@ namespace Driver.Services.order
             return new List<Order>(_list);
         }
 
-        public override void TakeOrder(Order order)
-        {
-            _httpService.Patch<Order>("api/orders/take-order/" + order.OrderId, order);
-            _list.Remove(order);
-        }
+        // public override void TakeOrder(Order order)
+        // {
+        //     _httpService.Patch<Order>("api/orders/take-order/" + order.OrderId, order);
+        //     _list.Remove(order);
+        // }
     }
 }
