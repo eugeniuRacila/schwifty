@@ -3,7 +3,7 @@ package project.sep3.restService.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import project.sep3.DAO.customers.CustomerDAO;
-import project.sep3.entities.Customer;
+import project.sep3.models.Customer;
 import project.sep3.models.LoginRequest;
 import project.sep3.models.Order;
 

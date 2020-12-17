@@ -5,7 +5,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import project.sep3.entities.Customer;
+import project.sep3.models.Customer;
 import project.sep3.models.Order;
 
 import java.util.List;
@@ -55,9 +55,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     public Customer findByEmail(String email) {
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();
-        String sql = "SELECT * FROM customers WHERE email = :email";
-        SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(Customer.class);
+        String sql = "FROM Customer WHERE email = :email";
+        Query query = session.createQuery(sql);
         query.setParameter("email", email);
         List results = query.list();
         transaction.commit();
