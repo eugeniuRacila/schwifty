@@ -11,7 +11,12 @@
 }
 
 .header--padding {
-    padding: 32px 24px 0;
+    padding: 24px 24px 0;
+}
+
+.header--background {
+    background-color: #FFFFFF;
+    padding-bottom: 24px;
 }
 
 .header__navigation {

@@ -95,7 +95,6 @@
         if (response.IsSuccessStatusCode)
         {
             await AuthenticationService.Login(_userRegistration.Email, _userRegistration.Password);
-            NavigationManager.NavigateTo("/");
             _createdAccountSuccessfully = true;
             await InvokeAsync(StateHasChanged);
         }
@@ -121,5 +120,4 @@
         }
         return true;
     }
-
 }

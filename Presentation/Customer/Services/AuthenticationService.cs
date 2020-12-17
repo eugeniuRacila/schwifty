@@ -47,6 +47,7 @@ namespace Customer.Services
             {
                 await _orderService.UpdMyActiveOrder();
                 await _webSocketService.InitializeWebSocketsAsync(User.Id);
+                // Order foundActiveOrder = await _orderService.GetActiveOrder();
                 // Console.WriteLine($"foundActiveOrder: {JsonConvert.SerializeObject(foundActiveOrder)}");
             }
         }
@@ -63,7 +64,7 @@ namespace Customer.Services
                 await _webSocketService.InitializeWebSocketsAsync(User.Id);
                 _navigationManager.NavigateTo("");
             }
-            
+
         }
 
         public async Task Logout()

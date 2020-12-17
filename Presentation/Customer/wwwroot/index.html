@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>CustomerBlazorWA</title>
+    <title>Schwifty - Enjoy every ride with us</title>
     <base href="/"/>
     <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
     <link href="css/app.css" rel="stylesheet" />
@@ -70,8 +70,90 @@
 </div>
 <script src="_framework/blazor.webassembly.js"></script>
 <script>
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+    
+    const customSvgMarker = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n' +
+        '<circle cx="12" cy="12" r="12" fill="#DEDEDE" fill-opacity="0.25"/>\n' +
+        '<circle cx="12" cy="12" r="9" fill="#BBBBBB" fill-opacity="0.27"/>\n' +
+        '<circle cx="12" cy="12" r="6" fill="white"/>\n' +
+        '<circle cx="12" cy="12" r="3" fill="black"/>\n' +
+        '</svg>';
+    
     window.initMap = () => {
         navigator.geolocation.getCurrentPosition(success, error);
+    }
+    
+    window.initBasicMap = () => {
+        navigator.geolocation.getCurrentPosition(basicSuccess, error, options);
+    }
+
+    window.initBasicDenmarkMap = () => {
+        navigator.geolocation.getCurrentPosition(basicDenmarkSuccess, error, options);
+    }
+    
+    window.initIndexMap = () => {
+        navigator.geolocation.getCurrentPosition(indexSuccess, error, options);
+    }
+
+    const basicSuccess = ({ coords: { latitude, longitude }}) => {
+        console.log('Your current position is:');
+        console.log(`Latitude : ${latitude}`);
+        console.log(`Longitude: ${longitude}`);
+
+        //  Map
+        return new google.maps.Map(document.getElementById("map"), {
+            center: {
+                lat: latitude,
+                lng: longitude
+            },
+            zoom: 14,
+            disableDefaultUI: true,
+            draggable: true
+        });
+    }
+
+    const basicDenmarkSuccess = ({ coords: { latitude, longitude }}) => {
+        console.log('Your current position is:');
+        console.log(`Latitude : ${latitude}`);
+        console.log(`Longitude: ${longitude}`);
+
+        //  Map
+        return new google.maps.Map(document.getElementById("map"), {
+            center: {
+                lat: 56,
+                lng: 10
+            },
+            zoom: 6,
+            disableDefaultUI: true,
+            draggable: true
+        });
+    }
+
+    const indexSuccess = ({ coords: { latitude, longitude }}) => {
+        console.log('Your current position is:');
+        console.log(`Latitude : ${latitude}`);
+        console.log(`Longitude: ${longitude}`);
+
+        //  Map
+        const map = basicSuccess({ coords: { latitude, longitude }});
+
+        // Marker, pointing and user's current location
+        const marker = new google.maps.Marker({
+            position: {
+                lat: latitude,
+                lng: longitude
+            },
+            map: map,
+            icon: {
+                url: 'data:image/svg+xml;charset=UTF-8;base64,' + btoa(customSvgMarker),
+                scaledSize: new google.maps.Size(48, 48)
+            },
+            optimized: false
+        });
     }
 
     // On success
@@ -99,23 +181,20 @@
             // Specify just the place data fields that you need.
             originAutocomplete.setFields(["place_id"]);
             const destinationAutocomplete = new google.maps.places.Autocomplete(destinationInput);
-
             // Specify just the place data fields that you need.
             destinationAutocomplete.setFields(["place_id"]);
+            
             this.setupPlaceChangedListener(originAutocomplete, "ORIG", originInput);
             this.setupPlaceChangedListener(destinationAutocomplete, "DEST", destinationInput);
 
-            this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-            this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
-
+            // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+            // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
         }
 
        
 
         setupPlaceChangedListener(autocomplete, mode, input) {
             autocomplete.bindTo("bounds", this.map);
-
-        
 
             autocomplete.addListener("place_changed", async () => {
                 let placeId = autocomplete.getPlace().place_id;
@@ -141,6 +220,8 @@
                 let loc = [];
                 let geocoder  = new google.maps.Geocoder();
                 geocoder.geocode({'address': input.value}, function (results, status){
+                    console.log("input.value: " + input.value)
+                    input.dispatchEvent(new Event("change"));
                     if(status == google.maps.GeocoderStatus.OK){
                         loc[0] = results[0].geometry.location.lat();
                         loc[1] = results[0].geometry.location.lng();
@@ -183,8 +264,7 @@
     function error() {
         console.log("Unable to retrieve your location");
     }
-
-
+    
     function intializeDanishMap(langAndLat) {
         const DENMARK_Bounds = {
             north: 57.73,
