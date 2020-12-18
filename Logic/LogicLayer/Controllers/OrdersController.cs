@@ -48,6 +48,7 @@ namespace LogicLayer.Controllers
         //     return receivedOrders;
         // }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
         {
