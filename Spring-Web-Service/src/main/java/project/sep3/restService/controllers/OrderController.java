@@ -38,6 +38,14 @@ public class OrderController {
         return orderDAO.create(order);
     }
 
+    @PostMapping
+    @RequestMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody Order order) {
+        System.out.println("DRIVER: "+order.getDriverId());
+        orderDAO.update(order);
+    }
+
     @PatchMapping
     public Order take(@RequestBody Order order) {
         return orderDAO.take(order);

@@ -1,4 +1,5 @@
-﻿@inject IAuthenticationService AuthenticationService
+﻿@using Driver.Models
+@inject IAuthenticationService AuthenticationService
 @inject AbstractOrderService OrderService;
 
 <!-- Styles -->
@@ -50,8 +51,12 @@
             }
             else
             {
-                 <NavLink href="create-order" class="header__link">Create order</NavLink>
-@*                 <NavLink href="create-order" class="header__link" hidden="@HasActiveOrders">Active order</NavLink> *@
+                <div hidden="@HasActiveOrders">
+                    <NavLink href="create-order" class="header__link">Create order</NavLink>
+                </div>
+                <div hidden="@(!HasActiveOrders)">
+                    <NavLink href="active-order" class="header__link">Active order</NavLink>
+                </div>
             }
             
             <div class="header__nav-toggle">
@@ -78,10 +83,7 @@
 
 <!-- Code -->
 @code {
-
-    // private bool HasActiveOrders => OrderService.hasActiveOrder();
-
-    private bool HasActiveOrders   {get;set;} = false;
+    private bool HasActiveOrders => OrderService.hasActiveOrder();
 
     private bool collapseNavMenu = true;
 
@@ -104,8 +106,10 @@
     
     protected override async Task OnInitializedAsync()
     {
-        // activeOrder = await OrderService.GetMyActiveOrder();
-        // HasActiveOrders = activeOrder != null;
+        if (AuthenticationService.User != null)
+        {
+            await OrderService.UpdMyActiveOrder();
+        }
         await base.OnInitializedAsync();
     }
 

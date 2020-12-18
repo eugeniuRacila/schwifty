@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using System.Net.Http.Headers
 @using Customer.Models
+@using Driver.Models
 @using Newtonsoft.Json
 
 @inject IJSRuntime JS
@@ -83,11 +84,11 @@
                             </p>
                             <div class="second-step__selection">
                                 <label class="second-step__radio-wrapper">
-                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" checked name="number-of-seats" value="1">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="1">
                                     <span class="second-step__number">1</span>
                                 </label>
                                 <label class="second-step__radio-wrapper">
-                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="2">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" checked name="number-of-seats" value="2">
                                     <span class="second-step__number">2</span>
                                 </label>
                                 <label class="second-step__radio-wrapper">
@@ -157,7 +158,7 @@
         await base.OnInitializedAsync();
 
         _order.TypeOfCar = "standard";
-        _order.NeededSeats = "2";
+        _order.NeededSeats = 2;
 
         await JS.InvokeVoidAsync("window.initMap");
     }
@@ -171,12 +172,11 @@
     private void NeededSeatsSelection(ChangeEventArgs args)
     {
         Console.WriteLine($"number of seats: {args.Value} was selected");
-        _order.NeededSeats = args.Value.ToString();
+        _order.NeededSeats =  Int32.Parse(args.Value.ToString());
     }
 
     private async void HandleValidSubmit()
     {
-        Console.WriteLine(_order.ToString());
         if (_order.LocationPoints.DestinationLat != 0.0 && _order.LocationPoints.DestinationLng != 0.0 && _order.LocationPoints.StartingLat != 0.0 && _order.LocationPoints.StartingLng != 0.0)
         {
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthenticationService.User.AccessToken);;
@@ -185,7 +185,9 @@
             if (!response.IsSuccessStatusCode)
             {
                 _error = "Don't try to hack me";
+                
             }
+            NavigationManager.NavigateTo("/");
         }
     }
 }

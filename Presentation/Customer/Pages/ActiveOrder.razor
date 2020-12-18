@@ -1,0 +1,21 @@
+@page "/active-order"
+
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+
+@inject AbstractOrderService OrderService;
+@inject IAuthenticationService AuthenticationService;
+
+@* <link href="css/activeOrder.css" rel="stylesheet"/> *@
+
+<h1>Active order</h1>
+<br>
+<b>From:</b> @OrderService.ActiveOrder.LocationPoints.StartingAddress
+<br>
+<b>To:</b> @OrderService.ActiveOrder.LocationPoints.DestinationAddress
+<br>
+<b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
+<br>
+<b>Type of the car:</b> @OrderService.ActiveOrder.TypeOfCar
+<br>
+<b>Status:</b> @OrderService.ActiveOrder.stateDesc

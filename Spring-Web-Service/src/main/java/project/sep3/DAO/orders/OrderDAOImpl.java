@@ -63,7 +63,7 @@ public class OrderDAOImpl implements OrderDAO {
         Session session = getNewSession();
         saveOrder(session, order);
         session.close();
-
+        System.out.println("ORDER INSERT OK");
         return order;
     }
 
@@ -72,6 +72,7 @@ public class OrderDAOImpl implements OrderDAO {
         Session session = getNewSession();
         updateOrder(session, order);
         session.close();
+        System.out.println("ORDER TAKE OK");
         return order;
     }
 
@@ -80,6 +81,7 @@ public class OrderDAOImpl implements OrderDAO {
         Session session = getNewSession();
         updateOrder(session,order);
         session.close();
+        System.out.println("ORDER UPDATE OK");
     }
 
     @Override

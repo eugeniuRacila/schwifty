@@ -6,6 +6,7 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.sep3.models.Driver;
+import project.sep3.models.Order;
 
 import java.util.List;
 
@@ -68,6 +69,23 @@ public class DriverDAOImpl implements DriverDAO{
             return null;
 
         return (Driver) results.get(0);
+    }
+
+    @Override
+    public Order getActiveOrder(int driverId) {
+        Session session = getNewSession();
+        Transaction transaction = session.beginTransaction();
+        Query query = session.createQuery("from Order WHERE state_id < 6 and driver_Id ="+driverId);
+        query.setCacheable(true);
+
+        List<Order> list = query.list();
+        transaction.commit();
+        session.close();
+        System.out.println("GET ACTIVE ORDER OK: "+ list.size());
+        if (list.size() == 0){
+            return null;
+        }
+        return list.get(0);
     }
 
 }

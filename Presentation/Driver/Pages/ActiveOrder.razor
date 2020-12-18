@@ -1,0 +1,53 @@
+@page "/active-order"
+
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Driver.Services.order
+
+@inject IJSRuntime JS
+@inject HttpClient Http
+@inject AbstractOrderService OrderService;
+@inject IAuthenticationService AuthenticationService;
+@inject NavigationManager NavigationManager
+
+@* <link href="css/activeOrder.css" rel="stylesheet"/> *@
+<link href="css/currentOrder.css" rel="stylesheet"/>
+
+<h1>Active order</h1>
+<br>
+<button @onclick="NextStatus">Next Status</button><br>
+<b>From:</b>
+<p id="startingAddressId">@OrderService.ActiveOrder.LocationPoints.StartingAddress</p>
+<br>
+<b>To:</b>
+<p id="destinationAddressId">@OrderService.ActiveOrder.LocationPoints.DestinationAddress</p>
+<br>
+<b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
+<br>
+<b>Type of the car:</b> @OrderService.ActiveOrder.TypeOfCar
+@* <br> *@
+@* <b>Status:</b> @OrderService.ActiveOrder.stateDesc *@
+
+<div class="map-container">
+    <div id="map" class="map-placeholder">
+
+    </div>
+</div>
+
+@code {
+    public string nextStatusText;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JS.InvokeVoidAsync("initMap", OrderService.ActiveOrder.LocationPoints.StartingAddress, OrderService.ActiveOrder.LocationPoints.DestinationAddress);
+        await base.OnInitializedAsync();
+    }
+
+    private async void NextStatus()
+    {
+        await OrderService.NextOrderStatus(OrderService.ActiveOrder);
+        await OrderService.UpdMyActiveOrder();
+        NavigationManager.NavigateTo("/active-order", true);
+    }
+
+}

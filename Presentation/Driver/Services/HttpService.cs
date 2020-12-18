@@ -49,7 +49,8 @@ namespace Driver.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            return await sendRequest<T>(request);
+            var res = await sendRequest<T>(request);
+            return res;
         }
         
         public async Task<T> Patch<T>(string uri, object value)
@@ -76,6 +77,9 @@ namespace Driver.Services
             {
                 _navigationManager.NavigateTo("logout");
                 return default;
+            }else if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return default;
             }
 
             // throw exception on error response
@@ -85,9 +89,8 @@ namespace Driver.Services
                 throw new Exception(error["message"]);
             }
 
-            Console.WriteLine("Response: " + response.StatusCode);
-
-            return await response.Content.ReadFromJsonAsync<T>();
+            var res = await response.Content.ReadFromJsonAsync<T>();
+            return res;
         }
     }
 }

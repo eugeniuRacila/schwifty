@@ -23,7 +23,12 @@ namespace LogicLayer.Models
             order._orderStatus = OrderTaken.GetInst();
             
         }
-        
+
+        public string GetDesc()
+        {
+            return "Looking for a Driver.";
+        }
+
         public int GetId()
         {
             return id;

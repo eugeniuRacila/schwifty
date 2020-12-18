@@ -7,7 +7,6 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.sep3.models.Customer;
 import project.sep3.models.Order;
-
 import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
@@ -82,9 +81,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         if (list.size() == 0){
             return null;
         }
-
-        Order order = list.get(0);
-        return order;
+        return list.get(0);
     }
 
 

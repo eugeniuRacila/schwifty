@@ -18,6 +18,11 @@ namespace LogicLayer.Models
             return OrderStatus;
         }
 
+        public string GetDesc()
+        {
+            return "Enjoy your trip!";
+        }
+
         public int GetId()
         {
             return id;

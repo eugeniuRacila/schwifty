@@ -36,17 +36,21 @@ namespace LogicLayer.Models
         [JsonPropertyName("neededSeats")]
         public int NeededSeats { get; set; }
 
-        private int _stateId;
-        
-        [JsonProperty("stateId")]
-        [JsonPropertyName("stateId")]
-        public int StateId
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        public OrderStatus _orderStatus
         {
-            get => _stateId;
-            set => _stateId = value;
+            get => OrderStatus.GetById(stateId);
+            set => stateId = value.GetId();
         }
 
-        public OrderStatus _orderStatus { get; internal set; }
+        [JsonProperty("stateId")]
+        [JsonPropertyName("stateId")]
+        private int stateId { get; set; }
+
+        [JsonProperty("stateDesc")]
+        [JsonPropertyName("stateDesc")]
+        public string stateDesc => _orderStatus.GetDesc();
 
         [JsonProperty("createdOn")]
         [JsonPropertyName("createdOn")]

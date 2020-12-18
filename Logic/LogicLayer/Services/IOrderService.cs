@@ -13,5 +13,6 @@ namespace LogicLayer.Services
 
         void NextOrderStatusAsync(Order order);
         Task<ActionResult<Order>> GetCustomerActiveOrder(int customerId);
+        Task<ActionResult<Order>> GetDriverActiveOrder(int driverId);
     }
 }
