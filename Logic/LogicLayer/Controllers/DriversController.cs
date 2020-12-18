@@ -23,6 +23,7 @@ namespace LogicLayer.Controllers
         public async Task<ActionResult<Order>> GetActiveOrder()
         {
             int driverId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+            Console.WriteLine("driver_id: "+ driverId);
             var order = await _orderService.GetDriverActiveOrder(driverId);
             Console.WriteLine("active order: "+order);
             return order;

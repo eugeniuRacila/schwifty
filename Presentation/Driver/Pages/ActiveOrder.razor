@@ -14,9 +14,12 @@
 
 <h1>Active order</h1>
 <br>
-<b>From:</b> <p id="startingAddressId">@OrderService.ActiveOrder.LocationPoints.StartingAddress</p> 
+<button @onclick="NextStatus">Next Status</button><br>
+<b>From:</b>
+<p id="startingAddressId">@OrderService.ActiveOrder.LocationPoints.StartingAddress</p>
 <br>
-<b>To:</b> <p id="destinationAddressId">@OrderService.ActiveOrder.LocationPoints.DestinationAddress</p>
+<b>To:</b>
+<p id="destinationAddressId">@OrderService.ActiveOrder.LocationPoints.DestinationAddress</p>
 <br>
 <b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
 <br>
@@ -31,9 +34,18 @@
 </div>
 
 @code {
-    protected override async void OnInitialized()
+    public string nextStatusText;
+
+    protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         await JS.InvokeVoidAsync("initMap", OrderService.ActiveOrder.LocationPoints.StartingAddress, OrderService.ActiveOrder.LocationPoints.DestinationAddress);
+        await base.OnInitializedAsync();
     }
+
+    private async void NextStatus()
+    {
+        await OrderService.NextOrderStatus(OrderService.ActiveOrder);
+        await OrderService.UpdMyActiveOrder();
+    }
+
 }

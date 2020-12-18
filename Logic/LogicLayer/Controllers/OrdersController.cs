@@ -37,16 +37,6 @@ namespace LogicLayer.Controllers
 
             return receivedOrders;
         }
-        
-        // [AllowAnonymous]
-        // [HttpGet]
-        // [Route("{orderId:int}")]
-        // public async Task<ActionResult<IList<Order>>> GetOrders(int orderId)
-        // {
-        //     var receivedOrders = await _orderService.GetOrdersAsync();
-        //
-        //     return receivedOrders;
-        // }
 
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder([FromBody] Order orderToCreate)
@@ -127,7 +117,7 @@ namespace LogicLayer.Controllers
             var takenOrder = await _orderService.TakeOrderAsync(foundOrder, driverId);
 
             // Broadcast order to all drivers
-            Package package = new Package("OrderService", "UpdateOrder", JsonConvert.SerializeObject(takenOrder));
+            Package package = new Package("OrderService", "OrderTaken", JsonConvert.SerializeObject(takenOrder));
             string jsonPackage = JsonConvert.SerializeObject(package);
             
             foreach (var ws in _manager.GetDriverSockets())
@@ -137,6 +127,21 @@ namespace LogicLayer.Controllers
             }
             
             return takenOrder;
+        }
+        
+        [HttpPost]
+        [Route("{orderId:int}/nextStatus")]
+        public async Task<ActionResult<Order>> NextOrderStatus([FromBody] Order order, int orderId)
+        {
+            int driverId = int.Parse(User.Claims.FirstOrDefault(c => c.Type.Equals("id"))?.Value);
+            order.DriverId = driverId;
+            _orderService.NextOrderStatusAsync(order);
+            // var jsonOrder = JsonConvert.SerializeObject(order);
+            // var client = new RestClient("http://localhost:8080/");
+            // var request = new RestRequest("orders/update", Method.POST) {RequestFormat = DataFormat.Json};
+            // request.AddJsonBody(jsonOrder);
+            // await client.ExecuteAsync(request);
+            return order;
         }
     }
 }

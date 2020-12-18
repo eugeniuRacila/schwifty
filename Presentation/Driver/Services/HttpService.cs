@@ -49,7 +49,8 @@ namespace Driver.Services
         {
             var request = new HttpRequestMessage(HttpMethod.Post, uri);
             request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
-            return await sendRequest<T>(request);
+            var res = await sendRequest<T>(request);
+            return res;
         }
         
         public async Task<T> Patch<T>(string uri, object value)
@@ -89,7 +90,6 @@ namespace Driver.Services
             }
 
             var res = await response.Content.ReadFromJsonAsync<T>();
-            Console.WriteLine("res:" + res);
             return res;
         }
     }

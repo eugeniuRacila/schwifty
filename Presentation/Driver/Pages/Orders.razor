@@ -36,15 +36,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         _orders = OrderService.GetAllOrders();
         OrderService.OrdersUpdate += OnNotify;
+        await base.OnInitializedAsync();
     }
 
     private async Task TakeOrder(Order order)
     {
-        OrderService.TakeOrder(order);
         _orders.Remove(order);
+        await OrderService.TakeOrder(order);
         await OrderService.UpdMyActiveOrder();
         NavigationManager.NavigateTo($"/active-order");
     }

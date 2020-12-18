@@ -9,3 +9,8 @@
     width: 55%;
     z-index: 0;
 }
+button{
+    background: white;
+    border: 1px solid black;
+    padding: 1px;
+}

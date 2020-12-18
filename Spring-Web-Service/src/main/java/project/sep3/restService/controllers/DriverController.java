@@ -27,6 +27,7 @@ public class DriverController {
     public Order GetCustomerActiveOrder(@PathVariable("drivId") String drivId) {
         int driverId = Integer.parseInt(drivId);
         var res = driverDAO.getActiveOrder(driverId);
+        System.out.println("");
         return res;
     }
 }

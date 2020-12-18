@@ -75,13 +75,13 @@ public class DriverDAOImpl implements DriverDAO{
     public Order getActiveOrder(int driverId) {
         Session session = getNewSession();
         Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("from Order WHERE state_id != 6 and driver_id ="+driverId);
+        Query query = session.createQuery("from Order WHERE state_id < 6 and driver_Id ="+driverId);
         query.setCacheable(true);
 
         List<Order> list = query.list();
         transaction.commit();
         session.close();
-
+        System.out.println("GET ACTIVE ORDER OK: "+ list.size());
         if (list.size() == 0){
             return null;
         }

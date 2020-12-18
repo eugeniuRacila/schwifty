@@ -18,11 +18,15 @@ namespace Driver.Services.order
         }
 
         public abstract void AddOrder(string jsonPayload);
-        public abstract void TakeOrder(Order order);
+        public abstract Task TakeOrder(Order order);
         public abstract void InitializeOrdersPool(IList<Order> orders);
         public abstract IList<Order> GetAllOrders();
         
         public abstract Task UpdMyActiveOrder();
+
+        public abstract Task NextOrderStatus(Order activeOrder);
+
+        public abstract void OrderTaken(string jsonPayload);
     }
 
     public class OrderService : AbstractOrderService
@@ -43,8 +47,11 @@ namespace Driver.Services.order
             var orderToCreate = JsonConvert.DeserializeObject<Order>(jsonPayload);
 
             // Call Data Layer and store the order into database
-            _list.Add(orderToCreate);
-
+            if (!_list.Contains(orderToCreate))
+            {
+                _list.Add(orderToCreate);    
+            }
+            
             // Rerender HTML observer
             OrdersUpdate?.Invoke(GetAllOrders());
         }
@@ -73,7 +80,22 @@ namespace Driver.Services.order
             Console.WriteLine("Active order: " + ActiveOrder);
         }
 
-        public override async void TakeOrder(Order order)
+        public override async Task NextOrderStatus(Order activeOrder)
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var httpService = scope.ServiceProvider.GetService<IHttpService>();
+                await httpService.Post<Order>($"api/orders/{activeOrder.Id}/nextStatus", activeOrder);
+            }
+        }
+
+        public override void OrderTaken(string payload)
+        {
+            Order order = JsonConvert.DeserializeObject<Order>(payload);
+            _list.Remove(order);
+        }
+
+        public override async Task TakeOrder(Order order)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             { 
