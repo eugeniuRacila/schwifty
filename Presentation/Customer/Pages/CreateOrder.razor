@@ -84,11 +84,11 @@
                             </p>
                             <div class="second-step__selection">
                                 <label class="second-step__radio-wrapper">
-                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" checked name="number-of-seats" value="1">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="1">
                                     <span class="second-step__number">1</span>
                                 </label>
                                 <label class="second-step__radio-wrapper">
-                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" name="number-of-seats" value="2">
+                                    <input class="second-step__radio-seats" @onchange="NeededSeatsSelection" type="radio" checked name="number-of-seats" value="2">
                                     <span class="second-step__number">2</span>
                                 </label>
                                 <label class="second-step__radio-wrapper">
@@ -185,7 +185,9 @@
             if (!response.IsSuccessStatusCode)
             {
                 _error = "Don't try to hack me";
+                
             }
+            NavigationManager.NavigateTo("/");
         }
     }
 }

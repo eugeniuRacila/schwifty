@@ -8,6 +8,7 @@
 @inject HttpClient Http
 @inject AbstractOrderService OrderService;
 @inject IAuthenticationService AuthenticationService;
+@inject NavigationManager NavigationManager
 
 @* <link href="css/activeOrder.css" rel="stylesheet"/> *@
 <link href="css/currentOrder.css" rel="stylesheet"/>
@@ -24,8 +25,8 @@
 <b>Number of seats:</b> @OrderService.ActiveOrder.NeededSeats
 <br>
 <b>Type of the car:</b> @OrderService.ActiveOrder.TypeOfCar
-<br>
-<b>Status:</b> @OrderService.ActiveOrder.stateDesc
+@* <br> *@
+@* <b>Status:</b> @OrderService.ActiveOrder.stateDesc *@
 
 <div class="map-container">
     <div id="map" class="map-placeholder">
@@ -46,6 +47,7 @@
     {
         await OrderService.NextOrderStatus(OrderService.ActiveOrder);
         await OrderService.UpdMyActiveOrder();
+        NavigationManager.NavigateTo("/active-order", true);
     }
 
 }
